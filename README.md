@@ -165,16 +165,7 @@ User → Frontend → Flask Backend\
 -   Qwen Coder 30B (quantized)
 -   Served locally via LM Studio API
 
-------------------------------------------------------------------------
-
-## 📂 Project Structure
-
-ai-java-code-tutor/ │ ├── backend/ │ ├── app.py │ ├── java_engine.py │
-├── llm_engine.py │ ├── analytics.py │ └── db.py │ ├── frontend/ │ ├──
-index.html │ ├── app.js │ └── styles.css │ ├── prompts/ │ └──
-master_prompt.txt │ └── README.md
-
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 
 ## 🔐 Academic Integrity Policy
 

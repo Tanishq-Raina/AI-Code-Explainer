@@ -2,5 +2,3 @@
 *.py[cod]
 .pytest_cache
 .venv
-test*
-live_llm_test.py

@@ -26,12 +26,13 @@ The backend:
 10. [HTTP Status Code Mapping](#http-status-code-mapping)
 11. [LLM Hint Generation](#llm-hint-generation)
 12. [Progressive Hint Escalation System](#progressive-hint-escalation-system)
-13. [MongoDB Collections](#mongodb-collections)
-14. [Running Tests](#running-tests)
-15. [Wiring hint_manager into routes.py](#wiring-hint_manager-into-routespy)
-16. [Development Environment](#development-environment)
-17. [Known Constraints and Rules](#known-constraints-and-rules)
-18. [Next Steps](#next-steps)
+13. [Multi-Level Fallback Pipeline](#multi-level-fallback-pipeline)
+14. [MongoDB Collections](#mongodb-collections)
+15. [Running Tests](#running-tests)
+16. [Wiring hint_manager into routes.py](#wiring-hint_manager-into-routespy)
+17. [Development Environment](#development-environment)
+18. [Known Constraints and Rules](#known-constraints-and-rules)
+19. [Next Steps](#next-steps)
 
 ---
 
@@ -40,19 +41,22 @@ The backend:
 ```
 project root/
 ├── backend/
-│   ├── app.py              # Flask application factory + global error handlers
-│   ├── routes.py           # API Blueprint (all route handlers)
-│   ├── java_engine.py      # Secure Java compile-and-execute engine
-│   ├── db.py               # MongoDB persistence layer (submissions collection)
-│   ├── response.py         # Unified JSON envelope builders: ok() / fail()
-│   ├── llm.py              # LLM hint generation via LM Studio (fully implemented)
-│   ├── hint_manager.py     # Progressive hint escalation tracker (hint_state collection)
-│   └── README.md           # This file
+│   ├── app.py                    # Flask application factory + global error handlers
+│   ├── routes.py                 # API Blueprint (all route handlers)
+│   ├── java_engine.py            # Secure Java compile-and-execute engine
+│   ├── db.py                     # MongoDB persistence layer (submissions collection)
+│   ├── response.py               # Unified JSON envelope builders: ok() / fail()
+│   ├── llm.py                    # LLM hint generation via LM Studio (fully implemented)
+│   ├── hint_manager.py           # Progressive hint escalation tracker (hint_state collection)
+│   ├── hallucination_guard.py    # LLM response validation layer
+│   ├── fallback_engine.py        # Multi-level fallback pipeline for safe hints
+│   └── README.md                 # This file
 │
-├── test_flask_backend.py   # 49 unit tests for routes + app
-├── test_llm.py             # 65 unit tests for llm.py
-├── test_hint_manager.py    # 41 unit tests for hint_manager.py
-├── live_llm_test.py        # Live 5-test integration test against LM Studio
+├── test_flask_backend.py         # 49 unit tests for routes + app
+├── test_llm.py                   # 65 unit tests for llm.py
+├── test_hint_manager.py          # 41 unit tests for hint_manager.py
+├── test_fallback_engine.py       # 7 unit tests for fallback pipeline
+├── live_llm_test.py              # Live 5-test integration test against LM Studio
 │
 ├── master_prompt.txt       # Project specification / AI context document
 ├── .gitignore
@@ -165,6 +169,77 @@ Escalation rules:
 3. Maximum level = 3 (capped, never exceeds `MAX_HINT_LEVEL = 3`)
 4. Error type changes → reset to level 1
 5. `status == "Success"` → call `reset_hint_level()` from route
+
+### `hallucination_guard.py`
+**LLM response validation layer.** Rejects malformed or risky model output
+before it reaches the user. Acts as a safety guardrail for LLM-generated hints.
+
+**Does NOT call the LLM. Does NOT generate hints. Has no Flask imports.**
+Only validates and filters responses.
+
+Public API:
+```python
+validate_and_filter_response(llm_output: dict, execution_result: dict) -> Optional[dict]
+    # Validates LLM output against safety rules.
+    # Returns clean dict on success, None on failure.
+```
+
+Validation rules enforced:
+- Input must be a dictionary
+- Required keys must exist and be non-empty strings:
+  - `problem_summary`, `why`, `hint_1`, `learning_tip`
+- Optional keys `hint_2`, `hint_3` must be strings if present
+- Must not contain markdown code fences (` ``` `)
+- Must not look like a full-solution response:
+  - Rejects patterns: `public static void main`, `class main`, `import java.`, `here is the full`, `complete solution`
+- Whitespace is normalized (multiple spaces/newlines collapsed)
+- Empty optional fields are dropped from output
+
+### `fallback_engine.py`
+**Multi-level fallback orchestration for safe hints.** Implements the strict
+4-step pipeline to ensure that even when the LLM produces incorrect or
+hallucinated output, the system always returns a safe, helpful, educational response.
+
+**Does NOT modify database. Has no direct database imports.** Calls `llm.py` only
+for strict retry.
+
+Public API:
+```python
+process_with_fallback(code: str, execution_result: dict, hint_level: int, llm_output: dict) -> dict
+    # Orchestrates fallback pipeline, returns guaranteed-safe hint dict.
+
+retry_llm_with_strict_prompt(code: str, execution_result: dict) -> Optional[dict]
+    # Retries LLM with stricter constraints to reduce hallucinations.
+
+match_error_template(error_message: str) -> Optional[dict]
+    # Returns template response for known Java errors.
+
+normalize_error_message(error_message: str) -> str
+    # Normalizes raw error text for robust template matching.
+```
+
+Fallback pipeline (strict order):
+1. **Validate initial LLM response** via `validate_and_filter_response()`
+   - If valid, return shaped response
+2. **Retry with strict prompt** — force model to use only error context, minimal hints, no code
+   - Validate retry output
+   - If valid, return shaped response
+3. **Template-based fallback** — match known Java errors:
+   - `cannot find symbol`
+   - `incompatible types`
+   - `NullPointerException`
+   - `ArrayIndexOutOfBoundsException`
+   - If match found, return shaped template
+4. **Generic safe fallback** — final guardrail:
+   - `problem_summary`: "There is an issue in your code."
+   - `why`: Raw error message from execution
+   - `hint_1`: Generic debugging guidance
+   - `learning_tip`: Generic learning advice
+
+All responses are normalized by `_shape_response()` to enforce:
+- Stable output schema (all required fields present)
+- Hint-level filtering (1 = gentlest, 3 = most direct)
+- Consistent string type and spacing
 
 ---
 
@@ -597,7 +672,71 @@ reset_hint_level(user_id, code)
 
 ---
 
-## MongoDB Collections
+## Multi-Level Fallback Pipeline
+
+The fallback engine (`fallback_engine.py`) implements a strict 4-step pipeline
+to guarantee safe, helpful, educational hint responses even when the LLM produces
+incorrect or hallucinated output.
+
+### Pipeline Overview
+
+**Strict execution order:**
+
+1. **Validate initial LLM response**
+   - Via `validate_and_filter_response()` from `hallucination_guard.py`
+   - Checks: required fields exist, values are non-empty strings, no code fences, no full-solution patterns
+   - If valid → return shaped response to user
+   - If invalid → proceed to step 2
+
+2. **Retry LLM with strict prompt**
+   - Call `retry_llm_with_strict_prompt()` with stricter constraints
+   - System prompt: enforce minimal hints, no code blocks, beginner language
+   - User prompt: use ONLY execution status + error message, ignore code
+   - Validate retry output
+   - If valid → return shaped response to user
+   - If invalid or unavailable → proceed to step 3
+
+3. **Template-based fallback**
+   - Call `match_error_template()` on normalized error message
+   - Known patterns:
+     - `cannot find symbol` → symbol not declared or out of scope
+     - `incompatible types` → type mismatch in assignment/operation
+     - `nullpointerexception` → null reference used as object
+     - `arrayindexoutofboundsexception` → array index outside bounds
+   - If match found → return shaped template to user
+   - If no match → proceed to step 4
+
+4. **Generic safe fallback**
+   - Return hardcoded safe response:
+     - `problem_summary`: "There is an issue in your code."
+     - `why`: Raw error message from execution
+     - `hint_1`: "Carefully read the error message and identify the problematic line."
+     - `learning_tip`: "Focus on understanding the concept behind the error."
+
+### Response Shaping
+
+All responses are shaped via `_shape_response(response_dict, hint_level)` to ensure:
+- **Stable schema**: Always returns required keys (`problem_summary`, `why`, `hint_1`, `learning_tip`)
+- **Hint-level filtering**:
+  - Level 1 (gentlest): problem_summary + why + hint_1 + learning_tip
+  - Level 2: adds hint_2
+  - Level 3 (most direct): adds hint_3
+- **Type safety**: All values are strings
+- **Whitespace normalization**: Multiple spaces/newlines collapsed
+
+### Why This Design
+
+The fallback pipeline protects against:
+- ✗ Malformed JSON responses
+- ✗ Missing required fields
+- ✗ Hallucinated code or full-solution dumps
+- ✗ LLM unavailability or timeouts
+- ✗ Completely unknown error types
+
+By enforcing this strict order, the system guarantees a valid, safe hint response
+in all cases — even in cascade failure scenarios.
+
+---
 
 ### `submissions` (managed by `db.py`)
 
@@ -633,10 +772,10 @@ All tests use mocks — no running Flask server, MongoDB, Java, or LLM required.
 
 ```powershell
 cd "D:\6th sem\Mini project Software\AI-Code-Explainer"
-C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe -m pytest test_flask_backend.py test_llm.py test_hint_manager.py -v
+C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe -m pytest test_flask_backend.py test_llm.py test_hint_manager.py test_fallback_engine.py -v
 ```
 
-Expected: **155 tests pass** (49 + 65 + 41).
+Expected: **162 tests pass** (49 + 65 + 41 + 7).
 
 ### Individual suites
 
@@ -649,6 +788,9 @@ C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe -m pytest test
 
 # Hint escalation manager — 41 tests
 C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe -m pytest test_hint_manager.py -v
+
+# Fallback pipeline — 7 tests
+C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe -m pytest test_fallback_engine.py -v
 ```
 
 ### Test groups
@@ -681,6 +823,15 @@ C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe -m pytest test
 - `TestUpdateHintLevelErrorChange` (4) — error type reset
 - `TestResetHintLevel` (6) — resolved flag + counter reset
 - `TestDatabaseErrors` (7) — PyMongoError fault tolerance
+
+**`test_fallback_engine.py`** (7 tests)
+- `test_normalize_error_message_collapses_space_and_lowercases` — error normalization
+- `test_match_error_template_for_known_error` — template lookup logic
+- `test_pipeline_returns_initial_llm_when_valid` — step 1 validation path
+- `test_pipeline_uses_retry_when_initial_invalid` — step 2 strict retry path
+- `test_pipeline_uses_template_when_retry_invalid` — step 3 template fallback path
+- `test_pipeline_uses_generic_fallback_when_no_template` — step 4 generic fallback path
+- `test_pipeline_shapes_by_hint_level` — hint-level filtering behavior
 
 ---
 
@@ -793,6 +944,8 @@ Add a `TestHintEscalation` group to `test_flask_backend.py` covering:
    The server must work correctly during development without LM Studio running.
 10. The `live_llm_test.py` file lives at the project root (not inside `backend/`)
     because it patches `llm.LLM_ENABLED` directly as a module attribute.
+11. `hallucination_guard.py` and `fallback_engine.py` have no database or Flask imports
+    — they are pure logic modules for validation and fallback orchestration.
 11. Always run Python via the full path
     `C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe` outside
     an activated venv to avoid picking up the wrong interpreter.
@@ -803,14 +956,22 @@ Add a `TestHintEscalation` group to `test_flask_backend.py` covering:
 
 Priority order for continued development:
 
-1. **Wire `hint_manager` into `routes.py`** (see [wiring guide](#wiring-hint_manager-into-routespy)).
-   Update `test_flask_backend.py` with `TestHintEscalation` group.
-2. **Expose `hint_level` in the API response** — add `data.hint_level` so the
-   frontend can display "Hint 1 of 3", "Hint 2 of 3", etc.
-3. **Build the frontend** — React or plain HTML/JS that calls `/api/submit-code`
-   and renders execution results + hints with a "Get another hint" button.
-4. **Add `GET /api/hint-status/{user_id}`** — lets the frontend query current
-   hint level without requiring a new code submission.
-5. **Add authentication** — replace bare `user_id` string with JWT or session
-   tokens so hint state cannot be spoofed.
-6. **Add rate limiting** — prevent hint-farming via rapid identical submissions.
+1. **Wire `fallback_engine` into `routes.py`**
+   - Import `process_with_fallback` from `fallback_engine.py`
+   - In `submit_code()`, after calling `generate_hints()`, pass result to `process_with_fallback()`
+   - Wrap result in fallback pipeline: `safe_hint = process_with_fallback(code, result, hint_level, llm_output)`
+   - Update response schema to include `hint_level` for frontend display
+2. **Wire `hint_manager` into `routes.py`** (see [wiring guide](#wiring-hint_manager-into-routespy))
+   - Track escalation state per user × code
+   - Call `update_hint_level()` on failures, `reset_hint_level()` on success
+3. **Expose `hint_level` in the API response**
+   - Add `data.hint_level` field so frontend can display "Hint 1 of 3", etc.
+4. **Build the frontend**
+   - React or plain HTML/JS that calls `/api/submit-code`
+   - Render execution results + hints with a "Get another hint" button
+5. **Add `GET /api/hint-status/{user_id}`**
+   - Query current hint level without requiring new code submission
+6. **Add authentication**
+   - Replace bare `user_id` string with JWT or session tokens
+7. **Add rate limiting**
+   - Prevent hint-farming via rapid identical submissions

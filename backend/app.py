@@ -19,6 +19,21 @@ from encouragement_engine import generate_encouragement
 
 app = Flask(__name__)
 
+
+def _parse_bool(value, default=False):
+    """Parse booleans from JSON-safe values and common string forms."""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in {"true", "1", "yes"}:
+            return True
+        if lowered in {"false", "0", "no"}:
+            return False
+    if value is None:
+        return default
+    return bool(value)
+
 # ---------------------------------------------------------------------------
 # Health check
 # ---------------------------------------------------------------------------
@@ -73,7 +88,11 @@ def submit_code():
         "error_type":   "NullPointerException",
         "error_message":"...",
         "hints_used":   2,
-        "resolved":     false
+        "resolved":     false,
+        "llm_response": "Try checking if obj is null before calling methods.",
+        "hallucination_flag": false,
+        "confidence_score": 0.88,
+        "user_feedback": "not_given"
       }
 
     The topic is auto-detected from the error message if not supplied.
@@ -88,7 +107,17 @@ def submit_code():
     error_type    = body.get("error_type", "")
     error_message = body.get("error_message", "")
     hints_used    = int(body.get("hints_used", 0))
-    resolved      = bool(body.get("resolved", False))
+    resolved      = _parse_bool(body.get("resolved", False), default=False)
+    llm_response  = body.get("llm_response", "")
+    hallucination_flag = _parse_bool(body.get("hallucination_flag", False), default=False)
+
+    raw_confidence_score = body.get("confidence_score")
+    try:
+        confidence_score = float(raw_confidence_score)
+    except (TypeError, ValueError):
+        confidence_score = None
+
+    user_feedback = str(body.get("user_feedback", "not_given") or "not_given").lower()
 
     # Caller may supply a topic; otherwise auto-detect from the error text
     topic = body.get("topic") or detect_topic_from_error(error_message)
@@ -104,6 +133,10 @@ def submit_code():
         error_message=error_message,
         hints_used=hints_used,
         resolved=resolved,
+        llm_response=llm_response,
+        hallucination_flag=hallucination_flag,
+        confidence_score=confidence_score,
+        user_feedback=user_feedback,
     )
 
     return jsonify({

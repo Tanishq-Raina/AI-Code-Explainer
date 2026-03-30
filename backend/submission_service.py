@@ -107,7 +107,11 @@ def save_submission(
     error_type: str,
     error_message: str,
     hints_used: int,
-    resolved: bool
+    resolved: bool,
+    llm_response: str = "",
+    hallucination_flag: bool = False,
+    confidence_score: float = None,
+    user_feedback: str = "not_given",
 ) -> str:
     """
     Persist a single Java submission and update the user's topic statistics.
@@ -126,6 +130,10 @@ def save_submission(
         error_message: Full error text returned by the Java engine.
         hints_used:    Number of hints the student consumed this session.
         resolved:      True if the student fixed the bug in this attempt.
+        llm_response:  Actual LLM response shown to the student.
+        hallucination_flag: True if the response was incorrect/misleading.
+        confidence_score: Confidence score in range [0, 1] from validator.
+        user_feedback: One of 'correct', 'incorrect', 'not_given'.
 
     Returns:
         The MongoDB _id string of the newly inserted submission document.
@@ -142,6 +150,10 @@ def save_submission(
         "error_message":  error_message,
         "hints_used":     hints_used,
         "resolved":       resolved,
+        "llm_response":   llm_response,
+        "hallucination_flag": hallucination_flag,
+        "confidence_score": confidence_score,
+        "user_feedback":  user_feedback,
         "timestamp":      now,
     }
     submission_id = insert_submission(doc)

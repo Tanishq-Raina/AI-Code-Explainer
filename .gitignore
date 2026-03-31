@@ -1,18 +1,11 @@
-# Environment variables / secrets
-.env
-**/.env
-
-# Python cache / bytecode
-__pycache__/
 **/__pycache__/
 *.py[cod]
-
-# Virtual environments
-.venv/
+.pytest_cache
+.venv
+.env
+**/.env
 venv/
 env/
-
-# IDE / OS local files
 .vscode/
 .DS_Store
 Thumbs.db

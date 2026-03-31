@@ -1,205 +1,117 @@
 """
 app.py
 ------
-Flask application entry point for the AI Java Tutor backend.
+Flask application factory for the AI-Based Java Programming Tutor backend.
 
-Registered endpoints
---------------------
-  POST /api/submit               - Record a Java submission
-  GET  /api/user-progress/<id>   - Learning analytics dashboard for a student
-  GET  /api/encouragement/<id>   - Motivational message for the latest topic
-  POST /api/users                - Create a new student profile
+Usage
+~~~~~
+Development::
+
+    set FLASK_ENV=development
+    python app.py
+
+Production (gunicorn example)::
+
+    gunicorn "app:create_app()" --bind 0.0.0.0:5000 --workers 4
+
+Environment variables
+~~~~~~~~~~~~~~~~~~~~~
+FLASK_ENV       – "development" (default) or "production"
+FLASK_PORT      – port to listen on (default 5000)
+MONGO_URI       – MongoDB connection string (default mongodb://localhost:27017)
+MONGO_DB_NAME   – database name (default java_tutor)
+LLM_ENABLED     – "true" to activate LLM hint generation (default false)
+LLM_BASE_URL    – OpenAI-compatible endpoint (default http://localhost:1234/v1)
+
+Architecture
+~~~~~~~~~~~~
+``create_app()`` is the sole entry point.  It:
+
+1. Registers the ``api_bp`` Blueprint (all routes live in ``routes.py``).
+2. Attaches global error handlers that use the unified JSON envelope from
+   ``response.py`` so every response – including Flask’s own 404/405 pages –
+   is consistent JSON.
 """
 
-from flask import Flask, request, jsonify
-from database import create_user, get_user
-from submission_service import detect_topic_from_error, save_submission
-from topic_analyzer import get_learning_summary
-from encouragement_engine import generate_encouragement
+import logging
+import os
 
-app = Flask(__name__)
+from flask import Flask
 
-
-def _parse_bool(value, default=False):
-    """Parse booleans from JSON-safe values and common string forms."""
-    if isinstance(value, bool):
-        return value
-    if isinstance(value, str):
-        lowered = value.strip().lower()
-        if lowered in {"true", "1", "yes"}:
-            return True
-        if lowered in {"false", "0", "no"}:
-            return False
-    if value is None:
-        return default
-    return bool(value)
-
-# ---------------------------------------------------------------------------
-# Health check
-# ---------------------------------------------------------------------------
-
-@app.route("/api/health", methods=["GET"])
-def health():
-    """Quick liveness probe."""
-    return jsonify({"status": "ok"}), 200
+from response import ErrorCode, fail
+from routes import api_bp
 
 
 # ---------------------------------------------------------------------------
-# User management
+# Logging
 # ---------------------------------------------------------------------------
 
-@app.route("/api/users", methods=["POST"])
-def create_student():
+logging.basicConfig(
+    level=logging.DEBUG if os.getenv("FLASK_ENV") == "development" else logging.INFO,
+    format="%(asctime)s  %(levelname)-8s  %(name)s  %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+logger = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# Application factory
+# ---------------------------------------------------------------------------
+
+def create_app() -> Flask:
     """
-    Create a new student profile.
+    Build and return a configured Flask application instance.
 
-    Request body (JSON):
-      { "name": "Alice" }
-
-    Response:
-      { "user_id": "<mongo_id>", "name": "Alice" }
+    The factory pattern keeps this module side-effect-free at import time,
+    which is required for:
+    * WSGI servers (gunicorn, uwsgi) that import before forking.
+    * The test suite, which calls ``create_app().test_client()`` directly.
     """
-    body = request.get_json(silent=True) or {}
-    name = body.get("name", "").strip()
+    app = Flask(__name__)
 
-    if not name:
-        return jsonify({"error": "name is required"}), 400
+    # Mounting under /api keeps all versioning changes to this one line.
+    app.register_blueprint(api_bp, url_prefix="/api")
 
-    user_id = create_user(name)
-    return jsonify({"user_id": user_id, "name": name}), 201
+    # All handlers use ``fail()`` from response.py so every HTTP response,
+    # including framework-generated errors, shares the same JSON envelope.
+    @app.errorhandler(400)
+    def bad_request(exc):
+        return fail(
+            message="Bad request.",
+            code=ErrorCode.INVALID_INPUT,
+            details={"detail": str(exc)},
+            http_status=400,
+        )
 
+    @app.errorhandler(404)
+    def not_found(exc):
+        return fail(
+            message="Endpoint not found.",
+            code=ErrorCode.NOT_FOUND,
+            http_status=404,
+        )
 
-# ---------------------------------------------------------------------------
-# Submission endpoint
-# ---------------------------------------------------------------------------
+    @app.errorhandler(405)
+    def method_not_allowed(exc):
+        return fail(
+            message="Method not allowed.",
+            code=ErrorCode.METHOD_NOT_ALLOWED,
+            http_status=405,
+        )
 
-@app.route("/api/submit", methods=["POST"])
-def submit_code():
-    """
-    Record a Java code submission and update topic statistics.
+    @app.errorhandler(500)
+    def internal_error(exc):
+        logger.exception("Unhandled server error")
+        return fail(
+            message="Internal server error.",
+            code=ErrorCode.INTERNAL_ERROR,
+            details={"detail": str(exc)},
+            http_status=500,
+        )
 
-    This endpoint is called after the Java engine has compiled / run the
-    student's code and the LLM has generated hints.
-
-    Request body (JSON):
-      {
-        "user_id":      "...",
-        "code":         "public class Main { ... }",
-        "error_type":   "NullPointerException",
-        "error_message":"...",
-        "hints_used":   2,
-        "resolved":     false,
-        "llm_response": "Try checking if obj is null before calling methods.",
-        "hallucination_flag": false,
-        "confidence_score": 0.88,
-        "user_feedback": "not_given"
-      }
-
-    The topic is auto-detected from the error message if not supplied.
-
-    Response:
-      { "submission_id": "...", "detected_topic": "object_handling" }
-    """
-    body = request.get_json(silent=True) or {}
-
-    user_id       = body.get("user_id", "").strip()
-    code          = body.get("code", "")
-    error_type    = body.get("error_type", "")
-    error_message = body.get("error_message", "")
-    hints_used    = int(body.get("hints_used", 0))
-    resolved      = _parse_bool(body.get("resolved", False), default=False)
-    llm_response  = body.get("llm_response", "")
-    hallucination_flag = _parse_bool(body.get("hallucination_flag", False), default=False)
-
-    raw_confidence_score = body.get("confidence_score")
-    try:
-        confidence_score = float(raw_confidence_score)
-    except (TypeError, ValueError):
-        confidence_score = None
-
-    user_feedback = str(body.get("user_feedback", "not_given") or "not_given").lower()
-
-    # Caller may supply a topic; otherwise auto-detect from the error text
-    topic = body.get("topic") or detect_topic_from_error(error_message)
-
-    if not user_id:
-        return jsonify({"error": "user_id is required"}), 400
-
-    submission_id = save_submission(
-        user_id=user_id,
-        code=code,
-        topic=topic,
-        error_type=error_type,
-        error_message=error_message,
-        hints_used=hints_used,
-        resolved=resolved,
-        llm_response=llm_response,
-        hallucination_flag=hallucination_flag,
-        confidence_score=confidence_score,
-        user_feedback=user_feedback,
-    )
-
-    return jsonify({
-        "submission_id":  submission_id,
-        "detected_topic": topic,
-    }), 201
-
-
-# ---------------------------------------------------------------------------
-# Learning analytics dashboard
-# ---------------------------------------------------------------------------
-
-@app.route("/api/user-progress/<user_id>", methods=["GET"])
-def user_progress(user_id: str):
-    """
-    Return a full learning analytics summary for a student.
-
-    Path parameter:
-      user_id  - MongoDB student _id string
-
-    Response:
-      {
-        "weak_topics":       ["loops"],
-        "improving_topics":  ["arrays"],
-        "strong_topics":     ["variables"],
-        "total_submissions": 24
-      }
-
-    Returns 404 if the user does not exist.
-    Returns an empty summary (no error) for users with zero submissions.
-    """
-    user = get_user(user_id)
-    if user is None:
-        return jsonify({"error": "user not found"}), 404
-
-    summary = get_learning_summary(user_id)
-    return jsonify(summary), 200
-
-
-# ---------------------------------------------------------------------------
-# Encouragement endpoint
-# ---------------------------------------------------------------------------
-
-@app.route("/api/encouragement/<user_id>", methods=["GET"])
-def encouragement(user_id: str):
-    """
-    Return a motivational message for a specific topic.
-
-    Query parameter:
-      topic  - the learning topic to evaluate (e.g. ?topic=arrays)
-
-    Response:
-      {
-        "show_message": true,
-        "message": "Your understanding of arrays is improving!"
-      }
-    """
-    topic = request.args.get("topic", "").strip()
-    if not topic:
-        return jsonify({"error": "topic query parameter is required"}), 400
-
-    result = generate_encouragement(user_id, topic)
-    return jsonify(result), 200
+    logger.info("Flask app created – blueprint registered at /api")
+    return app
 
 
 # ---------------------------------------------------------------------------
@@ -207,4 +119,10 @@ def encouragement(user_id: str):
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    port = int(os.getenv("FLASK_PORT", 5000))
+    debug = os.getenv("FLASK_ENV", "development") == "development"
+
+    application = create_app()
+
+    logger.info("Starting Flask dev server on port %d  (debug=%s)", port, debug)
+    application.run(host="0.0.0.0", port=port, debug=debug)

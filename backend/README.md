@@ -6,7 +6,7 @@ The backend:
 - Compiles and executes Java code submissions in a sandboxed subprocess.
 - Persists execution results to MongoDB.
 - Generates structured, progressive LLM hints via a local LM Studio endpoint.
-- Tracks per-user hint escalation (level 1 → 2 → 3) across submissions.
+- Includes safety modules for hallucination-guarded fallback and hint escalation (route wiring pending).
 
 ---
 
@@ -45,17 +45,23 @@ project root/
 │   ├── routes.py                 # API Blueprint (all route handlers)
 │   ├── java_engine.py            # Secure Java compile-and-execute engine
 │   ├── db.py                     # MongoDB persistence layer (submissions collection)
+│   ├── database.py               # Extended MongoDB helpers (users/submissions/topic_stats)
 │   ├── response.py               # Unified JSON envelope builders: ok() / fail()
 │   ├── llm.py                    # LLM hint generation via LM Studio (fully implemented)
 │   ├── hint_manager.py           # Progressive hint escalation tracker (hint_state collection)
 │   ├── hallucination_guard.py    # LLM response validation layer
 │   ├── fallback_engine.py        # Multi-level fallback pipeline for safe hints
+│   ├── submission_service.py      # Submission persistence + topic-status updater
+│   ├── topic_analyzer.py          # Weak/improving/strong topic classification
+│   ├── encouragement_engine.py    # Motivational message generator by topic status
+│   ├── requirements.txt           # Backend python dependencies
 │   └── README.md                 # This file
 │
 ├── test_flask_backend.py         # 49 unit tests for routes + app
 ├── test_llm.py                   # 65 unit tests for llm.py
 ├── test_hint_manager.py          # 41 unit tests for hint_manager.py
 ├── test_fallback_engine.py       # 7 unit tests for fallback pipeline
+├── test_java_engine.py           # Manual java_engine verification script (non-pytest)
 ├── live_llm_test.py              # Live 5-test integration test against LM Studio
 │
 ├── master_prompt.txt       # Project specification / AI context document
@@ -79,6 +85,11 @@ Flask Blueprint with all route handlers. Imports `generate_hint` from `llm.py`
 and `log_submission` from `db.py`. Route logic follows the strict pipeline:
 **validate → execute → hint → log → respond**. No pymongo, no subprocess, no
 OpenAI imports live here.
+
+**Current wiring status:**
+- Uses direct `llm.generate_hint()` for non-success execution results.
+- `hint_manager.py` is not yet wired into this route.
+- `fallback_engine.py` is not yet wired into this route.
 
 Current routes:
 - `GET  /api/health`      — liveness probe
@@ -107,6 +118,40 @@ Collection: `submissions`. Schema:
 user_id, code, status, output, error, submitted_at (UTC),
 line_number (optional), exception_type (optional)
 ```
+
+### `database.py`
+Extended MongoDB access layer used by learning analytics modules.
+
+Collections handled:
+- `users`
+- `submissions`
+- `topic_stats`
+
+Provides helpers for user creation/lookup, submission insertion and feedback
+logging, hallucination analytics, and topic-stat upserts with indexed queries.
+
+### `submission_service.py`
+High-level service that records rich submission events and updates per-topic
+learning progression.
+
+Key capabilities:
+- Detect topic from Java error text
+- Save submission with LLM quality metadata (`hallucination_flag`,
+  `confidence_score`, `user_feedback`)
+- Update topic counters and maintain rolling `recent_attempts`
+- Recompute topic status labels (`weak`, `improving`, `strong`)
+
+### `topic_analyzer.py`
+Read-side topic classification utility for student learning summaries.
+
+Public APIs:
+- `detect_weak_topics(user_id)`
+- `detect_improving_topics(user_id)`
+- `get_learning_summary(user_id)`
+
+### `encouragement_engine.py`
+Generates motivational/supportive messages based on topic status (`weak`,
+`improving`, `strong`) to encourage continued learner progress.
 
 ### `response.py`
 Zero-dependency envelope builder. No Flask routes, no DB imports — safe to
@@ -251,7 +296,7 @@ All responses are normalized by `_shape_response()` to enforce:
 | Java JDK | 11+ | `javac` and `java` must be on `PATH` |
 | MongoDB | 6.0+ | Local instance on `localhost:27017` (default) |
 | LM Studio | any | Required only when `LLM_ENABLED=true` |
-| pip packages | — | `flask`, `pymongo`, `requests` |
+| pip packages | — | `flask`, `pymongo`, `requests`, `python-dotenv` |
 
 Install Python dependencies:
 
@@ -259,6 +304,13 @@ Install Python dependencies:
 # From the project root — activate venv first
 & "d:\6th sem\Mini project Software\AI-Code-Explainer\.venv\Scripts\Activate.ps1"
 pip install flask pymongo requests
+```
+
+or install from backend requirements:
+
+```powershell
+cd "D:\6th sem\Mini project Software\AI-Code-Explainer\backend"
+pip install -r requirements.txt
 ```
 
 ---
@@ -279,6 +331,10 @@ All variables are optional. The defaults work for a local development setup.
 | `LLM_BASE_URL` | `http://localhost:1234/v1` | OpenAI-compatible LLM endpoint |
 | `LLM_MODEL` | `qwen/qwen3-coder-30b` | Model name as shown in LM Studio |
 | `LLM_TIMEOUT` | `120` | Seconds before LLM request times out |
+
+Note:
+- `db.py` (active Flask route logging path) uses `MONGO_DB_NAME` with default `java_tutor`.
+- `database.py` (analytics helpers) uses internal `DB_NAME = "ai_java_tutor"` and loads `MONGO_URI` from `.env`.
 
 Set variables in PowerShell before starting the server:
 
@@ -738,6 +794,21 @@ in all cases — even in cascade failure scenarios.
 
 ---
 
+### Current Route Integration Status
+
+`fallback_engine.py` is implemented and unit-tested, but the current
+`/api/submit-code` path in `routes.py` still calls `generate_hint()` directly.
+
+That means:
+- fallback engine logic is available but not yet active in route execution.
+- hallucination guard is active only when `process_with_fallback()` is used.
+- full fallback behavior has been validated in dedicated pipeline tests and
+  smoke runs, but not yet as the default route path.
+
+---
+
+## MongoDB Collections
+
 ### `submissions` (managed by `db.py`)
 
 | Field | Type | Always present |
@@ -766,7 +837,14 @@ in all cases — even in cascade failure scenarios.
 
 ## Running Tests
 
-All tests use mocks — no running Flask server, MongoDB, Java, or LLM required.
+Automated unit tests use mocks — no running Flask server, MongoDB, Java, or
+LLM required for the pytest suites.
+
+Current validated status (April 1, 2026):
+- `pytest -q` → **162 passed**
+- `live_llm_test.py` (LM Studio) → **5/5 passed**
+- End-to-end `/api/submit-code` smoke request with LM Studio enabled → passed
+- `test_java_engine.py` manual run → all 7 scenarios passed
 
 ### Run the full suite
 
@@ -791,6 +869,9 @@ C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe -m pytest test
 
 # Fallback pipeline — 7 tests
 C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe -m pytest test_fallback_engine.py -v
+
+# Java engine manual script (not pytest-collected)
+C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe test_java_engine.py
 ```
 
 ### Test groups
@@ -946,7 +1027,10 @@ Add a `TestHintEscalation` group to `test_flask_backend.py` covering:
     because it patches `llm.LLM_ENABLED` directly as a module attribute.
 11. `hallucination_guard.py` and `fallback_engine.py` have no database or Flask imports
     — they are pure logic modules for validation and fallback orchestration.
-11. Always run Python via the full path
+12. `database.py`, `submission_service.py`, `topic_analyzer.py`, and
+  `encouragement_engine.py` exist for learning analytics workflows and are
+  currently not part of the Flask route execution path.
+13. Always run Python via the full path
     `C:/Users/tanis/AppData/Local/Programs/Python/Python313/python.exe` outside
     an activated venv to avoid picking up the wrong interpreter.
 
@@ -957,10 +1041,10 @@ Add a `TestHintEscalation` group to `test_flask_backend.py` covering:
 Priority order for continued development:
 
 1. **Wire `fallback_engine` into `routes.py`**
-   - Import `process_with_fallback` from `fallback_engine.py`
-   - In `submit_code()`, after calling `generate_hints()`, pass result to `process_with_fallback()`
-   - Wrap result in fallback pipeline: `safe_hint = process_with_fallback(code, result, hint_level, llm_output)`
-   - Update response schema to include `hint_level` for frontend display
+  - Import `process_with_fallback` from `fallback_engine.py`
+  - Replace direct route hint usage so non-success paths call fallback pipeline
+  - Keep `hint` response as plain string (route contract)
+  - Add route-level tests for fallback happy path, strict retry, and template fallback
 2. **Wire `hint_manager` into `routes.py`** (see [wiring guide](#wiring-hint_manager-into-routespy))
    - Track escalation state per user × code
    - Call `update_hint_level()` on failures, `reset_hint_level()` on success

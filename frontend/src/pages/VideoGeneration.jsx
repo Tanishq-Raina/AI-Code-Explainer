@@ -24,28 +24,39 @@ const QUALITY_OPTIONS = [
 ];
 
 // Extract the main class name from Java source code.
-// Priority: class containing "public static void main", then any "public class", then first class.
+// Priority: the top-level class containing "public static void main".
+// Inner/nested classes (preceded by static, private, protected) are ignored.
 function extractClassName(source) {
-  // Find the class that contains the main method
-  // Look for class declarations and check if main() is inside them
-  const classBlocks = [...source.matchAll(/(?:public\s+)?class\s+(\w+)\s*\{/g)];
-  if (classBlocks.length > 0) {
-    // Check each class to see if it contains the main method
-    for (let i = 0; i < classBlocks.length; i++) {
-      const startIdx = classBlocks[i].index;
-      const nextClassIdx = i + 1 < classBlocks.length ? classBlocks[i + 1].index : source.length;
-      const classBody = source.slice(startIdx, nextClassIdx);
-      if (/public\s+static\s+void\s+main\s*\(\s*String/.test(classBody)) {
-        return classBlocks[i][1];
-      }
-    }
-    // No class has main — fall back to the public class
-    const publicMatch = source.match(/public\s+class\s+(\w+)/);
-    if (publicMatch) return publicMatch[1];
-    // Last resort: first class
-    return classBlocks[0][1];
+  // Match only top-level class declarations (start of line, not preceded by static/private/protected)
+  const topLevelClasses = [...source.matchAll(/^(?:public\s+|abstract\s+)*class\s+(\w+)\s*(?:extends\s+\w+\s*)?(?:implements\s+[\w,\s]+\s*)?\{/gm)];
+
+  if (topLevelClasses.length === 0) {
+    // Fallback: any class declaration
+    const anyClass = source.match(/(?:public\s+)?class\s+(\w+)/);
+    return anyClass ? anyClass[1] : null;
   }
-  return null;
+
+  // Single top-level class — that's our answer
+  if (topLevelClasses.length === 1) {
+    return topLevelClasses[0][1];
+  }
+
+  // Multiple top-level classes: find the one containing main()
+  for (let i = 0; i < topLevelClasses.length; i++) {
+    const startIdx = topLevelClasses[i].index;
+    const endIdx = i + 1 < topLevelClasses.length ? topLevelClasses[i + 1].index : source.length;
+    const region = source.slice(startIdx, endIdx);
+    if (/public\s+static\s+void\s+main\s*\(\s*String/.test(region)) {
+      return topLevelClasses[i][1];
+    }
+  }
+
+  // No main found — prefer the public class
+  const publicMatch = source.match(/public\s+class\s+(\w+)/);
+  if (publicMatch) return publicMatch[1];
+
+  // Last resort: first top-level class
+  return topLevelClasses[0][1];
 }
 
 // Rename the class that contains the main method (or the public class) in the source code.

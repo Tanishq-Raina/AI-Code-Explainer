@@ -67,31 +67,51 @@ _MAIN_METHOD_RE = re.compile(
 
 def _detect_main_class(code: str) -> str:
     """
-    Detect the class containing ``public static void main(String[] args)``.
+    Detect the top-level class containing ``public static void main(String[] args)``.
 
-    When multiple classes exist in the source, the one housing the main
-    method determines the filename.  Falls back to the first ``public class``,
-    then the first class declaration, then the constant ``MAIN_CLASS``.
+    Inner/nested classes are ignored.  Only top-level class declarations
+    (those not preceded by access modifiers like ``static``, ``private``, or
+    ``protected`` that indicate nesting) are considered as candidates for the
+    source filename.
+
+    Falls back to the first ``public class``, then the first top-level class,
+    then the constant ``MAIN_CLASS``.
     """
-    class_decls = list(re.finditer(r'(?:public\s+)?class\s+(\w+)\s*\{', code))
-    if not class_decls:
-        return MAIN_CLASS
+    # Match only top-level class declarations:
+    # They start at the beginning of a line (possibly with leading whitespace of 0-1 levels)
+    # and are NOT preceded by static/private/protected (which indicate inner classes).
+    # Top-level classes: "public class Foo {", "class Foo {", "abstract class Foo {"
+    # Inner classes: "    static class Bar {", "    private class Bar {"
+    top_level_re = re.compile(
+        r'^(?:public\s+|abstract\s+)*class\s+(\w+)\s*(?:extends\s+\w+\s*)?(?:implements\s+[\w,\s]+\s*)?\{',
+        re.MULTILINE,
+    )
+    top_level_classes = list(top_level_re.finditer(code))
 
-    # Check each class region for the main method
-    for i, match in enumerate(class_decls):
+    if not top_level_classes:
+        # Fallback: try any class declaration
+        any_class = re.search(r'(?:public\s+)?class\s+(\w+)', code)
+        return any_class.group(1) if any_class else MAIN_CLASS
+
+    # If there's only one top-level class, that's our answer
+    if len(top_level_classes) == 1:
+        return top_level_classes[0].group(1)
+
+    # Multiple top-level classes: find the one containing main()
+    for i, match in enumerate(top_level_classes):
         start = match.start()
-        end = class_decls[i + 1].start() if i + 1 < len(class_decls) else len(code)
+        end = top_level_classes[i + 1].start() if i + 1 < len(top_level_classes) else len(code)
         region = code[start:end]
         if _MAIN_METHOD_RE.search(region):
             return match.group(1)
 
     # No main method found — prefer the public class
-    public_match = re.search(r'public\s+class\s+(\w+)', code)
-    if public_match:
-        return public_match.group(1)
+    for match in top_level_classes:
+        if 'public' in code[max(0, match.start() - 10):match.start() + 7]:
+            return match.group(1)
 
-    # Last resort: first class
-    return class_decls[0].group(1)
+    # Last resort: first top-level class
+    return top_level_classes[0].group(1)
 
 
 # ---------------------------------------------------------------------------

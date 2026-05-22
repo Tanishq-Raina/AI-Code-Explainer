@@ -117,7 +117,7 @@ function Sidebar({ activePage, setActivePage, onToggle }) {
           <span>AI ONLINE</span>
         </div>
         <p className="sidebar-footer-text">
-          Powered by LM Studio &amp; Java engine
+          Powered by Qwen 3 Coder &amp; Java engine
         </p>
       </div>
     </aside>

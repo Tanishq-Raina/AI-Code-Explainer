@@ -21,7 +21,6 @@ function EditorToolbar({
         >
           <option value="Java">Java</option>
         </select>
-        <span className="editor-mode">main.java</span>
       </div>
 
       <div className="editor-toolbar-right">

@@ -28,6 +28,12 @@ export const submitCode = async (payload) => {
   return response.data;
 };
 
+/** Lightweight execute-only endpoint (no DB, no LLM). Used by Study & Video Gen. */
+export const executeCode = async (payload) => {
+  const response = await API.post("/execute-code", payload);
+  return response.data;
+};
+
 export const requestHint = async (payload) => {
   const response = await API.post("/request-hint", payload);
   return unwrap(response);

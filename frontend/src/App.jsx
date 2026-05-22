@@ -59,7 +59,10 @@ function App() {
             setSelectedProblemId={setSelectedProblemId}
           />
         )}
-        {activePage === "Simulator" && <Simulation />}
+        {/* Simulator stays mounted to preserve state (code, playback, results) */}
+        <div style={{ display: activePage === "Simulator" ? "block" : "none" }}>
+          <Simulation />
+        </div>
         {activePage === "Study" && (
           <Study
             setActivePage={setActivePage}

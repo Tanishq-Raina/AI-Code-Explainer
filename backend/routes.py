@@ -221,6 +221,67 @@ def parse_ast():
     return ok(payload)
 
 
+@api_bp.route("/execute-code", methods=["POST"])
+def execute_code():
+    """
+    POST /api/execute-code
+    ----------------------
+    Lightweight code execution endpoint used by Study and Video Gen sections.
+    Only compiles and runs the Java code — no LLM hints, no database writes,
+    no analytics. Returns the raw execution result (output or error).
+
+    Request body
+    ~~~~~~~~~~~~
+    .. code-block:: json
+
+        {"code": "public class Main { ... }"}
+
+    Response
+    ~~~~~~~~
+    .. code-block:: json
+
+        {
+          "success": true,
+          "data": {
+            "execution": { "status": "Success", "output": "Hello World", ... }
+          },
+          "error": null
+        }
+    """
+    body = request.get_json(silent=True)
+
+    if not body:
+        return fail(
+            message="Request body must be valid JSON.",
+            code=ErrorCode.INVALID_INPUT,
+            http_status=HTTPStatus.BAD_REQUEST,
+        )
+
+    if not (body.get("code") or "").strip():
+        return fail(
+            message="Field 'code' is required and must not be empty.",
+            code=ErrorCode.MISSING_FIELD,
+            details={"field": "code"},
+            http_status=HTTPStatus.BAD_REQUEST,
+        )
+
+    code: str = body["code"].strip()
+
+    try:
+        result = execute_java_code(code)
+    except Exception as exc:
+        logger.exception("execute_code: execute_java_code raised unexpectedly")
+        return fail(
+            message="Internal error during code execution.",
+            code=ErrorCode.EXECUTION_FAILED,
+            details={"detail": str(exc)},
+            http_status=HTTPStatus.INTERNAL_SERVER_ERROR,
+        )
+
+    status = result.get("status", "Unknown")
+    return ok({"execution": result}, http_status=_http_status_for(status))
+
+
 @api_bp.route("/submit-code", methods=["POST"])
 def submit_code():
     """

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { submitCode } from "../../api/client";
+import { executeCode } from "../../api/client";
 
 const NON_RUNNABLE_MODULE_MESSAGE =
   "This example demonstrates module syntax and is not directly executable as a single Main.java program.";
@@ -137,10 +137,8 @@ function StudyCodeBlock({ code }) {
       setErrorMessage("");
       setErrorLine(null);
 
-      const response = await submitCode({
-        user_id: "study_user",
+      const response = await executeCode({
         code: normalizeStudyCode(code),
-        submission_type: "run",
       });
 
       const execution = unpackExecution(response);

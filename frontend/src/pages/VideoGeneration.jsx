@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
 import CodeEditor from "../components/editor/CodeEditor";
 import VideoPlayer from "../components/VideoPlayer";
-import API from "../api/client";
+import { executeCode } from "../api/client";
 
 // Render API routed through Vite proxy to avoid CORS issues
 const RENDER_API = axios.create({
@@ -107,30 +107,14 @@ function VideoGeneration() {
       setErrorMessage("");
       setRunSuccess(false);
 
-      const response = await API.post("/submit-code", {
-        user_id: "demo_user",
-        // The backend auto-detects the main class and uses it as the filename
-        code: code,
-        submission_type: "run",
-        problem_id: "video_gen_run",
-        problem_title: "Video Generation",
-        problem_topic: "general",
-        hints_used: 0,
-      });
+      const response = await executeCode({ code });
 
-      const payload = response?.data ?? {};
-      const exec =
-        payload?.data?.execution ??
-        payload?.data?.execution_result ??
-        payload?.data ??
-        payload?.execution ??
-        payload?.execution_result ??
-        {};
+      const payload = response?.data ?? response ?? {};
+      const exec = payload?.execution ?? {};
 
-      const status = exec?.status || payload?.data?.status || payload?.status || "Error";
-      const execOutput = exec?.output ?? payload?.data?.output ?? "";
-      const execError =
-        exec?.error_message ?? payload?.data?.error_message ?? exec?.stderr ?? "";
+      const status = exec?.status || payload?.status || "Error";
+      const execOutput = exec?.output ?? "";
+      const execError = exec?.error_message ?? exec?.stderr ?? "";
 
       let combinedOutput;
       if (execOutput && execError) {

@@ -71,7 +71,7 @@ function getPracticeProblem(topic) {
   return problems.find((problem) => problem.topic === practiceTopic) || null;
 }
 
-function Study({ setActivePage, setSelectedProblemId }) {
+function Study({ setActivePage }) {
   const defaultChapter = studyTopics[0]?.id ?? "ch01";
   const [activeChapterId, setActiveChapterId] = useState(() => {
     if (typeof window === "undefined") return defaultChapter;
@@ -139,8 +139,7 @@ function Study({ setActivePage, setSelectedProblemId }) {
 
   const handlePracticeClick = () => {
     if (!practiceProblem) return;
-    setSelectedProblemId(practiceProblem.id);
-    setActivePage("Practice");
+    setActivePage("Simulator");
   };
 
   const handleChapterClick = (chapterId) => {

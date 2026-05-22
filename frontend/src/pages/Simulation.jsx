@@ -10,16 +10,7 @@ import { buildSpaceComplexityTimeline, getSpaceLineExplanation } from "../simula
 import { parseCodeToStructuredAst } from "../api/client";
 import { toSimulatorProgramAst } from "../simulator/astAdapter";
 
-const DEFAULT_SOURCE = `function main() {
-  let num = 107962;
-  let revNum;
-  while (num != 0) {
-    revNum = num % 10;
-    print(revNum);
-    num = num // 10;
-  }
-  return revNum;
-}`;
+const DEFAULT_SOURCE = "";
 
 function toPlaybackStepsFromTimeline(timeline, defaultOperation = "timeline_step") {
   return (timeline?.steps || []).map((step, index) => ({
@@ -49,7 +40,7 @@ function Simulation() {
   const [code, setCode] = useState(DEFAULT_SOURCE);
   const [error, setError] = useState("");
   const [mode, setMode] = useState("time");
-  const [language, setLanguage] = useState("Java");
+  const language = "Java";
 
   const playback = useSimulationPlaybackController();
 
@@ -186,15 +177,6 @@ function Simulation() {
                 Space Complexity
               </button>
             </div>
-
-            <select
-              value={language}
-              onChange={(event) => setLanguage(event.target.value)}
-              className="rounded-md border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-200"
-            >
-              <option>Java</option>
-              <option>Python</option>
-            </select>
 
             <button
               type="button"

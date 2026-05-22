@@ -122,6 +122,7 @@ function parseIfStatement(node, language) {
   return {
     type: "IfStatement",
     lineNumber: node.line || null,
+    snippet: node.snippet || "",
     test: expressionFromSnippet(conditionNode?.snippet || "", node.line || null),
     consequent: parseBodyNode(consequentNode, language),
     alternate: parseBodyNode(alternateNode, language),
@@ -157,6 +158,7 @@ function parseForStatement(node, language) {
   return {
     type: node.type === "while_statement" ? "WhileStatement" : "ForStatement",
     lineNumber: node.line || null,
+    snippet: node.snippet || "",
     test: expressionFromSnippet(conditionNode?.snippet || "", node.line || null),
     update,
     body: parseBodyNode(bodyNode, language),
@@ -175,6 +177,7 @@ function parseVariableDeclaration(node) {
         type: "VariableDeclaration",
         name,
         lineNumber: node.line || null,
+        snippet: node.snippet || "",
         value: expressionFromSnippet(valueSnippet, node.line || null),
       },
     ];
@@ -188,6 +191,7 @@ function parseVariableDeclaration(node) {
       type: "VariableDeclaration",
       name,
       lineNumber: decl.line || node.line || null,
+      snippet: decl.snippet || node.snippet || "",
       value: expressionFromSnippet(valueSnippet, decl.line || node.line || null),
     };
   });
@@ -219,6 +223,7 @@ function parseAssignmentFromSnippet(snippet, lineNumber) {
       type: "Assignment",
       name,
       lineNumber,
+      snippet: text,
       value: expressionFromSnippet(rhs, lineNumber),
     };
   }
@@ -227,6 +232,7 @@ function parseAssignmentFromSnippet(snippet, lineNumber) {
     type: "Assignment",
     name,
     lineNumber,
+    snippet: text,
     value: expressionFromSnippet(rhs, lineNumber),
   };
 }
@@ -263,6 +269,7 @@ function parseReturnStatement(node) {
   return {
     type: "ReturnStatement",
     lineNumber: node.line || null,
+    snippet: node.snippet || "",
     argument: expressionFromSnippet(valueSnippet, node.line || null),
   };
 }
@@ -357,6 +364,7 @@ function parseFunctionNode(fnNode) {
     name,
     params: parseParams(paramsNode?.snippet || ""),
     lineNumber: fnNode.line || null,
+    snippet: fnNode.snippet || "",
     body: parseBodyNode(bodyNode, ""),
   };
 }

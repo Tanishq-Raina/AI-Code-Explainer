@@ -196,18 +196,43 @@ function createTimelineContext() {
     order: 1,
     loopOrdinalByDepth: {},
     conditionOrdinalByDepth: {},
+    eventCounts: {},
     events: [],
   };
 }
 
 function emitEvent(context, payload) {
+  const repeatKey = [payload.event, payload.lineNumber || "-", payload.title || "-", payload.snippet || "-"].join("|");
+  context.eventCounts[repeatKey] = (context.eventCounts[repeatKey] || 0) + 1;
   const event = {
     stepId: context.stepId++,
     order: context.order++,
+    occurrence: context.eventCounts[repeatKey],
     ...payload,
   };
   context.events.push(event);
   return event;
+}
+
+function countSelfCalls(node, functionName) {
+  return collectCalls(node).filter((call) => call.name === functionName).length;
+}
+
+function summarizeRecursiveFunction(bodyTerm, selfCallCount) {
+  const normalized = bodyTerm || createBaseTerm();
+
+  if (selfCallCount >= 2) {
+    if (normalized.nExp >= 2) return normalized;
+    if (normalized.nExp === 1) return multiplyTerms(normalized, createBaseTerm(0, 1, 1));
+    return createBaseTerm(1, 0, 1);
+  }
+
+  if (selfCallCount === 1) {
+    if (normalized.nExp >= 1) return normalized;
+    return createBaseTerm(0, 1, 1);
+  }
+
+  return normalized;
 }
 
 function loopVisual(depth) {
@@ -259,6 +284,43 @@ function collectCalls(node, calls = []) {
   }
 
   return calls;
+}
+
+function getSnippetText(node) {
+  return String(node?.snippet || node?.text || "").trim();
+}
+
+function describeStatementFromSnippet(statement) {
+  const snippet = getSnippetText(statement);
+  if (!snippet) {
+    return "This line performs a basic operation. If it is not repeated by a loop or recursion, its local cost is O(1).";
+  }
+
+  if (/\bfor\s*\(|\bwhile\s*\(/.test(snippet)) {
+    return "This line starts a loop, so the work inside it repeats and must be counted more than once.";
+  }
+
+  if (/\bif\s*\(/.test(snippet)) {
+    return "This line checks a condition. Only one branch runs at runtime, so we compare the possible branch costs.";
+  }
+
+  if (/\breturn\b/.test(snippet)) {
+    return "This line returns from the function. Returning once is constant time, O(1).";
+  }
+
+  if (/\b[A-Za-z_][A-Za-z0-9_$]*\s*\(.*\)/.test(snippet) && !/\bnew\b/.test(snippet)) {
+    return "This line calls another function. We follow into that function and then come back to the caller.";
+  }
+
+  if (/=\s*\{.*\}/.test(snippet) || /new\s+[A-Za-z_][A-Za-z0-9_$]*\s*\[/.test(snippet)) {
+    return "This line creates or initializes data. For a fixed-size value or array, that work is treated as constant time, O(1).";
+  }
+
+  if (/\b[A-Za-z_][A-Za-z0-9_$]*\s*=/.test(snippet)) {
+    return "This line assigns a value. A single assignment is constant time, O(1).";
+  }
+
+  return "This line runs a basic statement. On its own, it contributes constant work, O(1).";
 }
 
 function buildLoopTimeline(node, context, depth, state) {
@@ -421,11 +483,12 @@ function analyzeStatements(statements, context, depth, state) {
       const fnNode = state.functionMap.get(fnName);
 
       emitEvent(context, {
-        lineNumber: fnNode?.lineNumber || call.lineNumber || statement.lineNumber || null,
+        lineNumber: call.lineNumber || statement.lineNumber || fnNode?.lineNumber || null,
         event: "enter_function",
         depth,
         title: `Enter ${fnName}()`,
         description: `Control moves into ${fnName}().`,
+        snippet: fnName,
         visual: {
           level: depth,
           color: "cyan",
@@ -444,7 +507,8 @@ function analyzeStatements(statements, context, depth, state) {
           event: "recursive_call",
           depth,
           title: `Recursive call to ${fnName}()`,
-          description: "Recursion detected, so deep expansion is skipped in this visualization.",
+          description: `Recursion detected, so we count this self-call as part of the larger pattern for ${fnName}().`,
+          snippet: fnName,
           visual: {
             level: depth,
             color: "cyan",
@@ -464,15 +528,18 @@ function analyzeStatements(statements, context, depth, state) {
           currentFunction: fnName,
         };
         const fnTerms = analyzeStatements(fnNode.body || [], context, depth + 1, nestedState);
-        terms.push(dominantTerm(fnTerms.length ? fnTerms : [createBaseTerm()]));
+        const functionBodyTerm = dominantTerm(fnTerms.length ? fnTerms : [createBaseTerm()]);
+        const selfCallCount = countSelfCalls(fnNode.body || [], fnName);
+        terms.push(summarizeRecursiveFunction(functionBodyTerm, selfCallCount));
       }
 
       emitEvent(context, {
-        lineNumber: call.lineNumber || statement.lineNumber || null,
+        lineNumber: call.lineNumber || statement.lineNumber || fnNode?.lineNumber || null,
         event: "return_function",
         depth,
         title: `Return to ${state.currentFunction || "caller"}()`,
-        description: "Control returns to the previous function.",
+        description: `Control returns to ${state.currentFunction || "caller"}().`,
+        snippet: state.currentFunction || "caller",
         visual: {
           level: depth,
           color: "cyan",
@@ -491,7 +558,8 @@ function analyzeStatements(statements, context, depth, state) {
       event: "show_statement",
       depth,
       title: statement.type || "statement",
-      description: "Primitive operation or assignment",
+      description: describeStatementFromSnippet(statement),
+      snippet: getSnippetText(statement),
       visual: {
         level: depth,
         color: "slate",
@@ -518,7 +586,7 @@ function buildSummaryTimeline(context, finalTerm, terms) {
     title: "Total Operations",
     formula: formulaFromTerms(terms),
     result: termToAsymptotic(finalTerm),
-    description: "Combine nested and sequential contributions into a final Big-O result",
+    description: "Combine nested and sequential contributions into a final Big-O result.",
     visual: {
       level: 0,
       highlight: true,
@@ -545,7 +613,8 @@ export function buildTimeComplexityTimeline(parsedRepresentation) {
       event: "enter_function",
       depth: 1,
       title: `Start in ${entryFunctionName}()`,
-      description: "Execution starts at the entry function.",
+      description: `Execution starts in ${entryFunctionName}().`,
+      snippet: entryFunctionName,
       visual: {
         level: 1,
         color: "cyan",
@@ -582,7 +651,8 @@ export function buildTimeComplexityTimeline(parsedRepresentation) {
       event: "return_function",
       depth: 1,
       title: `Exit ${entryFunctionName}()`,
-      description: "Execution returns after finishing the entry function.",
+      description: `Execution returns after finishing ${entryFunctionName}().`,
+      snippet: entryFunctionName,
       visual: {
         level: 1,
         color: "cyan",

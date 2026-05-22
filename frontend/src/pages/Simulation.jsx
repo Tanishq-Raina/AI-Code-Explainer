@@ -270,14 +270,14 @@ function Simulation() {
 
         {isFinalTimeStep ? (
           <div className="pointer-events-none absolute inset-x-0 bottom-1/2 z-30 flex justify-center px-6">
-            <div className="max-w-[460px] rounded-[22px] border border-cyan-300/22 bg-slate-900/40 px-10 py-8 text-center text-slate-100 shadow-[0_18px_50px_rgba(15,23,42,0.24)] backdrop-blur-md">
-              <div className="text-sm font-medium uppercase tracking-[0.24em] text-cyan-100/80">
+            <div className="max-w-[520px] rounded-[26px] border border-cyan-300/30 bg-gradient-to-br from-slate-950/85 via-slate-900/70 to-slate-950/80 px-12 py-9 text-center text-slate-100 shadow-[0_22px_60px_rgba(8,47,73,0.45)] backdrop-blur-md">
+              <div className="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-100/80">
                 Overall Time Complexity
               </div>
-              <div className="mt-4 text-6xl font-semibold tracking-tight text-cyan-200">
+              <div className="mt-4 text-7xl font-semibold tracking-tight text-cyan-200 drop-shadow-[0_10px_30px_rgba(14,116,144,0.45)]">
                 {timeFinalComplexity}
               </div>
-              <div className="mt-4 text-[15px] font-normal leading-7 text-slate-100/90">
+              <div className="mt-4 text-[15px] font-medium leading-7 text-slate-100/90">
                 {describeFinalTimeComplexity(timeFinalComplexity)}
               </div>
             </div>

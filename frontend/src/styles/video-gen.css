@@ -26,6 +26,14 @@
   top: var(--space-6);
 }
 
+/* On viewports too short to hold the right column comfortably,
+   drop sticky positioning so the page can scroll naturally. */
+@media (max-height: 800px) {
+  .video-gen-right {
+    position: static;
+  }
+}
+
 /* ─── Toolbar (filename + run) ──────────────────────────────── */
 .video-gen-toolbar {
   display: flex;

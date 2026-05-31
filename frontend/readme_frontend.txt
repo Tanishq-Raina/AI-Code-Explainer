@@ -263,7 +263,13 @@ Features:
   - Sidebar navigation with Part I (Ch 1-17) and Part II (Ch 18-31)
   - Chapter progress tracking (visited chapters persisted to localStorage)
   - Section-by-section content display with prose and code examples
-  - Syntax-highlighted code blocks (StudyCodeBlock component)
+  - Inline runnable code blocks (StudyCodeBlock component) — students
+    can press Run on any example to compile and execute it directly
+    inside the chapter. The Study runner uses the lightweight
+    /api/execute-code endpoint, so example runs do NOT contribute to
+    submission history, topic stats, hint state, or the LLM hint
+    pipeline. Errors are shown inline as plain text without any AI
+    explanation.
   - Per-chapter quizzes (StudyQuiz component)
   - Previous/Next chapter navigation
   - "Practice this Topic" button linking to relevant problems
@@ -281,7 +287,11 @@ videos rendered by an external Manim-based rendering service.
 
 Features:
   - Code editor with filename tab (syncs class name with filename)
-  - Run button to verify code compiles and executes successfully
+  - Run button to verify code compiles and executes successfully.
+    The Run path here uses the lightweight /api/execute-code endpoint,
+    so video-gen runs do NOT add submission entries to the database
+    and never go through the LLM hint pipeline — errors are surfaced
+    in the output panel as plain compiler/runtime text.
   - Quality selector: Low (480p), Medium (720p), High (1080p), Production (1440p)
   - Generate button (enabled only after successful run)
   - Progress tracking with stage display and percentage bar
@@ -289,7 +299,8 @@ Features:
   - Error handling for generation failures
 
 Architecture:
-  - Code execution: POST /api/submit-code (Flask backend)
+  - Code execution: POST /api/execute-code (Flask backend; lightweight,
+    no DB or LLM — runs only)
   - Video rendering: POST /render-api/render (external Manim service, port 4000)
   - Job polling: GET /render-api/jobs/<id> (1.5s interval)
   - Video playback: Direct URL to rendered video file
@@ -389,8 +400,14 @@ FloatingExplanationPanel.jsx
 ----------------------------------------------
 
 StudyCodeBlock.jsx
-  - Syntax-highlighted Java code display for study sections
-  - Read-only presentation format
+  - Syntax-highlighted Java code display for study sections, with an
+    inline Run button that compiles and executes the snippet via the
+    lightweight POST /api/execute-code endpoint
+  - Normalises common non-runnable forms (module declarations, package
+    declarations, snippets without a main method) into a Main class
+    wrapper before sending so most book-style examples are runnable
+  - Renders Output / Error inline beneath the snippet; no LLM hints,
+    no submission record, no analytics impact
 
 StudyQuiz.jsx
   - Interactive quiz component for chapter comprehension testing
@@ -535,6 +552,8 @@ Centralised axios instance configured for the Flask backend:
 
 Exported Functions:
   - submitCode(payload)              : POST /api/submit-code
+  - executeCode(payload)             : POST /api/execute-code
+                                        (lightweight: Study & Video Gen)
   - requestHint(payload)             : POST /api/request-hint
   - parseCodeToStructuredAst(payload): POST /api/parse-ast
   - getLearningSummary(userId)       : GET /api/learning-summary/<userId>

@@ -66,9 +66,9 @@ Key design principles:
                                     v
   +------------------------------------------------------------------+
   |                     routes.py (API Blueprint)                     |
-  |  - /api/health, /api/submit-code, /api/request-hint              |
-  |  - /api/learning-summary/<user>, /api/parse-ast                  |
-  |  - /api/study/topic/<chapter_id>, /api/feedback                  |
+  |  - /api/health, /api/submit-code, /api/execute-code              |
+  |  - /api/request-hint, /api/learning-summary/<user>               |
+  |  - /api/parse-ast, /api/study/topic/<chapter_id>, /api/feedback  |
   +------------------------------------------------------------------+
          |              |              |              |
          v              v              v              v
@@ -140,6 +140,7 @@ Purpose: Flask Blueprint containing all HTTP endpoint definitions.
 Endpoints Implemented:
   - GET  /api/health                  : Liveness probe
   - POST /api/submit-code             : Code submission, execution, and hints
+  - POST /api/execute-code            : Lightweight execute-only (no DB, no LLM)
   - POST /api/request-hint            : Explicit hint escalation
   - GET  /api/learning-summary/<user> : Learning analytics summary
   - POST /api/parse-ast               : AST parsing for simulation engine
@@ -166,7 +167,7 @@ Architecture (4 layers):
   Layer 4: _parse_*()          — regex helpers for error extraction
 
 Security Measures:
-  - Each submission gets a UUID-named temporary directory
+  - Each submission gets a UUID(Universally unique identifier)-named temporary directory
   - Classpath restricted to sandbox directory only
   - Working directory set to sandbox (no access to system files)
   - Hard 5-second wall-clock timeout on execution
@@ -591,7 +592,52 @@ Output Mismatch Detection:
   - Generates logic-focused hints via synthetic "WrongOutput" context
   - Does NOT alter the execution block (frontend shows actual output)
 
-4.3 POST /api/request-hint
+4.3 POST /api/execute-code
+----------------------------
+Purpose: Lightweight execute-only endpoint used by the Study and Video
+Generation pages. Compiles and runs Java code in the same sandbox as
+/api/submit-code, but bypasses the hint pipeline, hint-state tracking,
+topic analytics, encouragement engine, and database persistence
+entirely. The endpoint returns the raw execution result so the page
+can display either output or error to the student without polluting
+their progress metrics.
+
+Request Body:
+  {
+    "code": string (required, Java source)
+  }
+
+Response Data (success):
+  {
+    "execution": {
+      "status":        "Success",
+      "output":        "Hello, World!",
+      "error_message": "",
+      "exception_type": null,
+      "line_number":   null
+    }
+  }
+
+Response Data (error):
+  {
+    "execution": {
+      "status":         "RuntimeError",
+      "output":         "",
+      "error_message":  "java.lang.ArithmeticException: / by zero ...",
+      "exception_type": "ArithmeticException",
+      "line_number":    7
+    }
+  }
+
+What this route does NOT do:
+  - No hint generation (no LLM call on errors)
+  - No write to the submissions collection
+  - No topic_stats update
+  - No hint_state read or write
+  - No encouragement message
+  - No user_id required (the route is intentionally anonymous)
+
+4.4 POST /api/request-hint
 ----------------------------
 Purpose: Explicitly advance the hint escalation level for a (user, code,
 error) combination and return the hint at the new level.
@@ -612,7 +658,7 @@ Response Data:
     "hint":       { "problem_summary": "...", "hint_1": "...", "hint_2": "..." }
   }
 
-4.4 GET /api/learning-summary/<user_id>
+4.5 GET /api/learning-summary/<user_id>
 -----------------------------------------
 Purpose: Return a comprehensive structured summary of the user's learning
 state across all topics.
@@ -635,7 +681,7 @@ Response Data:
     "insight":                       {"headline": "...", "detail": "...", ...}
   }
 
-4.5 POST /api/parse-ast
+4.6 POST /api/parse-ast
 -------------------------
 Purpose: Parse Java or Python source code and return a structured AST
 payload with extracted loops, conditions, functions, and variables for
@@ -647,7 +693,7 @@ Request Body:
     "code":     string (required)
   }
 
-4.6 GET /api/study/topic/<chapter_id>
+4.7 GET /api/study/topic/<chapter_id>
 --------------------------------------
 Purpose: Retrieve structured study content for a specific chapter.
 Serves curated static content for chapters 4-31, or LLM-generated
@@ -655,7 +701,7 @@ content (with MongoDB caching) for chapters 1-3.
 
 Optional Query Parameter: ?section=<heading> (filter to single section)
 
-4.7 POST /api/feedback
+4.8 POST /api/feedback
 ------------------------
 Purpose: Record user feedback on the helpfulness of a previous
 submission's LLM-generated hint. Used for hallucination analytics.

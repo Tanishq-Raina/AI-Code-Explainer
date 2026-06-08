@@ -35,6 +35,7 @@ from typing import Optional
 from flask import Blueprint, request
 
 from ast_parser import parse_code_to_structured_ast
+from confidence_scorer import score_hint_response
 from database import get_study_content, log_llm_feedback, save_study_content
 from encouragement_engine import generate_encouragement
 from fallback_engine import process_with_fallback
@@ -403,6 +404,8 @@ def submit_code():
     # ------------------------------------------------------------------
     hints: Optional[dict] = None
     hallucination_flag = False
+    hint_tier: Optional[str] = None
+    raw_hints: dict = {}
 
     if not resolved:
         hint_execution_result = result
@@ -439,6 +442,10 @@ def submit_code():
                 llm_output=raw_hints,
                 question_context=question_context,
             )
+
+            # Pop the private tier marker so the public response stays clean.
+            # We keep it locally to feed the confidence scorer.
+            hint_tier = hints.pop("_tier", None) if isinstance(hints, dict) else None
         except Exception as exc:  # noqa: BLE001
             logger.error("hint generation raised unexpectedly: %s", exc)
             hallucination_flag = True
@@ -448,6 +455,19 @@ def submit_code():
                 "hint_1": "Carefully read the error message and identify the problematic line.",
                 "learning_tip": "Focus on understanding the concept behind the error.",
             }
+            hint_tier = None  # crashed — scorer will treat this as 0.0
+
+    # Compute the system's self-assessed confidence in the hint response.
+    # None for clean-success submissions (no hint to score), else a clamped
+    # float in [0.0, 1.0].
+    confidence_score = score_hint_response(
+        hints=hints,
+        raw_llm_output=raw_hints if raw_hints else None,
+        execution_result=hint_execution_result if not resolved else result,
+        tier=hint_tier,
+        hallucination_flag=hallucination_flag,
+        question_context=question_context,
+    )
 
     # ------------------------------------------------------------------
     # 4. Topic detection
@@ -504,7 +524,7 @@ def submit_code():
             resolved=resolved,
             llm_response=llm_response_text,
             hallucination_flag=hallucination_flag,
-            confidence_score=None,
+            confidence_score=confidence_score,
             user_feedback="not_given",
             submission_type=submission_type,
             problem_id=problem_id,

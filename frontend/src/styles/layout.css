@@ -2128,6 +2128,71 @@
   background: rgba(168, 85, 247, 0.22);
 }
 
+/* ─── Hint feedback (was this hint helpful?) ─────────────── */
+.hint-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-2);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.hint-feedback__label {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.hint-feedback__buttons {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.hint-feedback__btn {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-elevated-2);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: color 150ms var(--ease-out),
+              background 150ms var(--ease-out),
+              border-color 150ms var(--ease-out),
+              transform 150ms var(--ease-out);
+}
+
+.hint-feedback__btn:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.hint-feedback__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hint-feedback__btn.is-active {
+  border-color: transparent;
+}
+
+.hint-feedback__btn--up {
+  background: rgba(34, 197, 94, 0.18);
+  color: #22c55e;
+}
+
+.hint-feedback__btn--down {
+  background: rgba(239, 68, 68, 0.18);
+  color: #ef4444;
+}
+
 /* ─── Progress page ─────────────────────────────────────────── */
 .progress-grid {
   display: grid;

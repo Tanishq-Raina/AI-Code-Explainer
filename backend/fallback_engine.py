@@ -154,6 +154,14 @@ def match_error_template(error_message: str) -> dict | None:
     return None
 
 
+# Tier labels — exposed as constants so the confidence scorer (and any
+# future analytics module) can key on them without redefining magic strings.
+TIER_INITIAL_LLM = "initial_llm"   # Initial LLM response passed validation.
+TIER_STRICT_RETRY = "strict_retry" # Retry with stricter prompt passed validation.
+TIER_TEMPLATE = "template"         # Known error pattern matched a curated template.
+TIER_GENERIC = "generic"           # Generic safe fallback was used as last resort.
+
+
 def process_with_fallback(
     code: str,
     execution_result: dict,
@@ -163,11 +171,18 @@ def process_with_fallback(
 ) -> dict:
     """
     Process LLM output through strict fallback pipeline and return safe response.
+
+    The returned dict has a private ``_tier`` key indicating which fallback
+    tier produced the response. Callers (e.g. routes.py + confidence_scorer)
+    use this signal to score response quality. The key is removed before the
+    response leaves the route layer so the public API shape is unchanged.
     """
     # 1) Validate the externally-generated LLM response.
     validated = validate_and_filter_response(llm_output, execution_result)
     if validated:
-        return _shape_response(validated, hint_level)
+        shaped = _shape_response(validated, hint_level)
+        shaped["_tier"] = TIER_INITIAL_LLM
+        return shaped
 
     # 2) Retry with strict prompt, then validate again.
     retry_output = retry_llm_with_strict_prompt(
@@ -177,15 +192,19 @@ def process_with_fallback(
     )
     validated_retry = validate_and_filter_response(retry_output, execution_result) if retry_output else None
     if validated_retry:
-        return _shape_response(validated_retry, hint_level)
+        shaped = _shape_response(validated_retry, hint_level)
+        shaped["_tier"] = TIER_STRICT_RETRY
+        return shaped
 
     # 3) Template-based fallback using known Java error patterns.
     template = match_error_template(execution_result.get("error_message") or "")
     if template:
-        return _shape_response(template, hint_level)
+        shaped = _shape_response(template, hint_level)
+        shaped["_tier"] = TIER_TEMPLATE
+        return shaped
 
     # 4) Generic safe fallback as a final guardrail.
-    return _shape_response(
+    shaped = _shape_response(
         {
             "problem_summary": "There is an issue in your code.",
             "why": str(execution_result.get("error_message") or "Unknown error."),
@@ -194,3 +213,5 @@ def process_with_fallback(
         },
         hint_level,
     )
+    shaped["_tier"] = TIER_GENERIC
+    return shaped

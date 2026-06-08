@@ -63,6 +63,7 @@ function unpackResponse(res) {
     errorMessage: execError,
     errorLine: exec?.line_number ?? null,
     hints: payload?.hints ?? null,
+    submissionId: payload?.submission_id ?? null,
   };
 }
 
@@ -75,6 +76,7 @@ function Practice({ attempts, setAttempts, selectedProblemId }) {
   const [status, setStatus] = useState("Idle");
   const [output, setOutput] = useState("");
   const [hints, setHints] = useState(null);
+  const [submissionId, setSubmissionId] = useState(null);
   const [errorLine, setErrorLine] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [showHintModal, setShowHintModal] = useState(false);
@@ -105,6 +107,7 @@ function Practice({ attempts, setAttempts, selectedProblemId }) {
     setStatus("Idle");
     setOutput("");
     setHints(null);
+    setSubmissionId(null);
     setErrorLine(null);
     setErrorMessage("");
     setShowHintModal(false);
@@ -194,6 +197,7 @@ function Practice({ attempts, setAttempts, selectedProblemId }) {
   const resetFeedback = () => {
     setOutput("");
     setHints(null);
+    setSubmissionId(null);
     setErrorLine(null);
     setErrorMessage("");
     setVerdict(null);
@@ -221,6 +225,7 @@ function Practice({ attempts, setAttempts, selectedProblemId }) {
       setStatus(unpacked.status);
       setOutput(unpacked.combinedOutput);
       setHints(unpacked.hints);
+      setSubmissionId(unpacked.submissionId);
       setErrorLine(unpacked.errorLine);
       setErrorMessage(unpacked.errorMessage);
 
@@ -284,6 +289,7 @@ function Practice({ attempts, setAttempts, selectedProblemId }) {
       setStatus(unpacked.status);
       setOutput(unpacked.combinedOutput);
       setHints(unpacked.hints);
+      setSubmissionId(unpacked.submissionId);
       setErrorLine(unpacked.errorLine);
       setErrorMessage(unpacked.errorMessage);
 
@@ -453,6 +459,7 @@ function Practice({ attempts, setAttempts, selectedProblemId }) {
             <HintPanel
               hints={hints}
               status={status}
+              submissionId={submissionId}
               onClose={() => setShowHintModal(false)}
               onHintLevelChange={handleHintLevelChange}
             />

@@ -196,6 +196,9 @@ Features:
   - Output panel with execution results
   - Hint modal with progressive revelation (Level 1 -> 2 -> 3)
   - Hint usage tracking (feeds hint-weighted success rate)
+  - "Was this hint helpful?" thumbs-up/thumbs-down rating attached to
+    every hint modal — submits to POST /api/feedback so the backend
+    can persist `user_feedback` on the originating submission
 
 Output Validation:
   When submitting, the frontend compares actual output against expected
@@ -206,6 +209,16 @@ Hint Escalation:
   The HintPanel component tracks the highest hint level revealed per
   session. This value is sent to the backend on submit so the
   hint-weighted success rate properly discounts heavily-hinted wins.
+
+Hint Feedback Capture:
+  When the backend returns a submission, Practice.jsx extracts the
+  `submission_id` from the response and threads it into HintPanel.
+  HintPanel renders a thumbs-up / thumbs-down control beneath the
+  hint body. Clicking either button calls submitFeedback() against
+  POST /api/feedback with the rating ("correct" / "incorrect"); a
+  second click on the same button toggles back to "not_given".
+  Updates are optimistic and roll back automatically if the backend
+  request fails.
 
 4.3 Progress (Progress.jsx)
 ------------------------------
@@ -350,6 +363,10 @@ HintPanel.jsx
   - Level badge showing current/max (e.g., "Level 2 / 3")
   - Escape key to close
   - Notifies parent of highest hint level revealed
+  - Inline thumbs-up / thumbs-down rating for the whole hint modal,
+    wired to POST /api/feedback. Local state mirrors the backend
+    `user_feedback` enum ("correct" | "incorrect" | "not_given").
+    Optimistic UI updates with rollback on request failure.
 
 OutputPanel.jsx
   - Displays execution output (stdout + stderr)
@@ -640,6 +657,12 @@ tailwind.css
 video-gen.css / video-player.css
   - Video Generation page specific styles
 
+Inline component styles (in layout.css):
+  - .hint-feedback / .hint-feedback__btn — the thumbs-up / thumbs-down
+    block that appears at the bottom of the hint modal. Active states
+    fill the icon and tint the button (green for helpful, red for
+    not helpful) so the saved rating is visible at a glance.
+
 8.3 Responsive Design
 -----------------------
   - Sidebar collapses on narrow viewports
@@ -806,6 +829,11 @@ Each chapter contains 5-8 sections with:
   - Visual level indicator (Level 1/3, Level 2/3, Level 3/3)
   - "Need more help?" button for explicit escalation
   - Hint usage tracked and penalised in success rate calculation
+  - Inline "Was this hint helpful?" thumbs-up / thumbs-down rating
+    saved against the submission via POST /api/feedback. The rating
+    is one signal per submission (matches the existing user_feedback
+    schema), and clicking the same button again clears the rating
+    back to "not_given".
 
 13.2 Verdict System
   - Immediate feedback after Submit: Accepted / Wrong Output / Error

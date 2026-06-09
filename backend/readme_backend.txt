@@ -94,6 +94,10 @@ Key design principles:
   |  ast_parser    |  | study_prompts  |  |   response.py    |
   |     .py        |  |     .py        |  |                  |
   +----------------+  +----------------+  +------------------+
+  +-------------------+
+  | confidence_scorer |
+  |       .py         |
+  +-------------------+
 
 2.3 Request Processing Pipeline
 --------------------------------
@@ -103,11 +107,12 @@ For the primary /api/submit-code endpoint, the processing pipeline is:
   1. VALIDATE   : Parse JSON body, check required fields (user_id, code)
   2. EXECUTE    : Compile and run Java code in isolated sandbox
   3. HINT       : Generate progressive hints via LLM + fallback pipeline
-  4. DETECT     : Identify learning topic from error patterns
-  5. ESCALATE   : Manage hint level state (read/write to hint_state)
-  6. PERSIST    : Save submission record + update topic statistics
-  7. ENCOURAGE  : Generate motivational message based on learning trend
-  8. RESPOND    : Return unified JSON envelope to frontend
+  4. SCORE      : Compute confidence_score from fallback tier + signals
+  5. DETECT     : Identify learning topic from error patterns
+  6. ESCALATE   : Manage hint level state (read/write to hint_state)
+  7. PERSIST    : Save submission record + update topic statistics
+  8. ENCOURAGE  : Generate motivational message based on learning trend
+  9. RESPOND    : Return unified JSON envelope to frontend
 
 
 ================================================================================
@@ -301,7 +306,74 @@ Response Shaping:
   - Applies hint-level filtering (1=gentlest, 2=moderate, 3=direct)
   - Enforces string types and whitespace normalization
 
-3.7 hint_manager.py — Progressive Hint Escalation System
+Tier Tagging:
+  Each shaped response carries a private "_tier" key indicating which
+  fallback level produced it (initial_llm / strict_retry / template /
+  generic). The route layer reads this key to feed the confidence
+  scorer and then strips it before the response leaves the backend, so
+  the public API shape is unchanged. Tier constants are exported so
+  any future analytics module can consume them without redefining
+  magic strings.
+
+3.7 confidence_scorer.py — Self-Assessed Hint Quality Scorer
+--------------------------------------------------------------
+Purpose: Compute a continuous-valued ``confidence_score`` in the range
+[0.0, 1.0] for every hint payload produced by the fallback pipeline.
+This is the system's *automated* trust signal, complementing the
+*human* trust signal stored in ``user_feedback``.
+
+Scoring Model (executed in order):
+  Step 1 — TIER BASE SCORE
+    Pick a base score keyed on the fallback tier produced by
+    fallback_engine.process_with_fallback():
+      initial_llm   -> 0.90 (model followed instructions cleanly)
+      strict_retry  -> 0.70 (needed a stricter prompt to comply)
+      template      -> 0.60 (deterministic, no code-level context)
+      generic       -> 0.20 (system knows almost nothing)
+
+  Step 2 — ADDITIVE MODIFIERS
+    Apply small, independent adjustments based on per-response signals:
+      Error context match     +0.05  (response cites exception or line)
+      Error context miss      -0.05  (response is vague about the error)
+      Optional hints in raw   +0.03 each, capped at +0.05
+      Hint length out of bounds  -0.05  (any hint <20 or >300 chars)
+      Required field empty    -0.05 each (problem_summary/why/hint_1/tip)
+      Question context given  +0.05 (richer LLM grounding)
+
+  Step 3 — HALLUCINATION CAP
+    If hallucination_flag is True, cap the final score at 0.30
+    regardless of tier or modifiers. The system already detected
+    something wrong; modifiers cannot mask that.
+
+  Step 4 — CLAMP
+    Clamp the result to [0.0, 1.0] (database.insert_submission
+    also clamps defensively).
+
+Special Cases:
+  - hints == None        -> return None (clean Success runs aren't scored)
+  - tier missing/unknown -> return 0.0 (pipeline crashed before fallback)
+  - hallucination flagged-> capped at HALLUCINATION_CAP = 0.30
+
+Public API:
+  score_hint_response(
+    hints, raw_llm_output, execution_result, tier,
+    hallucination_flag, question_context
+  ) -> Optional[float]
+
+Architecture Rules:
+  - Pure function: no Flask, no database, no LLM imports
+  - All weights and thresholds are tunable constants at the top of
+    the module (TIER_BASE_SCORES, HALLUCINATION_CAP, MOD_*)
+  - Importable from routes.py and from any future evaluation script
+
+Calibration Strategy:
+  Once user_feedback ratings populate the database, plot
+  confidence_score (x-axis) against the proportion of
+  user_feedback == "correct" (y-axis). A well-calibrated scorer
+  produces a roughly diagonal line; deviations indicate which
+  tier base scores or modifier weights need tuning.
+
+3.8 hint_manager.py — Progressive Hint Escalation System
 ----------------------------------------------------------
 Purpose: Track and control the progressive revelation of hints for each
 student's submission, managing escalation state across multiple requests.
@@ -333,7 +405,7 @@ Fault Tolerance:
   returns level 1 as a safe default — a database issue must never prevent
   the student from receiving a hint.
 
-3.8 submission_service.py — Submission Persistence and Topic Analytics
+3.9 submission_service.py — Submission Persistence and Topic Analytics
 -----------------------------------------------------------------------
 Purpose: High-level service that records rich submission events and
 maintains per-user, per-topic learning statistics in MongoDB.
@@ -369,7 +441,7 @@ Topic Status Classification:
     WEAK      : total_errors >= 5 AND successful_attempts < 3
     Default   : keep existing status
 
-3.9 topic_analyzer.py — Learning Analytics Engine
+3.10 topic_analyzer.py — Learning Analytics Engine
 ---------------------------------------------------
 Purpose: Analyse per-user topic statistics and produce comprehensive
 learning summaries for the Dashboard and Progress pages.
@@ -400,7 +472,7 @@ Codexa Insight Engine:
     3. Positive reinforcement (high success rate)
     4. Neutral onboarding message (insufficient data)
 
-3.10 encouragement_engine.py — Motivational Message Generator
+3.11 encouragement_engine.py — Motivational Message Generator
 ---------------------------------------------------------------
 Purpose: Generate personalised motivational messages based on a student's
 hint-usage patterns across topics, encouraging continued engagement.
@@ -427,7 +499,7 @@ Message Templates:
   - Strong: "You've mastered {topic}! Solving with minimal hints..."
   - Weak: "Keep going with {topic} — every attempt teaches you something..."
 
-3.11 ast_parser.py — Language-Aware AST Parsing
+3.12 ast_parser.py — Language-Aware AST Parsing
 -------------------------------------------------
 Purpose: Parse Java and Python source code into a normalized, structured
 AST representation for the frontend's code simulation and complexity
@@ -465,7 +537,7 @@ Design Rationale:
   The output is intentionally language-agnostic so the frontend simulation
   engine can consume one consistent shape regardless of source language.
 
-3.12 database.py — MongoDB Persistence Layer
+3.13 database.py — MongoDB Persistence Layer
 ----------------------------------------------
 Purpose: Centralised MongoDB connection management and collection accessors
 for all backend modules.
@@ -498,7 +570,7 @@ Aggregation Pipelines:
   - Error counts by type (for error breakdown chart)
   - Submissions grouped by topic (for encouragement engine)
 
-3.13 response.py — Unified JSON Response Envelope
+3.14 response.py — Unified JSON Response Envelope
 ---------------------------------------------------
 Purpose: Centralised response builder ensuring every HTTP response from
 the API uses an identical JSON structure.
@@ -524,7 +596,7 @@ Error Codes (machine-readable, stable for client switching):
   - METHOD_NOT_ALLOWED : HTTP method not supported on endpoint
   - TIMEOUT            : Execution time exceeded limit
 
-3.14 study_prompts.py and study_curated_content.py — Study Material
+3.15 study_prompts.py and study_curated_content.py — Study Material
 --------------------------------------------------------------------
 Purpose: Define chapter structures, LLM prompts, and curated fallback
 content for the platform's "Learn" module (31 chapters covering Java
@@ -736,8 +808,12 @@ Schema:
     "wrong_output":       boolean (true if output mismatch),
     "llm_response":       string (JSON of hints shown to student),
     "hallucination_flag": boolean (true if LLM output failed validation),
-    "confidence_score":   float [0,1] or null,
-    "user_feedback":      "correct" | "incorrect" | "not_given",
+    "confidence_score":   float [0,1] or null (system's automated trust
+                          score, computed by confidence_scorer.py from
+                          the fallback tier + per-response signals),
+    "user_feedback":      "correct" | "incorrect" | "not_given"
+                          (set by frontend HintPanel thumbs up/down via
+                          POST /api/feedback),
     "submission_type":    "run" | "submit",
     "problem_id":         int or null,
     "problem_title":      string or null,
@@ -881,9 +957,21 @@ The system implements a multi-layered safety approach:
     4-step cascade ensuring a safe response is always delivered:
     Validate -> Retry with strict prompt -> Template match -> Generic safe
 
-  Layer 4 - User Feedback Loop:
-    Students can mark hints as "correct" or "incorrect", feeding back
-    into hallucination analytics for system improvement.
+  Layer 4 - Confidence Scoring:
+    Every shaped hint response is also scored by confidence_scorer.py.
+    The score combines the fallback tier base value (0.90 for clean
+    LLM, 0.20 for generic fallback) with per-response signals (length
+    sanity, error context match, optional hints present, question
+    context grounding) and is capped at 0.30 when the hallucination
+    guard fires. The result is stored on the submission as
+    `confidence_score` and pairs with `user_feedback` for calibration
+    analytics.
+
+  Layer 5 - User Feedback Loop:
+    Students can mark hints as "correct" or "incorrect" via the
+    HintPanel thumbs-up / thumbs-down control, feeding back into
+    hallucination analytics for system improvement and confidence
+    score calibration.
 
 ================================================================================
 7. LEARNING ANALYTICS AND ADAPTIVE FEATURES
@@ -1094,7 +1182,8 @@ routes.py                   | ~500  | All API endpoint handlers
 java_engine.py              | ~280  | Secure Java compilation and execution
 llm.py                      | ~350  | LLM communication and prompt engineering
 hallucination_guard.py      | ~75   | LLM output validation and filtering
-fallback_engine.py          | ~160  | 4-step fallback pipeline orchestration
+fallback_engine.py         | ~170  | 4-step fallback pipeline + tier tagging
+confidence_scorer.py       | ~210  | Self-assessed hint confidence scoring
 hint_manager.py             | ~220  | Progressive hint escalation state
 submission_service.py       | ~200  | Submission persistence + topic stats
 topic_analyzer.py           | ~350  | Learning analytics and insight engine
@@ -1105,7 +1194,7 @@ response.py                 | ~80   | Unified JSON response envelope
 study_prompts.py            | ~960  | Chapter definitions and fallback content
 study_curated_content.py    | ~2800 | Curated study material (chapters 4-31)
 
-Total backend codebase: approximately 6,900 lines of Python
+Total backend codebase: approximately 7,100 lines of Python
 
 ================================================================================
 13. CONCLUSION
@@ -1119,6 +1208,10 @@ robust, multi-layered architecture that combines:
   (3) Progressive pedagogical scaffolding through hint escalation
   (4) Comprehensive learning analytics with adaptive feedback
   (5) Deterministic fallback mechanisms guaranteeing system reliability
+  (6) Dual-trust quality model: an automated `confidence_score` based on
+      fallback tier and response signals, paired with a human-verified
+      `user_feedback` rating from the frontend HintPanel — together
+      enabling calibration analytics over the LLM hint pipeline
 
 The system prioritises student learning over convenience — it never provides
 direct solutions, instead guiding students through progressive hints that

@@ -3,6 +3,13 @@ function buildVisualElements(item) {
     return item.value.map((value, index) => ({ label: String(value), key: `${item.id || item.name}-${index}` }));
   }
 
+  if (item?.dimensions && item.dimensions.length > 0) {
+    return item.dimensions.map((dimension, index) => ({
+      label: String(dimension || "[ ]"),
+      key: `${item.id || item.name}-dim-${index}`,
+    }));
+  }
+
   if (item?.shape === "2d-array") {
     return [
       { label: "[ ]", key: `${item.name}-0` },
@@ -27,15 +34,19 @@ function buildVisualElements(item) {
 function getUsageText(heap = [], complexityContribution = "1") {
   const hasTwoD = heap.some((item) => item?.shape === "2d-array" || item?.size === "n^2");
   const hasArray = heap.some(
-    (item) => item?.shape === "array" || item?.size === "n" || Array.isArray(item?.value),
+    (item) => item?.shape === "array" || item?.size === "n" || item?.sizeExpression || Array.isArray(item?.value),
   );
 
   if (hasTwoD || complexityContribution === "n^2") return "Uses space proportional to n^2";
-  if (hasArray || complexityContribution === "n") return "Uses space proportional to n";
+  if (hasArray || complexityContribution === "n") {
+    const customTerm = heap.find((item) => item?.sizeExpression || item?.size)?.sizeExpression || heap.find((item) => item?.sizeExpression || item?.size)?.size;
+    return customTerm && customTerm !== "n" ? `Uses space proportional to ${customTerm}` : "Uses space proportional to n";
+  }
   return "Uses constant extra space";
 }
 
 function getArrayLabel(item) {
+  if (item?.sizeExpression) return `Array of size ${item.sizeExpression}`;
   if (item?.shape === "2d-array" || item?.size === "n^2") return "Array of size n^2";
   if (item?.shape === "array" || item?.size === "n") return "Array of size n";
   if (Array.isArray(item?.value)) return `Array of size ${item.value.length}`;
@@ -70,6 +81,18 @@ function HeapPanel({ heap, complexityContribution, activeEvent, contributionItem
               >
                 <div className="font-medium text-cyan-100">{item.name || item.id || "memory item"}</div>
                 <div className="text-xs text-slate-400">{getArrayLabel(item)}</div>
+                {buildVisualElements(item).length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {buildVisualElements(item).slice(0, 4).map((element) => (
+                      <span
+                        key={element.key}
+                        className="inline-flex min-w-7 items-center justify-center rounded-md border border-cyan-300/30 bg-slate-950/80 px-2 py-1 text-[10px] text-cyan-100"
+                      >
+                        {element.label}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>

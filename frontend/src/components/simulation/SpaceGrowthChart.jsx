@@ -10,16 +10,34 @@ import {
 } from "recharts";
 
 function evaluateSpace(complexityType, n) {
-  if (complexityType === "n") return n;
-  if (complexityType === "n^2") return n * n;
-  if (complexityType === "log n") return Math.max(1, Number(Math.log2(n).toFixed(2)));
+  const normalized = String(complexityType || "1").trim();
+  if (normalized === "n") return n;
+  if (normalized === "n^2") return n * n;
+  if (normalized === "log n") return Math.max(1, Number(Math.log2(n).toFixed(2)));
+  if (normalized === "stack") return n;
+  if (normalized && normalized !== "1") {
+    const powerMatch = normalized.match(/\^(\d+)$/);
+    if (powerMatch) return n ** Number(powerMatch[1]);
+    if (normalized.includes("*")) {
+      const factorCount = normalized.split(/\s*\*\s*/).filter((factor) => factor && factor !== "1").length;
+      return n ** Math.max(1, factorCount);
+    }
+    return n;
+  }
   return 1;
 }
 
 function formatLabel(complexityType) {
-  if (complexityType === "n") return "Linear growth O(n)";
-  if (complexityType === "n^2") return "Quadratic growth O(n^2)";
-  if (complexityType === "log n") return "Log growth O(log n)";
+  const normalized = String(complexityType || "1").trim();
+  if (normalized === "n") return "Linear growth O(n)";
+  if (normalized === "n^2") return "Quadratic growth O(n^2)";
+  if (normalized === "log n") return "Log growth O(log n)";
+  if (normalized === "stack") return "Stack growth O(n)";
+  if (normalized && normalized !== "1") {
+    return normalized.includes("*")
+      ? `Product growth O(${normalized})`
+      : `Input-sized growth O(${normalized})`;
+  }
   return "Constant growth O(1)";
 }
 

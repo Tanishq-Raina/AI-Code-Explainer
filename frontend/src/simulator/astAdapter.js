@@ -53,6 +53,37 @@ function expressionFromSnippet(snippet, lineNumber) {
   const text = String(snippet || "").trim();
   if (!text) return null;
 
+  const arrayCreationMatch = text.match(/^new\s+([A-Za-z_][A-Za-z0-9_$.<>]*)\s*((?:\s*\[[^\]]*\])+)\s*;?$/);
+  if (arrayCreationMatch) {
+    const typeName = cleanName(arrayCreationMatch[1] || "");
+    const dimensionsSource = arrayCreationMatch[2] || "";
+    const dimensions = Array.from(dimensionsSource.matchAll(/\[([^\]]*)\]/g))
+      .map((match) => match[1].trim())
+      .filter(Boolean)
+      .map((dimensionText) => expressionFromSnippet(dimensionText, lineNumber) || {
+        type: "RawExpression",
+        snippet: dimensionText,
+      });
+
+    return {
+      type: "ArrayCreationExpression",
+      elementType: typeName || null,
+      dimensions,
+      snippet: text,
+      lineNumber,
+    };
+  }
+
+  const lengthMatch = text.match(/^([A-Za-z_][A-Za-z0-9_$]*)\.(length|size)$/);
+  if (lengthMatch) {
+    return {
+      type: "MemberExpression",
+      object: { type: "Identifier", name: lengthMatch[1] },
+      property: { type: "Identifier", name: lengthMatch[2] },
+      snippet: text,
+    };
+  }
+
   const calls = extractCallExpressions(text, lineNumber);
   if (calls.length === 1) return calls[0];
   if (calls.length > 1) {
@@ -187,12 +218,17 @@ function parseVariableDeclaration(node) {
     const match = String(decl.snippet || "").match(/^\s*([A-Za-z_][A-Za-z0-9_$]*)\s*(?:=\s*(.+))?$/);
     const name = cleanName(match?.[1] || "");
     const valueSnippet = match?.[2] || "";
+    const declaredValue = Array.isArray(decl.children)
+      ? decl.children.find((child) => child.type === "array_creation_expression" || child.type === "object_creation_expression")
+      : null;
     return {
       type: "VariableDeclaration",
       name,
       lineNumber: decl.line || node.line || null,
       snippet: decl.snippet || node.snippet || "",
-      value: expressionFromSnippet(valueSnippet, decl.line || node.line || null),
+      value: declaredValue
+        ? expressionFromSnippet(declaredValue.snippet || valueSnippet, declaredValue.line || decl.line || node.line || null)
+        : expressionFromSnippet(valueSnippet, decl.line || node.line || null),
     };
   });
 }

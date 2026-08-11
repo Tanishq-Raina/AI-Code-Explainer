@@ -1,0 +1,227 @@
+{
+  "evaluation_date": "2026-05-18T16:09:22.569755",
+  "total_samples": 30,
+  "overall_accuracy": 0.9667,
+  "correct_count": 29,
+  "category_results": {
+    "O(1)": 1.0,
+    "O(n)": 1.0,
+    "O(n^2)": 1.0,
+    "O(n^3)": 1.0,
+    "O(log n)": 0.75,
+    "O(n log n)": 1.0,
+    "O(n^2 log n)": 1.0
+  },
+  "results": [
+    {
+      "id": 1,
+      "algorithm": "Swap two variables",
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 2,
+      "algorithm": "Check if number is even",
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 3,
+      "algorithm": "Get middle element of array",
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 4,
+      "algorithm": "Calculate circle area",
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 5,
+      "algorithm": "Calculate factorial iteratively",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 6,
+      "algorithm": "Check if array is sorted",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 7,
+      "algorithm": "Copy array elements",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 8,
+      "algorithm": "String character frequency count",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 9,
+      "algorithm": "Find minimum in array",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 10,
+      "algorithm": "Compute prefix sum array",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 11,
+      "algorithm": "Two sequential loops (still O(n))",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 12,
+      "algorithm": "Transpose a matrix",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 13,
+      "algorithm": "Find pair with given sum",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 14,
+      "algorithm": "Print multiplication table",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 15,
+      "algorithm": "Count inversions (brute force)",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 16,
+      "algorithm": "String pattern matching (naive)",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 17,
+      "algorithm": "Rotate matrix 90 degrees",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 18,
+      "algorithm": "Floyd-Warshall pattern (triple nested)",
+      "expected": "O(n^3)",
+      "computed": "O(n^3)",
+      "correct": true
+    },
+    {
+      "id": 19,
+      "algorithm": "Check if three numbers sum to target",
+      "expected": "O(n^3)",
+      "computed": "O(n^3)",
+      "correct": true
+    },
+    {
+      "id": 20,
+      "algorithm": "Count digits in a number",
+      "expected": "O(log n)",
+      "computed": "O(log n)",
+      "correct": true
+    },
+    {
+      "id": 21,
+      "algorithm": "Fast exponentiation (repeated squaring)",
+      "expected": "O(log n)",
+      "computed": "O(log n)",
+      "correct": true
+    },
+    {
+      "id": 22,
+      "algorithm": "Find floor of square root (binary search)",
+      "expected": "O(log n)",
+      "computed": "O(log n)",
+      "correct": true
+    },
+    {
+      "id": 23,
+      "algorithm": "GCD using Euclidean algorithm (divide pattern)",
+      "expected": "O(log n)",
+      "computed": "O(n)",
+      "correct": false
+    },
+    {
+      "id": 24,
+      "algorithm": "Outer loop linear, inner loop doubling",
+      "expected": "O(n log n)",
+      "computed": "O(n * log n)",
+      "correct": true
+    },
+    {
+      "id": 25,
+      "algorithm": "Outer loop linear, inner loop halving",
+      "expected": "O(n log n)",
+      "computed": "O(n * log n)",
+      "correct": true
+    },
+    {
+      "id": 26,
+      "algorithm": "For loop with inner for j = j * 3",
+      "expected": "O(n log n)",
+      "computed": "O(n * log n)",
+      "correct": true
+    },
+    {
+      "id": 27,
+      "algorithm": "Nested loop with constant inner bound (O(n * 10) = O(n))",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 28,
+      "algorithm": "Three sequential loops (still O(n))",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 29,
+      "algorithm": "Linear loop followed by quadratic (O(n^2) dominates)",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 30,
+      "algorithm": "Quadratic with inner log (O(n^2 log n))",
+      "expected": "O(n^2 log n)",
+      "computed": "O(n^2 * log n)",
+      "correct": true
+    }
+  ]
+}

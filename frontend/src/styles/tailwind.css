@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .sim-line-highlight {
+    border-left: 3px solid transparent;
+  }
+
+  .sim-line-highlight--executing {
+    background: linear-gradient(90deg, rgba(234, 179, 8, 0.26), rgba(234, 179, 8, 0.08)) !important;
+    border-left-color: rgb(234, 179, 8);
+  }
+
+  .sim-line-highlight--loop {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.24), rgba(59, 130, 246, 0.08)) !important;
+    border-left-color: rgb(59, 130, 246);
+  }
+
+  .sim-line-highlight--contribution {
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.24), rgba(239, 68, 68, 0.08)) !important;
+    border-left-color: rgb(239, 68, 68);
+  }
+}

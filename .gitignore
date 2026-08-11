@@ -1,0 +1,26 @@
+**/__pycache__/
+*.pyc
+*.py[cod]
+.pytest_cache
+.venv
+.env
+**/.env
+
+# Test files
+test_*.py
+*_test.py
+tests/
+.coverage
+htmlcov/
+venv/
+env/
+.vscode/
+.DS_Store
+Thumbs.db
+backend/__pycache__/
+*.log
+backend/*.log
+backend/*.err.log
+backend/*.out.log
+*.docx
+

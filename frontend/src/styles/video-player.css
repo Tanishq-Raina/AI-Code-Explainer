@@ -1,0 +1,329 @@
+/* ============================================================
+   Codexa AI — Custom Video Player Styles
+   ============================================================ */
+
+/* ─── Container ─────────────────────────────────────────────── */
+.vp-container {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.08),
+    0 0 30px rgba(34, 211, 238, 0.1),
+    0 12px 40px rgba(0, 0, 0, 0.6);
+  transition: box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+}
+
+.vp-container:hover,
+.vp-container:focus-within {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.15),
+    0 0 40px rgba(34, 211, 238, 0.18),
+    0 0 80px rgba(168, 85, 247, 0.06),
+    0 12px 40px rgba(0, 0, 0, 0.7);
+}
+
+.vp-container--fullscreen {
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Video element ─────────────────────────────────────────── */
+.vp-video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: #000;
+}
+
+/* ─── Play overlay (big center button) ──────────────────────── */
+.vp-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 9, 18, 0.4);
+  border: none;
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease-out);
+}
+
+.vp-play-overlay:hover {
+  background: rgba(7, 9, 18, 0.55);
+}
+
+.vp-play-overlay svg {
+  width: 64px;
+  height: 64px;
+  color: var(--accent-cyan);
+  filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.5));
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.vp-play-overlay:hover svg {
+  transform: scale(1.1);
+}
+
+/* ─── Buffering spinner ─────────────────────────────────────── */
+.vp-buffering {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 9, 18, 0.3);
+  pointer-events: none;
+}
+
+.vp-buffering-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(34, 211, 238, 0.2);
+  border-top-color: var(--accent-cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ─── Controls bar ──────────────────────────────────────────── */
+.vp-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-3) var(--space-4) var(--space-3);
+  background: linear-gradient(
+    0deg,
+    rgba(7, 9, 18, 0.92) 0%,
+    rgba(7, 9, 18, 0.6) 60%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+  pointer-events: none;
+}
+
+.vp-controls--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ─── Seek bar ──────────────────────────────────────────────── */
+.vp-seekbar {
+  width: 100%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 0;
+  margin-bottom: var(--space-2);
+}
+
+.vp-seekbar__track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+  transition: height var(--dur-fast) var(--ease-out);
+}
+
+.vp-seekbar:hover .vp-seekbar__track {
+  height: 6px;
+}
+
+.vp-seekbar__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+  border-radius: inherit;
+  transition: width 0.1s linear;
+}
+
+.vp-seekbar__thumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: var(--accent-cyan);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform var(--dur-fast) var(--ease-out);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+}
+
+.vp-seekbar:hover .vp-seekbar__thumb,
+.vp-seekbar:active .vp-seekbar__thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ─── Controls row ──────────────────────────────────────────── */
+.vp-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.vp-controls-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.vp-controls-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ─── Control buttons ───────────────────────────────────────── */
+.vp-btn {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+
+.vp-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.vp-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.vp-btn:active {
+  transform: scale(0.92);
+}
+
+/* ─── Volume group ──────────────────────────────────────────── */
+.vp-volume-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.vp-volume-slider-wrap {
+  width: 0;
+  overflow: hidden;
+  transition: width var(--dur-base) var(--ease-out);
+}
+
+.vp-volume-slider-wrap--visible {
+  width: 80px;
+}
+
+.vp-volume-slider {
+  width: 80px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+
+.vp-volume-slider__track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+}
+
+.vp-volume-slider__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent-cyan);
+  border-radius: inherit;
+}
+
+.vp-volume-slider__thumb {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.vp-volume-slider:hover .vp-volume-slider__thumb {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* ─── Time display ──────────────────────────────────────────── */
+.vp-time {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  margin-left: var(--space-2);
+  user-select: none;
+}
+
+/* ─── Fullscreen adjustments ────────────────────────────────── */
+.vp-container--fullscreen .vp-controls {
+  padding: var(--space-4) var(--space-6) var(--space-4);
+}
+
+.vp-container--fullscreen .vp-btn {
+  width: 44px;
+  height: 44px;
+}
+
+.vp-container--fullscreen .vp-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.vp-container--fullscreen .vp-time {
+  font-size: var(--fs-sm);
+}
+
+.vp-container--fullscreen .vp-seekbar__track {
+  height: 5px;
+}
+
+.vp-container--fullscreen .vp-seekbar:hover .vp-seekbar__track {
+  height: 8px;
+}
+
+.vp-container--fullscreen .vp-play-overlay svg {
+  width: 80px;
+  height: 80px;
+}

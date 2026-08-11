@@ -1,0 +1,226 @@
+{
+  "evaluation_date": "2026-05-18T15:51:06.911691",
+  "total_samples": 30,
+  "overall_accuracy": 1.0,
+  "correct_count": 30,
+  "category_results": {
+    "O(1)": 1.0,
+    "O(n)": 1.0,
+    "O(n^2)": 1.0,
+    "O(n^3)": 1.0,
+    "O(log n)": 1.0,
+    "O(n log n)": 1.0
+  },
+  "results": [
+    {
+      "id": 1,
+      "algorithm": "Simple assignment and return",
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 2,
+      "algorithm": "Arithmetic operations",
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 3,
+      "algorithm": "Array access by index",
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 4,
+      "algorithm": "Linear search",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 5,
+      "algorithm": "Sum of array elements",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 6,
+      "algorithm": "Find maximum element",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 7,
+      "algorithm": "Reverse array",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 8,
+      "algorithm": "Count occurrences",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 9,
+      "algorithm": "While loop linear traversal",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 10,
+      "algorithm": "Bubble sort",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 11,
+      "algorithm": "Selection sort",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 12,
+      "algorithm": "Insertion sort",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 13,
+      "algorithm": "Print all pairs",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 14,
+      "algorithm": "Matrix row-column traversal",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 15,
+      "algorithm": "Check duplicates with nested loop",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 16,
+      "algorithm": "Triple nested loop (matrix multiply pattern)",
+      "expected": "O(n^3)",
+      "computed": "O(n^3)",
+      "correct": true
+    },
+    {
+      "id": 17,
+      "algorithm": "Matrix multiplication",
+      "expected": "O(n^3)",
+      "computed": "O(n^3)",
+      "correct": true
+    },
+    {
+      "id": 18,
+      "algorithm": "Binary search",
+      "expected": "O(log n)",
+      "computed": "O(log n)",
+      "correct": true
+    },
+    {
+      "id": 19,
+      "algorithm": "Power of 2 check (divide by 2)",
+      "expected": "O(log n)",
+      "computed": "O(log n)",
+      "correct": true
+    },
+    {
+      "id": 20,
+      "algorithm": "Multiply by 2 until threshold",
+      "expected": "O(log n)",
+      "computed": "O(log n)",
+      "correct": true
+    },
+    {
+      "id": 21,
+      "algorithm": "Loop with inner halving",
+      "expected": "O(n log n)",
+      "computed": "O(n * log n)",
+      "correct": true
+    },
+    {
+      "id": 22,
+      "algorithm": "Outer linear inner logarithmic (multiply)",
+      "expected": "O(n log n)",
+      "computed": "O(n * log n)",
+      "correct": true
+    },
+    {
+      "id": 23,
+      "algorithm": "Simulated merge sort pattern",
+      "expected": "O(n log n)",
+      "computed": "O(n * log n)",
+      "correct": true
+    },
+    {
+      "id": 24,
+      "algorithm": "Sequential loops (O(n) + O(n) = O(n))",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 25,
+      "algorithm": "Loop followed by nested loop (O(n) + O(n^2) = O(n^2))",
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 26,
+      "algorithm": "Single for loop with if inside",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 27,
+      "algorithm": "Nested loop with inner loop constant (O(n * 5) = O(n))",
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 28,
+      "algorithm": "For loop with logarithmic for loop inside",
+      "expected": "O(n log n)",
+      "computed": "O(n * log n)",
+      "correct": true
+    },
+    {
+      "id": 29,
+      "algorithm": "Empty main (no loops)",
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 30,
+      "algorithm": "Nested for with inner doubling (O(n * log n))",
+      "expected": "O(n log n)",
+      "computed": "O(n * log n)",
+      "correct": true
+    }
+  ]
+}

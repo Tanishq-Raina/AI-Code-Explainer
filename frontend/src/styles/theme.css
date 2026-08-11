@@ -1,0 +1,146 @@
+/* ============================================================
+   Codexa AI — Design Tokens
+   Dark, techie, cyberpunk-adjacent theme.
+   All component styles should reference these variables so the
+   entire app can be re-themed from this single file.
+   ============================================================ */
+
+:root {
+  /* ─── Background layers ───────────────────────────────────── */
+  --bg-base: #070912;
+  --bg-surface: #0c1020;
+  --bg-elevated: #121830;
+  --bg-elevated-2: #1a2140;
+  --bg-overlay: rgba(7, 9, 18, 0.72);
+
+  /* ─── Borders ─────────────────────────────────────────────── */
+  --border-subtle: rgba(148, 163, 184, 0.08);
+  --border-default: rgba(148, 163, 184, 0.14);
+  --border-strong: rgba(148, 163, 184, 0.22);
+  --border-glow: rgba(34, 211, 238, 0.35);
+
+  /* ─── Text ────────────────────────────────────────────────── */
+  --text-primary: #e8ecf8;
+  --text-secondary: #a5b0cf;
+  --text-tertiary: #6b7594;
+  --text-muted: #4b5475;
+  --text-inverse: #070912;
+
+  /* ─── Brand / accent colors ───────────────────────────────── */
+  --accent-cyan: #22d3ee;
+  --accent-cyan-soft: rgba(34, 211, 238, 0.14);
+  --accent-cyan-glow: rgba(34, 211, 238, 0.4);
+
+  --accent-purple: #a855f7;
+  --accent-purple-soft: rgba(168, 85, 247, 0.14);
+  --accent-purple-glow: rgba(168, 85, 247, 0.4);
+
+  --accent-pink: #ec4899;
+  --accent-pink-soft: rgba(236, 72, 153, 0.14);
+
+  /* ─── Semantic colors ─────────────────────────────────────── */
+  --success: #34d399;
+  --success-soft: rgba(52, 211, 153, 0.12);
+  --success-glow: rgba(52, 211, 153, 0.35);
+
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.12);
+
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.12);
+  --danger-glow: rgba(248, 113, 113, 0.35);
+
+  --info: #60a5fa;
+  --info-soft: rgba(96, 165, 250, 0.12);
+
+  /* ─── Difficulty palette ──────────────────────────────────── */
+  --diff-easy: #34d399;
+  --diff-easy-soft: rgba(52, 211, 153, 0.15);
+  --diff-medium: #fbbf24;
+  --diff-medium-soft: rgba(251, 191, 36, 0.15);
+  --diff-hard: #f87171;
+  --diff-hard-soft: rgba(248, 113, 113, 0.15);
+
+  /* ─── Gradients ───────────────────────────────────────────── */
+  --grad-brand: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+  --grad-brand-soft: linear-gradient(
+    135deg,
+    rgba(34, 211, 238, 0.18) 0%,
+    rgba(168, 85, 247, 0.18) 100%
+  );
+  --grad-hero: radial-gradient(
+      1200px 600px at 10% -10%,
+      rgba(34, 211, 238, 0.14),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px 500px at 90% 10%,
+      rgba(168, 85, 247, 0.14),
+      transparent 55%
+    );
+  --grad-surface: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
+  /* ─── Typography ──────────────────────────────────────────── */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-base: 14px;
+  --fs-md: 15px;
+  --fs-lg: 17px;
+  --fs-xl: 20px;
+  --fs-2xl: 24px;
+  --fs-3xl: 30px;
+  --fs-4xl: 38px;
+
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* ─── Spacing ─────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ─── Radius ──────────────────────────────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* ─── Shadows ─────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow-glow-cyan: 0 0 0 1px var(--border-glow),
+    0 8px 32px rgba(34, 211, 238, 0.18);
+  --shadow-glow-purple: 0 0 0 1px rgba(168, 85, 247, 0.35),
+    0 8px 32px rgba(168, 85, 247, 0.18);
+
+  /* ─── Motion ──────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+
+  /* ─── Layout ──────────────────────────────────────────────── */
+  --sidebar-width: 248px;
+  --content-max: 1400px;
+}

@@ -1,0 +1,442 @@
+/* ============================================================
+   Codexa AI — Video Generation Page Styles
+   ============================================================ */
+
+/* ─── Layout ────────────────────────────────────────────────── */
+.video-gen-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.video-gen-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.video-gen-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  position: sticky;
+  top: var(--space-6);
+}
+
+/* ─── Toolbar (filename + run) ──────────────────────────────── */
+.video-gen-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+}
+
+.video-gen-file-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+}
+
+.video-gen-file-icon {
+  font-size: 14px;
+}
+
+.video-gen-filename-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-primary);
+  width: 120px;
+}
+
+.video-gen-filename-input:focus {
+  color: var(--accent-cyan);
+}
+
+.video-gen-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ─── Editor card ───────────────────────────────────────────── */
+.video-gen-editor {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ─── Output panel ──────────────────────────────────────────── */
+.video-gen-output {
+  padding: var(--space-4) var(--space-5);
+}
+
+.video-gen-output-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.video-gen-output-content {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  max-height: 180px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+.video-gen-status {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.video-gen-status--success {
+  color: var(--success);
+}
+
+/* ─── Controls (quality + generate) ─────────────────────────── */
+.video-gen-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.video-gen-quality-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.video-gen-quality-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+
+.video-gen-quality-select {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: border-color var(--dur-base) var(--ease-out);
+}
+
+.video-gen-quality-select:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+
+.video-gen-quality-select:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 2px var(--accent-cyan-soft);
+}
+
+.video-gen-quality-select option {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.video-gen-generate-btn {
+  width: 100%;
+  justify-content: center;
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--fs-md);
+}
+
+.video-gen-hint {
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+  text-align: center;
+  margin-top: var(--space-1);
+}
+
+/* ─── Video player card ─────────────────────────────────────── */
+.video-gen-player-card {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: linear-gradient(
+    180deg,
+    rgba(18, 24, 48, 0.85) 0%,
+    rgba(7, 9, 18, 0.98) 100%
+  );
+  border-color: var(--border-glow) !important;
+  box-shadow: var(--shadow-glow-cyan);
+  overflow: visible;
+}
+
+.video-gen-player-wrapper {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(34, 211, 238, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.15),
+    0 0 30px rgba(34, 211, 238, 0.18),
+    0 0 60px rgba(168, 85, 247, 0.08),
+    0 12px 40px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: box-shadow var(--dur-base) var(--ease-out);
+}
+
+.video-gen-player-wrapper:hover {
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.25),
+    0 0 40px rgba(34, 211, 238, 0.25),
+    0 0 80px rgba(168, 85, 247, 0.12),
+    0 12px 40px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.video-gen-video {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+/* Custom video controls styling (browser-native) */
+.video-gen-video::-webkit-media-controls-panel {
+  background: linear-gradient(
+    0deg,
+    rgba(7, 9, 18, 0.92) 0%,
+    transparent 100%
+  );
+}
+
+/* Video metadata strip below the player when video is loaded */
+.video-gen-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.video-gen-meta-bar__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--success);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: var(--fw-semibold);
+}
+
+.video-gen-meta-bar__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px var(--success-soft);
+  animation: pulse 2s var(--ease-in-out) infinite;
+}
+
+.video-gen-meta-bar__quality {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-cyan);
+  padding: 2px 8px;
+  background: var(--accent-cyan-soft);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Placeholder state ─────────────────────────────────────── */
+.video-gen-placeholder {
+  text-align: center;
+  padding: var(--space-10) var(--space-6);
+  position: relative;
+}
+
+.video-gen-placeholder-icon {
+  font-size: 56px;
+  margin-bottom: var(--space-5);
+  opacity: 0.5;
+}
+
+.video-gen-placeholder h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  margin-bottom: var(--space-3);
+  color: var(--text-secondary);
+}
+
+.video-gen-placeholder p {
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+  max-width: 300px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Decorative dashed border for empty state */
+.video-gen-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: var(--space-4);
+  border: 2px dashed var(--border-default);
+  border-radius: var(--radius-lg);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ─── Progress state ────────────────────────────────────────── */
+.video-gen-progress-section {
+  text-align: center;
+  padding: var(--space-8) var(--space-6);
+  width: 100%;
+}
+
+.video-gen-progress-icon {
+  font-size: 52px;
+  margin-bottom: var(--space-5);
+  animation: pulse 2s var(--ease-in-out) infinite;
+}
+
+.video-gen-progress-section h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  margin-bottom: var(--space-4);
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.video-gen-stage {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+  text-transform: capitalize;
+  margin-bottom: var(--space-6);
+  letter-spacing: 0.03em;
+}
+
+.video-gen-stage span {
+  color: var(--accent-cyan);
+  font-weight: var(--fw-semibold);
+}
+
+.video-gen-progress-bar {
+  max-width: 300px;
+  margin: 0 auto var(--space-3);
+  height: 10px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.video-gen-progress-pct {
+  font-family: var(--font-mono);
+  font-size: var(--fs-base);
+  color: var(--accent-cyan);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.05em;
+}
+
+/* ─── Error state ───────────────────────────────────────────── */
+.video-gen-error-section {
+  text-align: center;
+  padding: var(--space-8) var(--space-6);
+}
+
+.video-gen-error-icon {
+  font-size: 52px;
+  margin-bottom: var(--space-4);
+}
+
+.video-gen-error-section h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--danger);
+  margin-bottom: var(--space-3);
+}
+
+.video-gen-error-msg {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-5);
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+  padding: var(--space-3) var(--space-4);
+  background: var(--danger-soft);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  border-radius: var(--radius-md);
+}
+
+/* ─── Spinner ───────────────────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent-cyan);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .video-gen-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .video-gen-right {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .video-gen-toolbar {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: stretch;
+  }
+
+  .video-gen-quality-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

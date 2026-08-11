@@ -1,0 +1,850 @@
+{
+  "evaluation_date": "2026-05-18T15:04:34.544708",
+  "total_samples": 30,
+  "overall_score": 0.8911,
+  "metrics": {
+    "relevance": 0.8278,
+    "completeness": 0.9333,
+    "specificity": 0.9333,
+    "no_solution_policy": 1.0
+  },
+  "category_scores": {
+    "SyntaxError": 0.9486,
+    "TypeError": 0.8067,
+    "SymbolError": 0.92,
+    "NullPointerException": 0.9,
+    "ArrayIndexOutOfBounds": 0.92,
+    "StackOverflow": 1.0,
+    "ArithmeticException": 0.9,
+    "ClassCastException": 1.0,
+    "StringIndexOutOfBounds": 0.92,
+    "NumberFormatException": 1.0,
+    "ConcurrentModification": 0.0,
+    "InputMismatch": 0.92,
+    "NegativeArraySize": 1.0,
+    "LogicError": 0.9777,
+    "ScopeError": 1.0,
+    "AccessError": 0.92
+  },
+  "results": [
+    {
+      "id": 1,
+      "category": "SyntaxError",
+      "description": "Missing semicolon",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "semicolon",
+          ";",
+          "missing",
+          "statement"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look closely at line 3 where you declare the variable x.",
+        "hint_2": "Every statement in Java needs to end with a specific punctuation mark to tell the compiler the statement is complete.",
+        "hint_3": "Add a semicolon at the end of the line: int x = 10;",
+        "learning_tip": "Study Java syntax rules for statement termination and basic variable declaration syntax.",
+        "problem_summary": "Missing semicolon at the end of a variable declaration statement.",
+        "why": "In Java, every statement must end with a semicolon (;). The compiler needs this to know where one statement ends and another begins. Without it, the compiler gets confused and reports a syntax error."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 2,
+      "category": "SyntaxError",
+      "description": "Unclosed string literal",
+      "evaluation": {
+        "score": 0.9,
+        "relevance": 0.75,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "string",
+          "literal",
+          "quote"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look closely at the line where the string is defined and check both ends of the text.",
+        "hint_2": "Every opening quotation mark needs a corresponding closing quotation mark for string literals.",
+        "hint_3": "The string should have quotes at both the beginning and end: \"Hello World\"",
+        "learning_tip": "Always ensure string literals are properly enclosed in double quotes and escape special characters when needed.",
+        "problem_summary": "The string literal is missing a closing quotation mark.",
+        "why": "In Java, string literals must be enclosed in matching quotation marks. The compiler expects a closing quote to complete the string, but it's missing."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 3,
+      "category": "SyntaxError",
+      "description": "Missing closing brace",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "brace",
+          "}",
+          "block",
+          "close"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the structure of your for loop and check if all opening braces have matching closing braces.",
+        "hint_2": "Count the number of opening braces '{' and make sure there are equal number of closing braces '}' in your code.",
+        "hint_3": "Add a closing brace after the System.out.println statement to close the for loop block: }",
+        "learning_tip": "Always ensure proper brace matching in Java - each '{' needs a corresponding '}' to define code blocks correctly.",
+        "problem_summary": "The code is missing a closing brace for the for loop.",
+        "why": "In Java, every opening brace '{' must have a corresponding closing brace '}'. The for loop starts a block of code that needs to be properly closed before the main method ends."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 4,
+      "category": "TypeError",
+      "description": "Incompatible types - String to int",
+      "evaluation": {
+        "score": 0.92,
+        "relevance": 0.8,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "type",
+          "String",
+          "int",
+          "assign"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the data type of your variable and compare it to the value you're trying to assign.",
+        "hint_2": "Consider what data type would be appropriate for storing text versus numbers.",
+        "hint_3": "Try changing the variable type to match the value, like: String number = \"hello\";",
+        "learning_tip": "Study Java data types (int, String, double, boolean) and type safety concepts.",
+        "problem_summary": "The student is trying to assign a string value to an integer variable.",
+        "why": "In Java, variables have specific data types that determine what kind of values they can hold. An int variable can only store whole numbers, not text strings. The compiler prevents this type mismatch to avoid runtime errors."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 5,
+      "category": "TypeError",
+      "description": "Cannot compare String with ==",
+      "evaluation": {
+        "score": 0,
+        "relevance": 0,
+        "completeness": 0,
+        "specificity": 0,
+        "no_solution": 1,
+        "notes": "No hints returned"
+      },
+      "hints": null,
+      "execution_status": "Success"
+    },
+    {
+      "id": 6,
+      "category": "SymbolError",
+      "description": "Undeclared variable",
+      "evaluation": {
+        "score": 0.84,
+        "relevance": 0.6,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "variable",
+          "declared",
+          "before"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the order of your statements in the main method.",
+        "hint_2": "Try moving the variable declaration before the print statement so the variable exists when you try to use it.",
+        "hint_3": "Move the line 'int result = 42;' to appear before 'System.out.println(result);'",
+        "learning_tip": "Read about variable declaration and initialization in Java, and the concept of 'forward reference' errors.",
+        "problem_summary": "The variable 'result' is used before it is declared.",
+        "why": "In Java, variables must be declared before they can be used. The compiler reads the code from top to bottom and doesn't know what 'result' means when it encounters it on line 3."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 7,
+      "category": "SymbolError",
+      "description": "Misspelled method name",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "method",
+          "symbol",
+          "spell",
+          "length"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look closely at the method name you're trying to call on the String variable.",
+        "hint_2": "Check the spelling of the method that returns the number of characters in a string.",
+        "hint_3": "The correct method name is 'length()' - try calling text.length() instead.",
+        "learning_tip": "Method names in Java must be spelled exactly as defined in the API documentation. Always double-check spelling and capitalization when getting 'cannot find symbol' errors.",
+        "problem_summary": "The student misspelled the method name 'length()' as 'lenght()'.",
+        "why": "Java is case-sensitive and requires exact method names. The String class has a method called 'length()' that returns the number of characters, but 'lenght()' doesn't exist."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 8,
+      "category": "SyntaxError",
+      "description": "Missing return type on method",
+      "evaluation": {
+        "score": 0.9,
+        "relevance": 0.75,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "return",
+          "type",
+          "method"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Add the return type before the method name",
+        "hint_2": "The main method should return nothing, so use a specific keyword for that",
+        "learning_tip": "Always remember that in Java, every method must declare what it returns, even if it's nothing",
+        "problem_summary": "The main method is missing its return type",
+        "why": "Java requires all methods to specify what type of value they return"
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 9,
+      "category": "TypeError",
+      "description": "Array type mismatch",
+      "evaluation": {
+        "score": 0.92,
+        "relevance": 0.8,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "type",
+          "array",
+          "int",
+          "String"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the data types in your array initialization - do they all match the array's declared type?",
+        "hint_2": "Consider what happens when you try to put a text value into a container that only accepts numbers.",
+        "hint_3": "Either change \"three\" to its numeric value 3, or declare a different array type that can hold both numbers and text.",
+        "learning_tip": "Read about Java's primitive data types and arrays to understand type compatibility.",
+        "problem_summary": "The array declaration mixes integers and a string value.",
+        "why": "An int array can only store integer values, but the code tries to store a string \"three\" in the third position. Java is strongly typed, so this type mismatch causes a compilation error."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 10,
+      "category": "SyntaxError",
+      "description": "Invalid for loop syntax",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "for",
+          "loop",
+          "syntax",
+          "semicolon",
+          ","
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the for loop syntax on line 3 - something is wrong with the punctuation between the three parts.",
+        "hint_2": "The for loop needs semicolons (;) to separate the initialization, condition, and increment expressions, not commas (,).",
+        "hint_3": "Change the commas to semicolons: for (int i = 0; i < 10; i++)",
+        "learning_tip": "Review the correct syntax for for loops in Java, specifically the use of semicolons as separators.",
+        "problem_summary": "The for loop uses commas instead of semicolons to separate its components.",
+        "why": "In Java, the for loop syntax requires three parts separated by semicolons: initialization, condition, and increment. Using commas causes the compiler to misinterpret the syntax structure."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 11,
+      "category": "NullPointerException",
+      "description": "Calling method on null",
+      "evaluation": {
+        "score": 0.9,
+        "relevance": 0.75,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "null",
+          "NullPointer",
+          "object"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at what value the 'text' variable holds when you try to use it.",
+        "hint_2": "You need to ensure the String variable has an actual value before calling methods on it.",
+        "hint_3": "Try assigning a string value like \"hello\" to text instead of null: String text = \"hello\";",
+        "learning_tip": "Learn about null references and how to handle them safely using null checks or Optional classes.",
+        "problem_summary": "The code tries to call a method on a null reference.",
+        "why": "When a variable is null, it doesn't point to any actual object in memory. Calling methods on null references causes a NullPointerException because there's no object to execute the method on."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 12,
+      "category": "ArrayIndexOutOfBounds",
+      "description": "Accessing index beyond array length",
+      "evaluation": {
+        "score": 0.92,
+        "relevance": 0.8,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "index",
+          "bound",
+          "array",
+          "length"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Check the size of your array and compare it with the index you're trying to access.",
+        "hint_2": "Remember that array indices start at 0 and go up to the length of the array minus one.",
+        "hint_3": "Use arr.length to check the actual size of your array before accessing an index.",
+        "learning_tip": "Always validate array indices before accessing them to prevent ArrayIndexOutOfBoundsException.",
+        "problem_summary": "The code tries to access an array index that doesn't exist.",
+        "why": "Arrays in Java have a fixed size once created. The array 'arr' has only 3 elements at indices 0, 1, and 2, but the code attempts to access index 5 which is beyond the array's bounds."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 13,
+      "category": "StackOverflow",
+      "description": "Infinite recursion",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "recursion",
+          "base case",
+          "stack",
+          "overflow",
+          "condition"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the factorial method and think about when the recursion should stop.",
+        "hint_2": "Consider what the smallest input value for factorial should return, and add a condition to handle it.",
+        "hint_3": "Add a base case like: if (n <= 1) return 1;",
+        "learning_tip": "Research 'base case' and 'recursive case' in recursive functions to understand how to prevent infinite recursion.",
+        "problem_summary": "The factorial method causes infinite recursion leading to a stack overflow.",
+        "why": "The recursive method lacks a base case to stop the recursion. It keeps calling itself indefinitely, consuming stack memory until it overflows."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 14,
+      "category": "ArithmeticException",
+      "description": "Division by zero",
+      "evaluation": {
+        "score": 0.9,
+        "relevance": 0.75,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "division",
+          "zero",
+          "ArithmeticException"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the values of your variables when performing mathematical operations.",
+        "hint_2": "Check what value you're using as the denominator in your division operation and make sure it's not zero.",
+        "hint_3": "Before dividing, add a condition to check if the divisor equals zero, for example: `if (b != 0) { System.out.println(a / b); }`",
+        "learning_tip": "Learn about exception handling in Java using try-catch blocks to handle runtime errors gracefully.",
+        "problem_summary": "Division by zero causes an ArithmeticException at runtime.",
+        "why": "In mathematics, division by zero is undefined, and Java throws an ArithmeticException when this operation is attempted. The error occurs because the variable 'b' is initialized to 0 and used as the divisor."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 15,
+      "category": "ClassCastException",
+      "description": "Invalid type cast",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "cast",
+          "type",
+          "ClassCast",
+          "Object",
+          "Integer"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at what type of object is stored in the 'obj' variable and compare it to what you're trying to cast it to.",
+        "hint_2": "You need to ensure that the object you're casting actually represents the type you're casting to, or use a different approach to convert between types.",
+        "hint_3": "If you need to convert a String to an Integer, you should use methods like Integer.parseInt() instead of casting. For example: Integer num = Integer.parseInt(obj.toString());",
+        "learning_tip": "Research the difference between casting objects and converting between data types in Java, including wrapper classes and their conversion methods.",
+        "problem_summary": "The code attempts to cast a String object to an Integer, which causes a ClassCastException.",
+        "why": "In Java, you cannot cast an object to a type that it doesn't actually represent. The variable 'obj' contains a String value 'Hello', but the code tries to force it into an Integer type, which is incompatible."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 16,
+      "category": "StringIndexOutOfBounds",
+      "description": "charAt with invalid index",
+      "evaluation": {
+        "score": 0.92,
+        "relevance": 0.8,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "index",
+          "charAt",
+          "length",
+          "String"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Check the length of the string and compare it to the index you're trying to access.",
+        "hint_2": "Remember that string indices start at 0 and go up to the length of the string minus one.",
+        "hint_3": "Use `word.length()` to check how many characters are in the string before accessing a specific index.",
+        "learning_tip": "Read about String indexing and the charAt() method in Java documentation.",
+        "problem_summary": "The code tries to access a character at an index that doesn't exist in the string.",
+        "why": "Strings in Java are zero-indexed, meaning the first character is at index 0. The string 'Java' has only 4 characters, so valid indices are 0, 1, 2, and 3. Trying to access index 10 goes beyond the string's length."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 17,
+      "category": "NumberFormatException",
+      "description": "Parsing non-numeric string",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "parse",
+          "number",
+          "format",
+          "numeric",
+          "parseInt"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the value you're trying to convert on line 4.",
+        "hint_2": "Check what characters are allowed when using Integer.parseInt() method.",
+        "hint_3": "Try parsing a string like \"123\" instead of \"abc123\" to see the difference.",
+        "learning_tip": "Read about NumberFormatException and how to handle invalid string-to-number conversions in Java.",
+        "problem_summary": "The program tries to convert a non-numeric string to an integer.",
+        "why": "The String 'abc123' contains letters, which cannot be parsed as a valid integer. The parseInt method expects a string that represents only numbers (with optional +/- sign)."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 18,
+      "category": "ConcurrentModification",
+      "description": "Modifying list during iteration",
+      "evaluation": {
+        "score": 0,
+        "relevance": 0,
+        "completeness": 0,
+        "specificity": 0,
+        "no_solution": 1,
+        "notes": "No hints returned"
+      },
+      "hints": null,
+      "execution_status": "Success"
+    },
+    {
+      "id": 19,
+      "category": "InputMismatch",
+      "description": "Scanner reading wrong type",
+      "evaluation": {
+        "score": 0.92,
+        "relevance": 0.8,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "input",
+          "mismatch",
+          "Scanner",
+          "int"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at how you're creating the Scanner object and what input source you're providing.",
+        "hint_2": "The Scanner constructor should typically use System.in for keyboard input, not a literal string.",
+        "hint_3": "Try changing Scanner sc = new Scanner(\"hello\"); to Scanner sc = new Scanner(System.in);",
+        "learning_tip": "Learn about Scanner constructors and the difference between reading from System.in versus reading from a String source.",
+        "problem_summary": "The Scanner is trying to read an integer from a string that contains text.",
+        "why": "When you create a Scanner with a string like \"hello\", it treats that string as the input source. Since \"hello\" is not a number, calling nextInt() causes an InputMismatchException because the scanner cannot convert the text to an integer."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 20,
+      "category": "NegativeArraySize",
+      "description": "Creating array with negative size",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "negative",
+          "array",
+          "size",
+          "NegativeArraySize"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the array creation statement and think about what values are valid for array sizes.",
+        "hint_2": "Array sizes must always be zero or positive integers since they represent how many elements the array can hold.",
+        "hint_3": "Change the negative number to a positive number or zero: `int[] arr = new int[5];`",
+        "learning_tip": "Read about array initialization and the rules for array sizes in Java. Also learn about the different types of exceptions that can occur when working with arrays.",
+        "problem_summary": "The program attempts to create an array with a negative size, which is not allowed in Java.",
+        "why": "In Java, arrays must have a non-negative size because they represent a fixed number of elements in memory. When you try to create an array with a negative size, the JVM throws a NegativeArraySizeException at runtime."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 21,
+      "category": "LogicError",
+      "description": "Off-by-one in loop (prints one extra)",
+      "evaluation": {
+        "score": 0.933,
+        "relevance": 0.833,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "bound",
+          "index",
+          "<=",
+          "<",
+          "length"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Check the condition in your for loop - when does it stop?",
+        "hint_2": "Think about the relationship between array length and the last valid index.",
+        "hint_3": "The loop should run while i < arr.length, not i <= arr.length.",
+        "learning_tip": "Array indexing and bounds checking in Java",
+        "problem_summary": "The loop tries to access an array index that doesn't exist.",
+        "why": "Array indices in Java start at 0 and go up to length-1. The loop condition 'i <= arr.length' allows i to reach 5, but the last valid index is 4."
+      },
+      "execution_status": "RuntimeError"
+    },
+    {
+      "id": 22,
+      "category": "LogicError",
+      "description": "Using = instead of == in condition",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "=",
+          "==",
+          "assignment",
+          "comparison",
+          "condition"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the condition inside the parentheses of your if statement on line 4.",
+        "hint_2": "Think about the difference between assigning a value to a variable and comparing two values for equality.",
+        "hint_3": "Replace the single equals sign with double equals signs to perform comparison: if (x == 10)",
+        "learning_tip": "Study the difference between assignment operators (=) and comparison operators (==, !=) in Java conditional statements.",
+        "problem_summary": "The if statement uses assignment operator instead of comparison operator.",
+        "why": "In Java, the if statement requires a boolean expression, but using '=' assigns the value 10 to x and returns an integer, which cannot be converted to boolean. The assignment operator '=' is different from the equality comparison operator '=='."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 23,
+      "category": "ScopeError",
+      "description": "Variable declared inside if block used outside",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "scope",
+          "variable",
+          "block",
+          "declared",
+          "outside"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at where you declared the 'result' variable and where you're trying to use it.",
+        "hint_2": "The variable 'result' is declared inside the if block, but you're trying to use it outside that block where it's no longer accessible.",
+        "hint_3": "Declare the variable before the if statement like this: `int result;` then assign and use it inside the if block.",
+        "learning_tip": "Study variable scope in Java, particularly how block scope works with curly braces {}.",
+        "problem_summary": "The variable 'result' is being used outside of its declared scope.",
+        "why": "In Java, variables declared inside a block (like an if statement) are only accessible within that block. Once the block ends, the variable goes out of scope and cannot be accessed anymore."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 24,
+      "category": "TypeError",
+      "description": "Comparing int with String using equals()",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "primitive",
+          "int",
+          "equals",
+          "method",
+          "object"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the type of variable 'num' and think about whether it's an object or a primitive.",
+        "hint_2": "For comparing primitive values like int, you should use the == operator instead of equals().",
+        "hint_3": "Change the condition to use == for comparison: if (num == 5)",
+        "learning_tip": "Learn about the difference between primitive data types and their wrapper classes (int vs Integer, boolean vs Boolean, etc.)",
+        "problem_summary": "The student is trying to use the equals() method on a primitive int variable.",
+        "why": "Primitive data types like int don't have methods - they are not objects. The equals() method belongs to the Integer class, not the int primitive type. When you try to call a method on a primitive, Java doesn't know what object to call it on."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 25,
+      "category": "SyntaxError",
+      "description": "Missing parentheses in if statement",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "parentheses",
+          "(",
+          "if",
+          "condition",
+          "syntax"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at line 4 where the if statement is written.",
+        "hint_2": "The condition 'x > 5' needs to be wrapped in parentheses to be valid syntax.",
+        "hint_3": "Try writing the if statement like: if (x > 5) {",
+        "learning_tip": "Study the syntax rules for control flow statements like if, while, and for loops in Java.",
+        "problem_summary": "Missing parentheses around the condition in the if statement.",
+        "why": "In Java, the condition for an if statement must be enclosed in parentheses. The compiler expects to see '(' before the condition and ')' after it."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 26,
+      "category": "LogicError",
+      "description": "Infinite while loop - missing increment",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "infinite",
+          "loop",
+          "increment",
+          "update",
+          "i++"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at your while loop and think about how the variable 'i' changes during execution.",
+        "hint_2": "The loop needs a statement that modifies the loop control variable so that the condition eventually becomes false.",
+        "hint_3": "Add a line inside the loop body to increment 'i', such as: i++;",
+        "learning_tip": "Always ensure your loop has a proper termination condition and that the loop control variable is updated correctly within the loop body.",
+        "problem_summary": "The while loop runs infinitely because the loop variable is never updated.",
+        "why": "The variable 'i' starts at 0 and the condition checks if i < 10, but 'i' is never incremented inside the loop. This means the condition will always remain true, causing an infinite loop."
+      },
+      "execution_status": "Timeout"
+    },
+    {
+      "id": 27,
+      "category": "TypeError",
+      "description": "Void method used in expression",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "void",
+          "return",
+          "type",
+          "method",
+          "assign"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the return type of your greet() method and compare it with how you're trying to use it.",
+        "hint_2": "Either change the greet() method to return a String value, or don't try to store its result in a variable.",
+        "hint_3": "You could modify greet() to return a String like this: public static String greet() { return \"Hello\"; }",
+        "learning_tip": "Study method return types in Java and understand the difference between void methods (which perform actions) and methods that return values.",
+        "problem_summary": "The greet() method returns void but is being assigned to a String variable.",
+        "why": "In Java, methods with a void return type don't produce a value that can be stored in a variable. When you try to assign the result of a void method to a variable, the compiler doesn't know what value to use since void means 'no return value'."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 28,
+      "category": "AccessError",
+      "description": "Accessing private member from another context",
+      "evaluation": {
+        "score": 0.92,
+        "relevance": 0.8,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "private",
+          "access",
+          "modifier",
+          "getter"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the access modifier of the 'name' field in the Animal class.",
+        "hint_2": "Consider providing a public method in the Animal class that returns the value of the private field.",
+        "hint_3": "Create a public getter method like 'public String getName() { return name; }' in the Animal class and call it from main.",
+        "learning_tip": "Learn about encapsulation and access modifiers (private, public, protected, default) in Java classes.",
+        "problem_summary": "The code tries to access a private field from outside its class.",
+        "why": "In Java, private fields can only be accessed within the same class where they are declared. The 'name' field in the Animal class is private, so it cannot be accessed directly from the Main class."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 29,
+      "category": "SyntaxError",
+      "description": "Static method calling non-static method",
+      "evaluation": {
+        "score": 0.84,
+        "relevance": 0.6,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "static",
+          "non-static",
+          "instance"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the relationship between your main method and the display method.",
+        "hint_2": "Consider how you can make the display method accessible from the static main method.",
+        "hint_3": "You could either make display() static or create an instance of the class to call display().",
+        "learning_tip": "Study the difference between static and non-static methods and when to use each.",
+        "problem_summary": "The static main method is trying to call a non-static method directly.",
+        "why": "In Java, static methods belong to the class itself, while non-static methods belong to instances of the class. Static methods cannot directly access non-static methods because there's no instance to call them on."
+      },
+      "execution_status": "CompilationError"
+    },
+    {
+      "id": 30,
+      "category": "TypeError",
+      "description": "Generic type mismatch in ArrayList",
+      "evaluation": {
+        "score": 1.0,
+        "relevance": 1.0,
+        "completeness": 1.0,
+        "specificity": 1.0,
+        "no_solution": 1.0,
+        "matched_keywords": [
+          "type",
+          "generic",
+          "Integer",
+          "String",
+          "ArrayList"
+        ],
+        "notes": "OK"
+      },
+      "hints": {
+        "hint_1": "Look at the declaration of your ArrayList and compare it with what you're trying to add.",
+        "hint_2": "Either change the ArrayList to accept Strings instead of Integers, or add an actual integer value instead of the string \"three\".",
+        "hint_3": "You could declare: ArrayList<String> numbers = new ArrayList<>(); OR numbers.add(3);",
+        "learning_tip": "Read about Java generics and type safety to understand how collections enforce data types.",
+        "problem_summary": "The code tries to add a String to an ArrayList that only accepts Integer objects.",
+        "why": "The ArrayList is declared to hold only Integer objects, so when you try to add a String like \"three\", Java's type safety prevents this incompatible assignment. Generic types in Java enforce that only the specified type can be added to the collection."
+      },
+      "execution_status": "CompilationError"
+    }
+  ]
+}

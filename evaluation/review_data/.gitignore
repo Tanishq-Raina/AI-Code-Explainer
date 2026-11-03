@@ -1,0 +1,4 @@
+# Each reviewer exports their own judgments separately.
+human_hint_reviews.json
+human_hint_review_history.jsonl
+human_hint_reviews.json.tmp

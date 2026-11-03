@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Hint evaluation reviewer</title><link rel="stylesheet" href="/styles.css"></head>
+<body>
+  <header class="app-header">
+    <div><span id="assignment-label" class="eyebrow">CODEXA · BENCHMARK REVIEW</span><h1>Hint evaluation</h1><p>Read the response. Check the AI judgment. Record your own.</p></div>
+    <div class="header-actions"><a class="button secondary" href="/api/export.json" download>Export reviews</a><a class="text-link" href="/api/export.csv" download>CSV</a></div>
+  </header>
+  <div id="load-error" class="message error hidden" role="alert"></div>
+  <div id="loading" class="loading">Loading your assigned responses…</div>
+  <div id="workspace" class="workspace hidden">
+    <aside class="sidebar">
+      <div class="progress-top"><strong id="progress-label">0 of 90 reviewed</strong><span id="progress-percent">0%</span></div>
+      <progress id="progress" value="0" max="90" aria-label="Review completion"></progress>
+      <p id="flagged-count" class="muted small"></p>
+      <label class="field-label" for="search">Find a test</label><input id="search" type="search" placeholder="Task, case or response ID">
+      <label class="field-label" for="filter">Show</label><select id="filter"><option value="all">All responses</option><option value="unreviewed">Not yet reviewed</option><option value="reviewed">Reviewed</option><option value="flagged">Flagged for later</option><option value="adjusted">My scores differ from AI</option><option value="ai-issues">AI found correctness issues</option></select>
+      <div id="response-list" class="response-list" aria-label="Responses"></div>
+      <details class="method"><summary>How to use the ratings</summary><p>AI ratings are suggestions, not human expert judgments. Review the entire response, including the explanation and learning tip.</p><p><strong>Correctness:</strong> 0 = materially incorrect diagnosis, false Java claim or harmful guidance. 1 = partially correct but incomplete or ambiguous. 2 = correct diagnosis and substantive advice.</p><p><strong>Actionability:</strong> 0 = unhelpful or misleading. 1 = relevant but vague. 2 = a concrete useful next step.</p><p>Choose your own ratings, or use the AI scores after checking them. Save commits your review to a separate local file. Original results and AI ratings stay intact.</p><p>Valid alternative fixes need not match a private reference literal. A correct patch does not cancel a false Java rule elsewhere in the response.</p><p>Progression is about hint levels 1–3. A missing level can be N/A. Flag uncertain judgments for a second look.</p></details>
+    </aside>
+    <main>
+      <nav class="test-nav" aria-label="Test navigation"><button id="previous" class="button secondary">← Previous</button><span id="position"></span><button id="next" class="button secondary">Next →</button></nav>
+      <div class="test-heading"><div class="chips"><span id="review-id" class="chip accent"></span><span id="condition" class="chip"></span><span id="case-id" class="chip"></span><span id="case-status" class="chip"></span></div><h2 id="task"></h2></div>
+      <div class="review-layout">
+        <div class="evidence-column">
+          <section class="card code-card"><div class="section-header"><h3>Java program</h3><div class="tabs" role="tablist" aria-label="Program version"><button id="tab-submitted" role="tab" aria-selected="true" aria-controls="program-panel">Submitted</button><button id="tab-reference" role="tab" aria-selected="false" aria-controls="program-panel">Verified reference</button></div></div><p id="code-caption" class="muted small">The program that produced this response.</p><div id="program-panel" role="tabpanel" aria-labelledby="tab-submitted"><pre id="code" class="code-block" tabindex="0"></pre></div></section>
+          <section class="card diagnostics"><h3>Execution evidence</h3><div class="output-label">Reference output</div><pre id="expected-output" class="output-block"></pre><p class="muted small">A valid alternative repair may differ when the public task did not specify the exact output.</p><details id="diagnostic-details"><summary>Compiler or runtime diagnostic</summary><pre id="diagnostic" class="diagnostic-block"></pre></details></section>
+          <section class="card response-card"><div class="section-header"><h3>Tutor response</h3><span class="muted small">Judge the complete response</span></div><div id="hint-fields"></div></section>
+        </div>
+        <div class="rating-column">
+          <section class="card ai-card"><div class="section-header"><h3>AI evaluation</h3><button id="toggle-ai" class="text-button" aria-expanded="true" aria-controls="ai-body">Hide</button></div><div id="ai-body"><div id="ai-scores" class="score-grid"></div><h4>Why I assigned these ratings</h4><p id="ai-reason" class="reason"></p><div id="issue-tags" class="tag-list"></div></div></section>
+          <section class="card your-review"><div class="section-header"><h3>Your review</h3><button id="use-ai" class="button compact secondary">Use AI scores</button></div><p class="muted small">Your choices are saved separately. Using AI scores fills the form; it does not mark the response reviewed.</p>
+            <form id="review-form">
+              <fieldset><legend>Correctness</legend><p class="field-help">Consider diagnosis, advice and learning tip together.</p><div id="correctness-options" class="rating-options"></div></fieldset>
+              <fieldset><legend>Actionability</legend><p class="field-help">Does it give a useful next debugging step?</p><div id="actionability-options" class="rating-options"></div></fieldset>
+              <fieldset><legend>Excessive disclosure?</legend><p class="field-help">Full solution, too much code, or the exact fix too early.</p><div id="disclosure-options" class="rating-options short"></div></fieldset>
+              <fieldset><legend>Appropriate progression?</legend><p class="field-help">Do the hints become more specific without repeating or reversing?</p><div id="progression-options" class="rating-options short"></div></fieldset>
+              <label class="field-label" for="notes">Your notes <span class="muted">(optional)</span></label><textarea id="notes" rows="4" maxlength="12000" placeholder="What do you agree or disagree with? Include the specific claim or hint."></textarea>
+              <label class="field-label" for="reviewer-name">Reviewer name <span class="muted">(optional)</span></label><input id="reviewer-name" maxlength="120" autocomplete="name" placeholder="Your name">
+              <div id="save-message" class="save-message" role="status" aria-live="polite"></div>
+              <div class="save-actions"><button id="save-next" type="submit" class="button primary">Save review & next →</button><button id="save-stay" type="button" class="button secondary">Save</button><button id="flag" type="button" class="text-button">Flag for later</button></div>
+            </form>
+          </section>
+        </div>
+      </div>
+      <footer class="footer"><span id="storage-note">Saved reviews stay on this computer.</span><button id="reload-saved" class="text-button">Reload saved reviews</button></footer>
+    </main>
+  </div>
+  <script type="module" src="/app.js"></script>
+</body></html>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { TUTOR_API_URL, HINT_TIMEOUT_MS } from "./config.js";
 
 // ============================================================
 // Codexa AI — API client
@@ -12,7 +13,7 @@ import axios from "axios";
 // ============================================================
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: TUTOR_API_URL,
   timeout: 45_000,
 });
 
@@ -24,7 +25,7 @@ function unwrap(response) {
 
 // ─── Code execution ────────────────────────────────────────────
 export const submitCode = async (payload) => {
-  const response = await API.post("/submit-code", payload);
+  const response = await API.post("/submit-code", payload, { timeout: HINT_TIMEOUT_MS });
   return response.data;
 };
 
@@ -35,7 +36,7 @@ export const executeCode = async (payload) => {
 };
 
 export const requestHint = async (payload) => {
-  const response = await API.post("/request-hint", payload);
+  const response = await API.post("/request-hint", payload, { timeout: HINT_TIMEOUT_MS });
   return unwrap(response);
 };
 
@@ -52,6 +53,7 @@ export const getLearningSummary = async (userId) => {
 
 export const getStudyTopicContent = async (chapterId, section) => {
   const response = await API.get(`/study/topic/${chapterId}`, {
+    timeout: HINT_TIMEOUT_MS,
     params: section ? { section } : undefined,
   });
   return unwrap(response);

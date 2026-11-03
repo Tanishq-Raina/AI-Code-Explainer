@@ -1,0 +1,162 @@
+[
+  {
+    "id": "legacy_dev_01",
+    "category": "SyntaxError",
+    "description": "Missing semicolon",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        int x = 10\n        System.out.println(x);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_02",
+    "category": "SyntaxError",
+    "description": "Unclosed string literal",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        String msg = \"Hello World;\n        System.out.println(msg);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_03",
+    "category": "SyntaxError",
+    "description": "Missing closing brace",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        for (int i = 0; i < 5; i++) {\n            System.out.println(i);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_04",
+    "category": "TypeError",
+    "description": "Incompatible types - String to int",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        int number = \"hello\";\n        System.out.println(number);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_05",
+    "category": "TypeError",
+    "description": "Cannot compare String with ==",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        String a = new String(\"hello\");\n        String b = new String(\"hello\");\n        if (a == b) {\n            System.out.println(\"Equal\");\n        } else {\n            System.out.println(\"Not Equal\");\n        }\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_06",
+    "category": "SymbolError",
+    "description": "Undeclared variable",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(result);\n        int result = 42;\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_07",
+    "category": "SymbolError",
+    "description": "Misspelled method name",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        String text = \"Hello\";\n        System.out.println(text.lenght());\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_08",
+    "category": "SyntaxError",
+    "description": "Missing return type on method",
+    "code": "public class Main {\n    public static main(String[] args) {\n        System.out.println(\"Hello\");\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_09",
+    "category": "TypeError",
+    "description": "Array type mismatch",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        int[] numbers = {1, 2, \"three\", 4, 5};\n        System.out.println(numbers[2]);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_10",
+    "category": "SyntaxError",
+    "description": "Invalid for loop syntax",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        for (int i = 0, i < 10, i++) {\n            System.out.println(i);\n        }\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_11",
+    "category": "NullPointerException",
+    "description": "Calling method on null",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        String text = null;\n        System.out.println(text.length());\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_12",
+    "category": "ArrayIndexOutOfBounds",
+    "description": "Accessing index beyond array length",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        int[] arr = {1, 2, 3};\n        System.out.println(arr[5]);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_13",
+    "category": "StackOverflow",
+    "description": "Infinite recursion",
+    "code": "public class Main {\n    public static int factorial(int n) {\n        return n * factorial(n - 1);\n    }\n    public static void main(String[] args) {\n        System.out.println(factorial(5));\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_14",
+    "category": "ArithmeticException",
+    "description": "Division by zero",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 0;\n        System.out.println(a / b);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_15",
+    "category": "ClassCastException",
+    "description": "Invalid type cast",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        Object obj = \"Hello\";\n        Integer num = (Integer) obj;\n        System.out.println(num);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_16",
+    "category": "StringIndexOutOfBounds",
+    "description": "charAt with invalid index",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        String word = \"Java\";\n        char c = word.charAt(10);\n        System.out.println(c);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_17",
+    "category": "NumberFormatException",
+    "description": "Parsing non-numeric string",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        String value = \"abc123\";\n        int num = Integer.parseInt(value);\n        System.out.println(num);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_18",
+    "category": "ConcurrentModification",
+    "description": "Modifying list during iteration",
+    "code": "import java.util.ArrayList;\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<String> list = new ArrayList<>();\n        list.add(\"a\");\n        list.add(\"b\");\n        list.add(\"c\");\n        for (String s : list) {\n            if (s.equals(\"b\")) {\n                list.remove(s);\n            }\n        }\n        System.out.println(list);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_19",
+    "category": "InputMismatch",
+    "description": "Scanner reading wrong type",
+    "code": "import java.util.Scanner;\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(\"hello\");\n        int num = sc.nextInt();\n        System.out.println(num);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  },
+  {
+    "id": "legacy_dev_20",
+    "category": "NegativeArraySize",
+    "description": "Creating array with negative size",
+    "code": "public class Main {\n    public static void main(String[] args) {\n        int[] arr = new int[-5];\n        System.out.println(arr.length);\n    }\n}",
+    "split": "development",
+    "provenance": "Previously used project example, not independent held-out data"
+  }
+]

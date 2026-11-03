@@ -1,0 +1,50 @@
+{
+  "hints_test": 100,
+  "hints_by_category": {
+    "syntax": 10,
+    "scope": 10,
+    "types": 10,
+    "methods": 10,
+    "null": 10,
+    "index": 10,
+    "arithmetic": 10,
+    "parsing": 10,
+    "termination": 10,
+    "logic": 10
+  },
+  "paired_correct_controls": 20,
+  "legacy_development": 20,
+  "complexity_test": 60,
+  "time_distribution": {
+    "O(1)": 10,
+    "O(log n)": 10,
+    "O(n)": 10,
+    "O(n log n)": 10,
+    "O(n^2)": 10,
+    "O(n^3)": 10
+  },
+  "space_distribution": {
+    "O(1)": 49,
+    "O(log n)": 2,
+    "O(n)": 6,
+    "O(n^2)": 2,
+    "O(n^3)": 1
+  },
+  "dedicated_space_test": 40,
+  "dedicated_space_distribution": {
+    "O(1)": 10,
+    "O(log n)": 10,
+    "O(n)": 10,
+    "O(n^2)": 10
+  },
+  "video_categories": 24,
+  "guard_challenges": 100,
+  "analytics_scenarios": 12,
+  "limitations": [
+    "Author-constructed and AI-assisted; no independent student data or raters.",
+    "Repeated guard-rule families are not independent semantic examples.",
+    "Complexity variants share control-flow families; report family-level limitations.",
+    "All labels are frozen after static review; execution-oracle validation is pending and must pass before inference.",
+    "No learning-outcome conclusions follow from these benchmarks."
+  ]
+}

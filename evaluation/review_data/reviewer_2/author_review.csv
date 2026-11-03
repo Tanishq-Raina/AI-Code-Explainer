@@ -1,0 +1,871 @@
+﻿review_id,task,code,reference_code,expected_stdout,observed_error,problem_summary,why,hint_1,hint_2,hint_3,learning_tip,correctness_0_1_2,actionability_0_1_2,excessive_disclosure_yes_no,progression_appropriate_yes_no,notes
+R002,Initialize an iterator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Iterator<Integer> it=null; System.out.println(it.hasNext());
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Iterator<Integer> it=Arrays.asList(1).iterator(); System.out.println(it.hasNext());
+}
+}
+",true,"Exception in thread ""main"" java.lang.NullPointerException: Cannot invoke ""java.util.Iterator.hasNext()"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The iterator variable 'it' is declared but not initialized before calling hasNext() method.,"In Java, when you declare an Iterator variable without initializing it, it gets a default value of null. When you try to call any method on a null reference, like hasNext(), Java throws a NullPointerException. An iterator must be initialized with a collection's iterator() method before you can use it.",Look at the line where you declare the iterator variable 'it' - it's set to null explicitly.,"Before calling methods on an iterator, you need to initialize it with the iterator() method from a collection like ArrayList or LinkedList.","You need to create a collection first, then get its iterator: List<Integer> list = new ArrayList<>(); Iterator<Integer> it = list.iterator();",Remember that all reference variables in Java are null by default unless explicitly initialized. Always initialize your iterators with collection.iterator() before using them.,,,,,
+R006,Do not index an empty array,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={}; System.out.println(a[0]);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={}; System.out.println(a.length);
+}
+}
+",0,"Exception in thread ""main"" java.lang.ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0
+	at Main.main(Main.java:5)
+","The code tries to access an element from an empty array, which will cause an ArrayIndexOutOfBoundsException at runtime.","When you create an empty array with int[] a = {}; the array has zero elements. Trying to access a[0] attempts to get the first element, but since there are no elements, this throws an exception. Arrays in Java are fixed in size and cannot be accessed beyond their bounds.",Look at how you declared the array - it's empty but you're trying to access index 0.,"An empty array has no elements, so you can't access any index in it. You need to either add elements or not try to access an element.","Try this instead: int[] a = {1, 2, 3}; System.out.println(a[0]);
+This creates an array with elements that can be accessed.",Always check array bounds before accessing elements. Remember that arrays in Java start at index 0 and go up to length-1.,,,,,
+R007,Keep loop bounds exclusive,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={1,2};for(int i=0;i<=a.length;i++){System.out.println(a[i]);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={1,2};for(int i=0;i<a.length;i++){System.out.println(a[i]);}
+}
+}
+","1
+2","Exception in thread ""main"" java.lang.ArrayIndexOutOfBoundsException: Index 2 out of bounds for length 2
+	at Main.main(Main.java:5)
+","The loop runs one iteration too many, causing an ArrayIndexOutOfBoundsException.","The loop condition uses 'i<=a.length' instead of 'i<a.length'. Since array indices start at 0, a array of length 2 has valid indices 0 and 1. When i equals 2, it tries to access a[2] which doesn't exist, causing the exception.",Look at your loop condition - you're using <= instead of <,"Remember that array indices go from 0 to length-1, so your loop should stop before reaching the array's length","Change i<=a.length to i<a.length
+This ensures you only access valid array indices",Always remember that arrays are zero-indexed and the last valid index is always (length - 1),,,,,
+R009,Use an equality operator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=3; if(x === 3){System.out.println(""yes"");}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=3; if(x == 3){System.out.println(""yes"");}
+}
+}
+",yes,"Main.java:5: error: illegal start of expression
+int x=3; if(x === 3){System.out.println(""yes"");}
+                ^
+1 error
+","The code uses '===' instead of '==' for comparison, which is invalid syntax in Java.","In Java, '===' is not a valid operator. The language uses '==' for equality comparison between primitive values. The triple equals operator is used in some other languages like JavaScript, but not in Java. Using '===' causes a compilation error because the compiler doesn't recognize it as a valid operator.",Look at the comparison operator used in your if statement condition.,You need to replace the triple equals symbol with the correct equality operator that Java recognizes.,"Change 'x === 3' to 'x == 3'
+This is the standard equality operator in Java.","Remember that Java uses '==' for value comparison and '===' is not a valid operator. Also, be careful about confusing operators from other programming languages when learning Java.",,,,,
+R010,Use a compatible numeric parser,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""2.5""));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Double.parseDouble(""2.5""));
+}
+}
+",2.5,"Exception in thread ""main"" java.lang.NumberFormatException: For input string: ""2.5""
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at Main.main(Main.java:5)
+","The code tries to parse a decimal string '2.5' using Integer.parseInt(), which only accepts whole numbers.","Integer.parseInt() expects a string that represents a whole number without any decimal points. When it encounters a decimal point, it throws a NumberFormatException because the string doesn't match the expected format for integer parsing. The string '2.5' contains a decimal point which makes it a floating-point number, not an integer.",Look at the method you're using to convert the string to a number.,Think about what type of number '2.5' represents and which parsing method handles that type.,Try using Double.parseDouble() instead of Integer.parseInt(). Both methods exist in the java.lang package.,"Remember that Integer.parseInt() is for whole numbers only, while Double.parseDouble() or Float.parseFloat() handle decimal numbers. Always choose the appropriate parsing method based on your data type.",,,,,
+R011,Keep a loop index in scope,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0;i<2;i++){} System.out.println(i);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0; for(;i<2;i++){} System.out.println(i);
+}
+}
+",2,"Main.java:5: error: cannot find symbol
+for(int i=0;i<2;i++){} System.out.println(i);
+                                          ^
+  symbol:   variable i
+  location: class Main
+1 error
+",The loop variable 'i' is out of scope when trying to access it outside the loop.,"In Java, variables declared inside a for loop's initialization block (the first part of the for statement) are only accessible within that specific block. When the loop ends, the variable goes out of scope and cannot be referenced elsewhere in the method.",Look at where you declare the variable 'i' in your for loop and where you try to use it afterward.,The variable 'i' needs to be declared outside the loop so it remains accessible after the loop finishes executing.,Move your variable declaration before the loop: int i; for(i=0;i<2;i++){},Remember that Java has block scope - variables declared inside a block (like a loop) are only available within that block and cannot be accessed outside of it.,,,,,
+R012,Compare compatible operand types,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=4; if(n==""4""){System.out.println(n);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=4; if(n==4){System.out.println(n);}
+}
+}
+",4,"Main.java:5: error: bad operand types for binary operator '=='
+int n=4; if(n==""4""){System.out.println(n);}
+             ^
+  first type:  int
+  second type: String
+1 error
+",The code tries to compare an integer variable with a string literal using the equality operator.,"In Java, you cannot directly compare incompatible types like int and String using the == operator. The == operator requires both operands to be of compatible types that can be compared directly. An integer variable can only be compared with other integer values, not with strings.","Look at the comparison operation on line 5 where you're comparing n with ""4"".",Think about what type of value you're comparing against - is it the same type as your variable n?,"If you want to check if n equals 4, you should compare it with the number 4, not the string ""4"". int n=4; if(n==4){System.out.println(n);}","Remember that in Java, primitive types like int cannot be directly compared to objects like String using ==. Use appropriate comparison methods or ensure both operands are of the same type.",,,,,
+R014,Avoid averaging an empty count,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int count=0;System.out.println(9/count);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int count=3;System.out.println(9/count);
+}
+}
+",3,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+","The program attempts to divide by zero, which causes an ArithmeticException at runtime.","In Java, dividing any number by zero is undefined mathematically and throws an ArithmeticException. The variable 'count' is initialized to 0, so when the program tries to calculate 9/count, it's essentially trying to compute 9/0, which is not allowed.",Look at the division operation on line 4 where you're dividing by the variable 'count'.,Think about what value 'count' has when the division happens and why that would cause a problem.,"The line `System.out.println(9/count);` will crash because count is 0.
+You need to check if count is not zero before doing the division.","Always validate your inputs before performing mathematical operations, especially division. Consider using conditional statements to prevent division by zero errors.",,,,,
+R016,Compare compatible operand types,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=4; if(n==""4""){System.out.println(n);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=4; if(n==4){System.out.println(n);}
+}
+}
+",4,"Main.java:5: error: bad operand types for binary operator '=='
+int n=4; if(n==""4""){System.out.println(n);}
+             ^
+  first type:  int
+  second type: String
+1 error
+",The code uses string comparison syntax (= =) with an integer variable.,"In Java, you cannot directly compare an integer variable with a string literal using == operator. The == operator is used for reference comparison of objects or value comparison of primitive types with matching types. Here, n is an int but ""4"" is a String, so they are incompatible types for direct comparison.",Look at the data types on both sides of your comparison operator.,Think about what type of value you're comparing against in your if statement condition.,"If you want to check if n equals 4, use n == 4 instead of n == ""4"".
+You can also convert the string to an integer using Integer.parseInt(""4"").","Remember that == compares values for primitive types when they match, but for objects like String, you need .equals() method or matching primitive types for direct comparison.",,,,,
+R017,Match digits to the radix,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""19"",8));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""17"",8));
+}
+}
+",15,"Exception in thread ""main"" java.lang.NumberFormatException: For input string: ""19"" under radix 8
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at Main.main(Main.java:5)
+","The code tries to parse '19' as a base-8 number, but '9' is not a valid digit in base-8.","In any number system (radix), you can only use digits from 0 up to (radix-1). For base-8, the valid digits are 0, 1, 2, 3, 4, 5, 6, and 7. Since '9' is not in this range, Java throws a NumberFormatException when trying to parse it.","Look at the second parameter in Integer.parseInt() - it's 8, meaning you're trying to parse as base-8.",Think about what digits are allowed in base-8 number system and whether '9' is one of them.,"Try changing the string to use only valid base-8 digits like ""17"" or ""10"" instead of ""19"".","Remember that for any radix r, valid digits are 0 through (r-1). For example, base-10 uses 0-9, base-2 uses 0-1, and base-8 uses 0-7.",,,,,
+R018,Do not assign a void return,"import java.util.*;
+public class Main {
+static void log(){System.out.println(4);}
+public static void main(String[] args) {
+int x=log(); System.out.println(x);
+}
+}
+","import java.util.*;
+public class Main {
+static void log(){System.out.println(4);}
+public static void main(String[] args) {
+log();
+}
+}
+",4,"Main.java:5: error: incompatible types: void cannot be converted to int
+int x=log(); System.out.println(x);
+         ^
+1 error
+",The code tries to assign the return value of a void method to an integer variable.,"The method 'log()' is declared with a 'void' return type, which means it doesn't return any value. When you try to assign its result to variable 'x', the compiler throws an error because you're trying to convert 'void' (which represents no value) into an integer type.",Look at line 5 where you're trying to assign the result of log() to x.,"The method log() is declared as void, so it doesn't return anything that can be assigned to a variable.","Change either the method declaration to return an int, or don't try to assign its result to a variable.","Remember that void methods are used for performing actions without returning values, while methods that return values must specify a return type like int, String, etc.",,,,,
+R019,Respect collection element types,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>(); a.add(""7""); System.out.println(a);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>(); a.add(7); System.out.println(a);
+}
+}
+",[7],"Main.java:5: error: incompatible types: String cannot be converted to Integer
+List<Integer> a=new ArrayList<>(); a.add(""7""); System.out.println(a);
+                                         ^
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+1 error
+",The code tries to add a String to a List that is declared to hold only Integer objects.,"In Java, generic collections like ArrayList are type-safe, meaning they enforce what types of objects can be stored in them. The declaration 'List<Integer>' means this list can only store Integer objects, not Strings. When you try to add a String value like ""7"", the compiler throws an error because it cannot convert a String to an Integer.",Look at line 5 where you're adding an element to your list.,"The list is declared to hold Integer objects, but you're trying to add a String literal.","Change the ""7"" to just 7 without quotes, since you want to add an integer value.","Remember that generic collections in Java enforce type safety at compile time, which helps prevent runtime errors. Always ensure the data types match what your collection is declared to hold.",,,,,
+R020,Advance a while counter,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0;while(i<3){}System.out.println(i);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0;while(i<3){i++;}System.out.println(i);
+}
+}
+",3,Execution time exceeded the frozen limit,The while loop runs infinitely because the counter variable is never incremented.,"The code has a while loop that checks if i is less than 3, but inside the loop body there's nothing that changes the value of i. This creates an infinite loop where i stays at 0 forever, causing the program to hang and exceed the time limit.",Look at the while loop condition and the code inside it.,The variable i needs to be changed inside the loop for the loop to eventually end.,Add i++ or i = i + 1 somewhere inside the loop body. Try: while(i<3){i++;},Always ensure loop variables are updated within the loop body to prevent infinite loops - this is a fundamental concept in control flow structures.,,,,,
+R022,Do not assign a void return,"import java.util.*;
+public class Main {
+static void log(){System.out.println(4);}
+public static void main(String[] args) {
+int x=log(); System.out.println(x);
+}
+}
+","import java.util.*;
+public class Main {
+static void log(){System.out.println(4);}
+public static void main(String[] args) {
+log();
+}
+}
+",4,"Main.java:5: error: incompatible types: void cannot be converted to int
+int x=log(); System.out.println(x);
+         ^
+1 error
+",The code tries to assign the return value of a void method to an integer variable.,"The method 'log()' is declared with a 'void' return type, which means it doesn't return any value. When you try to assign its result to variable 'x', the compiler throws an error because you're trying to convert 'void' (which represents no value) into an integer type.",Look at line 5 where you're trying to assign the result of log() to x.,"The method log() is declared as void, so it doesn't return anything that can be assigned to a variable.","Change either the method declaration to return an int, or don't try to assign its result to a variable.","Remember that void methods are used for performing actions without returning values, while methods that return values must specify a return type like int, String, etc.",,,,,
+R024,Use a compatible numeric parser,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""2.5""));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Double.parseDouble(""2.5""));
+}
+}
+",2.5,"Exception in thread ""main"" java.lang.NumberFormatException: For input string: ""2.5""
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at Main.main(Main.java:5)
+","The code tries to parse a decimal string '2.5' using Integer.parseInt(), which only accepts whole numbers.","Integer.parseInt() expects a string that represents a whole number without any decimal points. When it encounters a decimal point, it throws a NumberFormatException because the string doesn't match the expected format for integer parsing. The string '2.5' contains a decimal point which makes it a floating-point number, not an integer.",Look at the method you're using to convert the string to a number.,Think about what type of number '2.5' represents and which parsing method handles that type.,"Try using Double.parseDouble() instead of Integer.parseInt().
+Both methods exist in the java.lang package.","Remember that Integer.parseInt() is for whole numbers only, while Double.parseDouble() or Float.parseFloat() handle decimal numbers. Always choose the appropriate parsing method based on your data type.",,,,,
+R025,Use an equality operator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=3; if(x === 3){System.out.println(""yes"");}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=3; if(x == 3){System.out.println(""yes"");}
+}
+}
+",yes,"Main.java:5: error: illegal start of expression
+int x=3; if(x === 3){System.out.println(""yes"");}
+                ^
+1 error
+","The code uses === instead of == for equality comparison, which is not valid Java syntax.","In Java, === is not a valid operator. The language uses == for comparing values for equality. The triple equals operator is used in some other programming languages like JavaScript, but not in Java. This causes a compilation error because the compiler doesn't recognize === as a valid operator.",Look at the if statement condition on line 5 where you're using three equal signs.,Replace the triple equals operator with the correct Java equality operator that compares two values.,Change `x === 3` to `x == 3` for proper Java syntax.,"Remember that in Java, == is used for value comparison, while === is not a valid operator. Always use == for equality checks in Java.",,,,,
+R028,Use a compatible numeric parser,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""2.5""));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Double.parseDouble(""2.5""));
+}
+}
+",2.5,"Exception in thread ""main"" java.lang.NumberFormatException: For input string: ""2.5""
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at Main.main(Main.java:5)
+",The code tries to parse a decimal string '2.5' using Integer.parseInt() which only accepts integer strings.,"Integer.parseInt() is designed to convert string representations of integers into integer values. It cannot handle decimal points or fractional parts because integers are whole numbers without decimal places. When it encounters a decimal point, it throws a NumberFormatException.",Look at the method being used to parse the string '2.5'.,Consider which parsing method is appropriate for decimal numbers instead of integers.,"Try using Double.parseDouble() instead of Integer.parseInt().
+// Example: Double.parseDouble(""2.5"")","Remember that Integer.parseInt() works only with whole numbers, while Double.parseDouble() handles both integers and decimals.",,,,,
+R031,Use an equality operator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=3; if(x === 3){System.out.println(""yes"");}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=3; if(x == 3){System.out.println(""yes"");}
+}
+}
+",yes,"Main.java:5: error: illegal start of expression
+int x=3; if(x === 3){System.out.println(""yes"");}
+                ^
+1 error
+","The code uses === instead of == for equality comparison, which is not valid Java syntax.","In Java, === is not a valid operator. The language uses == for comparing values for equality. The triple equals operator is used in some other programming languages like JavaScript, but not in Java. This causes a compilation error because the compiler doesn't recognize === as a valid operator.",Look at the if statement condition on line 5 where you're using three equal signs.,Replace the triple equals operator with the correct Java equality operator that compares two values.,Change `x === 3` to `x == 3` for proper Java syntax.,"Remember that in Java, == is used for value comparison, while === is not a valid operator. Always use == for equality checks in Java.",,,,,
+R032,Initialize an iterator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Iterator<Integer> it=null; System.out.println(it.hasNext());
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Iterator<Integer> it=Arrays.asList(1).iterator(); System.out.println(it.hasNext());
+}
+}
+",true,"Exception in thread ""main"" java.lang.NullPointerException: Cannot invoke ""java.util.Iterator.hasNext()"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The code tries to call hasNext() on a null iterator reference.,"An Iterator in Java cannot be used until it is properly initialized with a collection. When you declare an Iterator variable but don't assign it a value (like setting it to null), calling any method on it will result in a NullPointerException. The hasNext() method cannot be called on a null reference.",Look at how the iterator 'it' is declared and initialized.,You need to create an iterator from an actual collection before using it.,Try initializing your iterator like: Iterator<Integer> it = someCollection.iterator();,"Remember that all reference variables in Java must be initialized with a valid object before you can call methods on them, or they will throw NullPointerException.",,,,,
+R033,Do not index an empty array,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={}; System.out.println(a[0]);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={}; System.out.println(a.length);
+}
+}
+",0,"Exception in thread ""main"" java.lang.ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0
+	at Main.main(Main.java:5)
+",The code tries to access the first element of an empty array.,"An empty array has no elements, so there is no valid index 0. When you try to access an array element using an index that doesn't exist, Java throws an ArrayIndexOutOfBoundsException. The array declaration int[] a={} creates an array with zero elements.",Look at how the array 'a' is declared on line 4.,"An empty array has no elements, so you cannot access any index of it.",Try adding at least one element to your array declaration like: int[] a = {5};,Always check that arrays have elements before trying to access them by index. Consider using array.length to verify the size before indexing.,,,,,
+R034,Match digits to the radix,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""19"",8));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""17"",8));
+}
+}
+",15,"Exception in thread ""main"" java.lang.NumberFormatException: For input string: ""19"" under radix 8
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at Main.main(Main.java:5)
+","The code attempts to parse a decimal string '19' using radix 8, which is invalid because '9' is not a valid digit in base 8.","In base 8 (octal), only digits 0-7 are valid. The string '19' contains the digit '9', which doesn't exist in octal system. When you try to parse '19' with radix 8, Java throws a NumberFormatException because it cannot interpret '9' as a valid digit in base 8.",Look at the string '19' and the radix 8 being used together.,"Remember that in any number system, you can only use digits up to (but not including) the radix value.","Try changing the input string to something like ""17"" or ""10"" when using radix 8.
+For example: Integer.parseInt(""17"", 8)","When working with different number bases in Java, always ensure your input string only contains valid digits for that specific radix. The maximum digit allowed in radix N is (N-1).",,,,,
+R036,Keep a loop index in scope,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0;i<2;i++){} System.out.println(i);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0; for(;i<2;i++){} System.out.println(i);
+}
+}
+",2,"Main.java:5: error: cannot find symbol
+for(int i=0;i<2;i++){} System.out.println(i);
+                                          ^
+  symbol:   variable i
+  location: class Main
+1 error
+",The loop variable 'i' is out of scope when trying to access it outside the loop.,"In Java, variables declared inside a for loop's initialization block (the first part of the for statement) are only accessible within that specific block. When the loop ends, the variable goes out of scope and cannot be referenced elsewhere in the method.",Look at where you declare the variable 'i' in your for loop and where you try to use it afterward.,The variable 'i' needs to be declared outside the loop so it remains accessible after the loop finishes executing.,"Move your variable declaration before the loop:
+int i;
+for(i=0;i<2;i++){}",Remember that Java has block scope - variables declared inside a block (like a loop) are only available within that block and cannot be accessed outside of it.,,,,,
+R037,Keep a loop index in scope,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0;i<2;i++){} System.out.println(i);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0; for(;i<2;i++){} System.out.println(i);
+}
+}
+",2,"Main.java:5: error: cannot find symbol
+for(int i=0;i<2;i++){} System.out.println(i);
+                                          ^
+  symbol:   variable i
+  location: class Main
+1 error
+",The variable 'i' is out of scope when trying to print it outside the loop.,"In Java, variables declared inside a loop's initialization block (like 'int i=0' in the for loop) are only accessible within that specific block. When the loop ends, the variable goes out of scope and cannot be accessed elsewhere in the method. This is a fundamental concept of variable scope in Java.",Look at where the variable 'i' is declared and where it's being used.,The loop variable 'i' needs to be declared outside the loop so it can be accessed after the loop finishes.,"Move the variable declaration outside the loop:
+```
+int i;
+for(i=0;i<2;i++){}
+System.out.println(i);
+```","Review Java's scope rules and understand that variables declared in a block (like loops, if statements) are only accessible within that block unless declared outside of it.",,,,,
+R038,Do not assign a void return,"import java.util.*;
+public class Main {
+static void log(){System.out.println(4);}
+public static void main(String[] args) {
+int x=log(); System.out.println(x);
+}
+}
+","import java.util.*;
+public class Main {
+static void log(){System.out.println(4);}
+public static void main(String[] args) {
+log();
+}
+}
+",4,"Main.java:5: error: incompatible types: void cannot be converted to int
+int x=log(); System.out.println(x);
+         ^
+1 error
+",The code tries to assign the return value of a void method to a variable.,"In Java, void methods don't return any value - they perform an action but give nothing back. When you try to assign what a void method returns to a variable, the compiler doesn't know what to do because there's nothing to assign. This is a fundamental concept about method return types in Java.",Look at the log() method declaration - it's declared as 'void' which means it returns nothing.,"You're trying to store the result of log() into variable x, but log() doesn't return anything to store.","Change either: 1) The method signature to return an int instead of void, or 2) Don't try to assign the result to a variable.","Remember that void methods are used for actions like printing output, while methods that return values should have a specific return type like int, String, etc.",,,,,
+R043,Match digits to the radix,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""19"",8));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+System.out.println(Integer.parseInt(""17"",8));
+}
+}
+",15,"Exception in thread ""main"" java.lang.NumberFormatException: For input string: ""19"" under radix 8
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at Main.main(Main.java:5)
+","The code tries to parse '19' as a base-8 number, but '9' is not a valid digit in base-8.","In any number system (radix), you can only use digits from 0 up to (radix-1). For base-8, the valid digits are 0, 1, 2, 3, 4, 5, 6, and 7. Since '9' is not in this range, Java throws a NumberFormatException when trying to parse it.","Look at the second parameter in Integer.parseInt() - it's 8, meaning you're trying to parse as base-8.",Think about what digits are allowed in base-8 number system and whether '9' is one of them.,"Try changing the string to use only valid base-8 digits like ""17"" or ""10"" instead of ""19"".","Remember that for any radix r, valid digits are 0 through (r-1). For example, base-10 uses 0-9, base-2 uses 0-1, and base-8 uses 0-7.",,,,,
+R044,Keep loop bounds exclusive,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={1,2};for(int i=0;i<=a.length;i++){System.out.println(a[i]);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={1,2};for(int i=0;i<a.length;i++){System.out.println(a[i]);}
+}
+}
+","1
+2","Exception in thread ""main"" java.lang.ArrayIndexOutOfBoundsException: Index 2 out of bounds for length 2
+	at Main.main(Main.java:5)
+",The loop tries to access an array index that is out of bounds.,"The loop condition uses `i<=a.length` instead of `i<a.length`. Since array indices start at 0, a array of length 2 has valid indices 0 and 1. When i equals 2, it tries to access a[2] which doesn't exist, causing the exception.",Look at your loop condition - you're using less than or equal to instead of just less than.,"Remember that array indices start at 0 and go up to length-1, so your loop should stop before reaching the array's length.",Change `i<=a.length` to `i<a.length` to prevent accessing invalid array indices.,"Always remember that arrays in Java are zero-indexed, meaning the first element is at index 0 and the last element is at index (length-1).",,,,,
+R045,Respect collection element types,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>(); a.add(""7""); System.out.println(a);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>(); a.add(7); System.out.println(a);
+}
+}
+",[7],"Main.java:5: error: incompatible types: String cannot be converted to Integer
+List<Integer> a=new ArrayList<>(); a.add(""7""); System.out.println(a);
+                                         ^
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+1 error
+",The code tries to add a String to a List that is declared to hold only Integer objects.,"In Java, generic collections like ArrayList are type-safe, meaning they enforce what types of objects can be stored in them. The declaration 'List<Integer>' means this list can only store Integer objects, not Strings. When you try to add a String value like ""7"", the compiler throws an error because it cannot convert a String to an Integer.",Look at line 5 where you're adding an element to your list.,"The list is declared to hold Integer objects, but you're trying to add a String literal.","Change the ""7"" to just 7 without quotes, since you want to add an integer value.","Remember that generic collections in Java enforce type safety at compile time, which helps prevent runtime errors. Always ensure the data types match what your collection is declared to hold.",,,,,
+R049,Separate for header clauses,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0, i<2, i++){System.out.println(i);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0; i<2; i++){System.out.println(i);}
+}
+}
+","0
+1","Main.java:5: error: ';' expected
+for(int i=0, i<2, i++){System.out.println(i);}
+              ^
+Main.java:5: error: illegal start of type
+for(int i=0, i<2, i++){System.out.println(i);}
+               ^
+2 errors
+",The for loop header uses incorrect syntax with commas instead of semicolons to separate clauses.,"In Java, the for loop header requires semicolons to separate the initialization, condition, and increment clauses. Using commas creates a compilation error because the compiler expects specific syntax for each part of the loop structure. The comma-separated format is not valid for for loop headers.",Look at the for loop header syntax - you're using commas between the three parts instead of semicolons.,Remember that for loops have a specific structure: for (initialization; condition; increment) where each part is separated by semicolons.,"Change your loop header from:
+for(int i=0, i<2, i++)
+to:
+for(int i=0; i<2; i++)","Review the Java for loop syntax and understand that initialization, condition, and increment must be separated by semicolons, not commas.",,,,,
+R051,Avoid averaging an empty count,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int count=0;System.out.println(9/count);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int count=3;System.out.println(9/count);
+}
+}
+",3,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+","The program attempts to divide by zero, causing an ArithmeticException.","In Java, dividing any number by zero is not allowed and results in an ArithmeticException. The variable 'count' is initialized to 0, so when the program tries to calculate 9/count, it's essentially trying to do 9/0, which is mathematically undefined and throws an exception at runtime.",Look at the division operation on line 5 where you're dividing 9 by 'count'.,Think about what value 'count' needs to be before doing division to avoid getting zero.,Try initializing count to a non-zero value like 1 or 3 instead of 0. int count = 1;,Remember that any division operation in Java must have a non-zero denominator. Always validate your inputs before performing mathematical operations.,,,,,
+R055,Advance a while counter,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0;while(i<3){}System.out.println(i);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0;while(i<3){i++;}System.out.println(i);
+}
+}
+",3,Execution time exceeded the frozen limit,The while loop runs infinitely because the counter variable is never incremented.,"The code has a while loop that checks if i is less than 3, but inside the loop body there's nothing that changes the value of i. This creates an infinite loop where i stays at 0 forever, causing the program to hang and exceed the time limit.",Look at the while loop condition and the code inside it.,The variable i needs to be changed inside the loop for the loop to eventually end.,"Add i++ or i = i + 1 somewhere inside the loop body.
+Try: while(i<3){i++;}",Always ensure loop variables are updated within the loop body to prevent infinite loops - this is a fundamental concept in control flow structures.,,,,,
+R056,Handle a checked exception,"import java.util.*;
+public class Main {
+static void fail() throws java.io.IOException {throw new java.io.IOException();}
+public static void main(String[] args) {
+fail();
+}
+}
+","import java.util.*;
+public class Main {
+static void fail() throws java.io.IOException {throw new java.io.IOException();}
+public static void main(String[] args) {
+try{fail();}catch(java.io.IOException e){System.out.println(""handled"");}
+}
+}
+",handled,"Main.java:5: error: unreported exception IOException; must be caught or declared to be thrown
+fail();
+    ^
+1 error
+",The code throws a checked exception but doesn't handle it properly.,"In Java, checked exceptions like IOException must be either caught using try-catch blocks or declared to be thrown further up the call stack. The method 'fail()' declares it throws IOException but the main method doesn't handle it, so the program won't compile.",Look at where the IOException is thrown and where it's not handled.,The main method needs to either catch the exception or declare that it throws IOException.,"Add a try-catch block around the fail() call in main, or add 'throws IOException' to the main method signature.",Remember that checked exceptions must be handled at compile time - either with try-catch or throws declarations.,,,,,
+R059,Find a maximum in an all negative array,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={-5,-2,-8};int m=0;for(int x:a)if(x>m)m=x;System.out.println(m);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={-5,-2,-8};int m=a[0];for(int x:a)if(x>m)m=x;System.out.println(m);
+}
+}
+",-2,Output does not match the task specification. Actual stdout: 0,The program outputs 0 instead of the maximum negative number in the array.,"The issue occurs because the variable 'm' is initialized to 0, which is greater than all the negative numbers in the array. When comparing negative numbers, the largest (closest to zero) negative number should be the maximum, but since 0 is larger than any negative number, it incorrectly becomes the result.",Look at how you initialize your maximum variable 'm'.,Think about what value 'm' should be initialized to when working with an array of all negative numbers.,"Try initializing m to the first element of the array instead:
+int m = a[0];","When finding maximum or minimum values in arrays, always consider edge cases like all negative numbers or empty arrays, and initialize your tracking variable appropriately.",,,,,
+R061,Avoid averaging an empty count,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int count=0;System.out.println(9/count);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int count=3;System.out.println(9/count);
+}
+}
+",3,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+","The program attempts to divide by zero, causing an ArithmeticException.","In Java, dividing any number by zero is not allowed and results in an ArithmeticException. The variable 'count' is initialized to 0, so when the program tries to calculate 9/count, it's essentially trying to do 9/0, which is mathematically undefined and throws an exception at runtime.",Look at the division operation on line 5 where you're dividing 9 by 'count'.,Think about what value 'count' needs to be before doing division to avoid getting zero.,"Try initializing count to a non-zero value like 1 or 3 instead of 0.
+int count = 1;",Remember that any division operation in Java must have a non-zero denominator. Always validate your inputs before performing mathematical operations.,,,,,
+R064,Handle a checked exception,"import java.util.*;
+public class Main {
+static void fail() throws java.io.IOException {throw new java.io.IOException();}
+public static void main(String[] args) {
+fail();
+}
+}
+","import java.util.*;
+public class Main {
+static void fail() throws java.io.IOException {throw new java.io.IOException();}
+public static void main(String[] args) {
+try{fail();}catch(java.io.IOException e){System.out.println(""handled"");}
+}
+}
+",handled,"Main.java:5: error: unreported exception IOException; must be caught or declared to be thrown
+fail();
+    ^
+1 error
+",The program doesn't handle the checked IOException that is thrown by the fail() method.,"In Java, checked exceptions like IOException must be either caught using a try-catch block or declared to be thrown by the method that calls it. The fail() method declares it throws IOException, but the main method doesn't handle it, so the compiler requires either a catch block or a throws declaration in main.",Look at line 5 where fail() is called - the method throws an exception that needs handling.,The main method needs to either declare that it throws IOException or use a try-catch block around the call to fail().,"You can fix this by adding 'throws java.io.IOException' to your main method signature.
+public static void main(String[] args) throws java.io.IOException {",Remember that checked exceptions must be handled before a program will compile. Read about the difference between checked and unchecked exceptions in Java.,,,,,
+R067,Initialize an iterator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Iterator<Integer> it=null; System.out.println(it.hasNext());
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Iterator<Integer> it=Arrays.asList(1).iterator(); System.out.println(it.hasNext());
+}
+}
+",true,"Exception in thread ""main"" java.lang.NullPointerException: Cannot invoke ""java.util.Iterator.hasNext()"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The iterator variable 'it' is declared but not initialized before calling hasNext() method.,"In Java, when you declare an Iterator variable without initializing it, it gets a default value of null. When you try to call any method on a null reference, like hasNext(), Java throws a NullPointerException. An iterator must be initialized with a collection's iterator() method before you can use it.",Look at the line where you declare the iterator variable 'it' - it's set to null explicitly.,"Before calling methods on an iterator, you need to initialize it with the iterator() method from a collection like ArrayList or LinkedList.","You need to create a collection first, then get its iterator:
+
+List<Integer> list = new ArrayList<>();
+Iterator<Integer> it = list.iterator();",Remember that all reference variables in Java are null by default unless explicitly initialized. Always initialize your iterators with collection.iterator() before using them.,,,,,
+R071,Advance a while counter,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0;while(i<3){}System.out.println(i);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int i=0;while(i<3){i++;}System.out.println(i);
+}
+}
+",3,Execution time exceeded the frozen limit,"The while loop counter is never incremented, causing an infinite loop.","The code enters a while loop that continues as long as i is less than 3, but the variable i is never changed inside the loop. This means i stays at 0 forever, creating an infinite loop that never exits to print the value of i.",Look at the while loop condition and check if the loop variable is being modified inside the loop body.,You need to add code inside the loop that increases the value of i by 1 each time the loop runs.,Add `i++` or `i = i + 1` somewhere inside the curly braces of your while loop.,"Remember that loops need a way to eventually become false, otherwise they run infinitely. This is called the 'loop termination condition' or 'loop increment'.",,,,,
+R072,Separate for header clauses,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0, i<2, i++){System.out.println(i);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0; i<2; i++){System.out.println(i);}
+}
+}
+","0
+1","Main.java:5: error: ';' expected
+for(int i=0, i<2, i++){System.out.println(i);}
+              ^
+Main.java:5: error: illegal start of type
+for(int i=0, i<2, i++){System.out.println(i);}
+               ^
+2 errors
+",The for loop header uses incorrect syntax with commas instead of semicolons to separate clauses.,"In Java, the for loop header has three parts: initialization, condition, and increment, which must be separated by semicolons. Using commas creates invalid syntax because the compiler expects semicolon separators between these logical components.",Look at the for loop header syntax - you're using commas to separate the three clauses.,"Remember that in a for loop, initialization; condition; increment are separated by semicolons, not commas.","Change the commas in your for loop to semicolons:
+for(int i=0; i<2; i++)",Review the correct syntax for for loops in Java - the header format is: for(initialization; condition; increment),,,,,
+R074,Compare compatible operand types,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=4; if(n==""4""){System.out.println(n);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=4; if(n==4){System.out.println(n);}
+}
+}
+",4,"Main.java:5: error: bad operand types for binary operator '=='
+int n=4; if(n==""4""){System.out.println(n);}
+             ^
+  first type:  int
+  second type: String
+1 error
+",The code tries to compare an integer variable with a string literal using the equality operator.,"In Java, you cannot directly compare incompatible types like int and String using the == operator. The == operator requires both operands to be of compatible types that can be compared directly. An integer variable can only be compared with other integer values, not with strings.","Look at the comparison operation on line 5 where you're comparing n with ""4"".",Think about what type of value you're comparing against - is it the same type as your variable n?,"If you want to check if n equals 4, you should compare it with the number 4, not the string ""4"".
+int n=4; if(n==4){System.out.println(n);}","Remember that in Java, primitive types like int cannot be directly compared to objects like String using ==. Use appropriate comparison methods or ensure both operands are of the same type.",,,,,
+R078,Separate for header clauses,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0, i<2, i++){System.out.println(i);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+for(int i=0; i<2; i++){System.out.println(i);}
+}
+}
+","0
+1","Main.java:5: error: ';' expected
+for(int i=0, i<2, i++){System.out.println(i);}
+              ^
+Main.java:5: error: illegal start of type
+for(int i=0, i<2, i++){System.out.println(i);}
+               ^
+2 errors
+",The for loop header uses incorrect syntax with commas instead of semicolons to separate clauses.,"In Java, the for loop header has three parts: initialization, condition, and increment, which must be separated by semicolons. Using commas creates invalid syntax because the compiler expects semicolon separators between these logical components.",Look at the for loop header syntax - you're using commas to separate the three clauses.,"Remember that in a for loop, initialization; condition; increment are separated by semicolons, not commas.",Change the commas in your for loop to semicolons: for(int i=0; i<2; i++),Review the correct syntax for for loops in Java - the header format is: for(initialization; condition; increment),,,,,
+R080,Handle a checked exception,"import java.util.*;
+public class Main {
+static void fail() throws java.io.IOException {throw new java.io.IOException();}
+public static void main(String[] args) {
+fail();
+}
+}
+","import java.util.*;
+public class Main {
+static void fail() throws java.io.IOException {throw new java.io.IOException();}
+public static void main(String[] args) {
+try{fail();}catch(java.io.IOException e){System.out.println(""handled"");}
+}
+}
+",handled,"Main.java:5: error: unreported exception IOException; must be caught or declared to be thrown
+fail();
+    ^
+1 error
+","The program has a method call that can throw an IOException, but the exception is not handled properly.",The code tries to use a method that might throw a checked exception without handling it.,Look at the method you're calling and see if it declares that it throws an exception,You need to either put try-catch around the method call or add throws to your method signature,,"Checked exceptions must be handled explicitly in Java, either by catching them or declaring they can be thrown",,,,,
+R083,Keep loop bounds exclusive,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={1,2};for(int i=0;i<=a.length;i++){System.out.println(a[i]);}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={1,2};for(int i=0;i<a.length;i++){System.out.println(a[i]);}
+}
+}
+","1
+2","Exception in thread ""main"" java.lang.ArrayIndexOutOfBoundsException: Index 2 out of bounds for length 2
+	at Main.main(Main.java:5)
+",The loop tries to access an array index that is out of bounds.,"The loop condition uses `i<=a.length` instead of `i<a.length`. Since array indices start at 0, a array of length 2 has valid indices 0 and 1. When i equals 2, it tries to access a[2] which doesn't exist, causing the exception.",Look at your loop condition - you're using less than or equal to instead of just less than.,"Remember that array indices start at 0 and go up to length-1, so your loop should stop before reaching the array's length.",Change `i<=a.length` to `i<a.length` to prevent accessing invalid array indices.,"Always remember that arrays in Java are zero-indexed, meaning the first element is at index 0 and the last element is at index (length-1).",,,,,
+R087,Respect collection element types,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>(); a.add(""7""); System.out.println(a);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>(); a.add(7); System.out.println(a);
+}
+}
+",[7],"Main.java:5: error: incompatible types: String cannot be converted to Integer
+List<Integer> a=new ArrayList<>(); a.add(""7""); System.out.println(a);
+                                         ^
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+1 error
+",The code tries to add a String to an ArrayList that is declared to hold only Integer objects.,"In Java, collections are type-safe and enforce what types of objects they can contain. The List<Integer> declaration means this list can only store Integer objects. When you try to add a String like ""7"", the compiler throws a type mismatch error because Strings and Integers are different data types.",Look at the type declared for your ArrayList on the left side of the assignment.,Think about what type of objects you're trying to add to your collection versus what type you declared the collection to hold.,"Change either the declaration or the value being added. For example: 
+List<Integer> a = new ArrayList<>();
+a.add(7);",Always ensure that the data types you use with collections match the generic type you declared for them. This is called type safety in Java.,,,,,
+R088,Find a maximum in an all negative array,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={-5,-2,-8};int m=0;for(int x:a)if(x>m)m=x;System.out.println(m);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={-5,-2,-8};int m=a[0];for(int x:a)if(x>m)m=x;System.out.println(m);
+}
+}
+",-2,Output does not match the task specification. Actual stdout: 0,The program outputs 0 instead of the maximum negative number in the array.,"The issue occurs because the variable 'm' is initialized to 0, which is greater than all the negative numbers in the array. When comparing negative numbers, the largest (closest to zero) negative number should be the maximum, but since 0 is larger than any negative number, it incorrectly becomes the result.",Look at how you initialize your maximum variable 'm'.,Think about what value 'm' should be initialized to when working with an array of all negative numbers.,Try initializing m to the first element of the array instead: int m = a[0];,"When finding maximum or minimum values in arrays, always consider edge cases like all negative numbers or empty arrays, and initialize your tracking variable appropriately.",,,,,
+R089,Find a maximum in an all negative array,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={-5,-2,-8};int m=0;for(int x:a)if(x>m)m=x;System.out.println(m);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={-5,-2,-8};int m=a[0];for(int x:a)if(x>m)m=x;System.out.println(m);
+}
+}
+",-2,Output does not match the task specification. Actual stdout: 0,The code does not correctly find the maximum value in an array of all negative numbers.,"The issue occurs because the initial value of 'm' is set to 0, which is positive. When comparing negative numbers with a positive initial value, the maximum value found will always be the largest negative number (closest to zero), but the logic fails when all elements are negative and the initial value is larger than any element. In this specific case, since 0 > -5, -2, and -8, the code incorrectly outputs 0 instead of the actual maximum (-2).",Look at how you initialize your maximum variable 'm'.,What happens when all elements in the array are negative and your initial maximum is positive?,"Try initializing m with the first element of the array instead:
+int m = a[0];","When finding maximum or minimum values in arrays, always consider initializing your result variable with an actual array element rather than an arbitrary value, especially when dealing with arrays that might contain only negative numbers.",,,,,
+R090,Do not index an empty array,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={}; System.out.println(a[0]);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int[] a={}; System.out.println(a.length);
+}
+}
+",0,"Exception in thread ""main"" java.lang.ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0
+	at Main.main(Main.java:5)
+",The code tries to access the first element of an empty array.,"An empty array has no elements, so there is no valid index 0. When you try to access an array element using an index that doesn't exist, Java throws an ArrayIndexOutOfBoundsException. The array declaration int[] a={} creates an array with zero elements.",Look at how the array 'a' is declared on line 4.,"An empty array has no elements, so you cannot access any index of it.",Try adding at least one element to your array declaration like: int[] a = {5};,Always check that arrays have elements before trying to access them by index. Consider using array.length to verify the size before indexing.,,,,,

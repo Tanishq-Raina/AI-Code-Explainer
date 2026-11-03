@@ -1,9 +1,13 @@
-# Frozen benchmark v1 preparation
+# Frozen benchmark v2 preparation
 
 Status: prepared for a future authorized run. No benchmark programs, hint requests,
 video jobs, guard measurements or complexity predictions were executed during
 preparation. Only metadata reads and mocked/offline software tests were used.
 The Java ground-truth execution gate is deliberately still pending.
+
+V2 records Ollama 0.40.14 and the pre-collection reliability audit. V1 is preserved
+in evaluation/freeze_history/benchmark-v1-pre-audit.zip. The synthetic datasets,
+labels, model weights and planned sample sizes are unchanged. See BENCHMARK_AUDIT.md.
 
 ## What is frozen
 
@@ -18,7 +22,7 @@ The Java ground-truth execution gate is deliberately still pending.
 | Validator challenges | 100 | Four groups of 25; related rule families disclosed |
 | Analytics scenarios | 12 | Synthetic rule behavior, not student learning |
 
-Files are under evaluation/benchmark_v1. FREEZE.json seals their bytes, protocol,
+Files are under evaluation/benchmark_v2. FREEZE.json seals their bytes, protocol,
 runner, relevant backend/frontend source and analysis code. It is a tamper check,
 not a claim that the labels have been empirically validated. Never overwrite a
 freeze after seeing results. Changes require a new version and an explicit log.
@@ -44,6 +48,9 @@ Ollama version, 8192-token context, temperature 0.3, 1200 output-token limit and
 prompt-only JSON for both conditions; constrained decoding is not added to just
 one condition. Raw text, complete response envelope, load/token timing and parse
 failures are retained. Cloud credentials are never sent to the loopback endpoint.
+Repetitive error diagnostics are capped at 40 lines and 4000 characters for prompt
+input; complete originals remain in the oracle records. This budget applies to
+grounded and strict-retry input, and truncation is explicitly recorded.
 
 Videos remain on the configured AbacusAI Qwen 480B model and Edge speech, as
 requested. These are different deployments and must be described separately in
@@ -53,7 +60,9 @@ from a model-generated overview. The paper cannot claim that all code stays loca
 
 The prepared machine has an i7-13700HX, approximately 16 GB RAM and an RTX 4060
 Laptop GPU with 8188 MiB VRAM. The 30B weights exceed GPU memory; actual speed has
-not been measured. Do not extrapolate the old cloud timings to local inference.
+not been measured on the updated runtime. A separate three-call synthetic pilot
+on the earlier runtime observed a 63.2-second first call and 10.5/13.2-second warm
+calls. That pilot is not part of the benchmark and does not predict all case latencies.
 
 ## Commands that do not start a benchmark
 
@@ -69,6 +78,9 @@ health, Docker image identity and tool versions, without inference or rendering:
 ```powershell
 .\.venv\Scripts\python.exe evaluation\run_benchmarks.py --preflight
 ```
+
+If Ollama updates again, the version check will stop intentionally. Do not edit
+FREEZE.json or disable the guard; prepare a documented revision before collecting.
 
 The equivalent PowerShell wrapper is evaluation/run_benchmarks.ps1. Its default
 also does not run anything. Do not add -Run or --run until collection is intended.
@@ -109,7 +121,7 @@ mapping is kept separate. This is not independent or blinded expert validation.
 
 ## Pause and recovery
 
-Default output: evaluation/runs/benchmark-v1. Rerun the exact same command and
+Default output: evaluation/runs/benchmark-v2. Rerun the exact same command and
 output folder to resume. A global lock prevents duplicate suite launchers.
 Completed responses, known failures and video job IDs are retained. A timeout
 after video submission may leave a server job running: the collector stops instead
@@ -121,10 +133,16 @@ The previous pilot data remain separate and are not final benchmark cases.
 
 Transport failures and timeouts are data. Five consecutive paired hint transport
 failures stop the queue. A failed excluded warmup stops before test generations;
-its record is retained for diagnosis. Do not delete failed call records to obtain
+its record is retained for diagnosis. Each model call also has a durable intent
+file: if a process dies after sending a request but before saving its response,
+resume stops instead of silently generating another response. Do not delete
+intent files or failed call records to obtain
 a favorable rerun. Ask for a documented recovery/version decision instead.
 
 ## After collection
+
+The launcher requires every planned stage record before producing a completion
+marker. Manual review sheets are never overwritten on resume.
 
 Read collection_complete.json and all failure records. Completion means stages
 were traversed, not that every case passed. Fill author_review.csv and

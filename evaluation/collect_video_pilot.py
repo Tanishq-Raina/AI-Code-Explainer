@@ -47,7 +47,8 @@ def append_event(folder, kind, **data):
 def http_json(url, timeout=30, body=None, content_type=None):
     req = request.Request(url, data=body, headers=(
         {'Content-Type': content_type} if content_type else {}))
-    with request.urlopen(req, timeout=timeout) as response:
+    opener=request.build_opener(request.ProxyHandler({}))
+    with opener.open(req, timeout=timeout) as response:
         return response.status, json.load(response)
 
 
@@ -115,7 +116,8 @@ def check_service(base):
 def download(base, job_id, target):
     # Always derive the URL from the configured service, not a response URL.
     temporary = target.with_suffix('.mp4.part')
-    with request.urlopen(base + '/jobs/' + job_id + '/video', timeout=300) as response:
+    opener=request.build_opener(request.ProxyHandler({}))
+    with opener.open(base + '/jobs/' + job_id + '/video', timeout=300) as response:
         if 'video/mp4' not in response.headers.get('Content-Type', ''):
             raise ValueError('Video endpoint did not return video/mp4')
         expected = response.headers.get('Content-Length')
@@ -200,7 +202,13 @@ def collect_case(folder, case, base, quality, args):
             append_event(folder, 'poll_error', case_id=case['id'], error=str(exc))
         else:
             errors = 0
+            if payload.get('job_id') != state['job_id']:
+                save()
+                raise RuntimeError('Video status returned the wrong job identity; queue stopped')
             stage = payload.get('stage') or payload.get('status')
+            if stage not in {'queued','validating','parsing','generating','rendering','finalizing','completed','failed'}:
+                save()
+                raise RuntimeError('Video status has an unknown stage; queue stopped without resubmitting')
             if stage != state.get('last_stage'):
                 print(case['id'], stage, flush=True)
             append_event(folder, 'poll', case_id=case['id'], response=raw)

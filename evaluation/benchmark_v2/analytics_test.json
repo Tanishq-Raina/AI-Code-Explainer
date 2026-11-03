@@ -1,0 +1,89 @@
+[
+  {
+    "id": "empty",
+    "stat": {},
+    "expected": "neutral"
+  },
+  {
+    "id": "weak",
+    "stat": {
+      "total_errors": 5,
+      "successful_attempts": 1
+    },
+    "expected": "weak"
+  },
+  {
+    "id": "strong",
+    "stat": {
+      "total_errors": 2,
+      "successful_attempts": 8
+    },
+    "expected": "strong"
+  },
+  {
+    "id": "not_strong_error_rate",
+    "stat": {
+      "total_errors": 5,
+      "successful_attempts": 8
+    },
+    "expected": "neutral"
+  },
+  {
+    "id": "improving",
+    "stat": {
+      "total_errors": 7,
+      "successful_attempts": 3,
+      "status": "weak",
+      "recent_attempts": [
+        true,
+        true,
+        true
+      ]
+    },
+    "expected": "improving"
+  },
+  {
+    "id": "not_improving",
+    "stat": {
+      "total_errors": 7,
+      "successful_attempts": 2,
+      "status": "weak",
+      "recent_attempts": [
+        true,
+        false,
+        true
+      ]
+    },
+    "expected": "weak"
+  },
+  {
+    "id": "hint_weight_0",
+    "hints_used": 0,
+    "expected_weight": 1.0
+  },
+  {
+    "id": "hint_weight_1",
+    "hints_used": 1,
+    "expected_weight": 0.7
+  },
+  {
+    "id": "hint_weight_2",
+    "hints_used": 2,
+    "expected_weight": 0.4
+  },
+  {
+    "id": "hint_weight_3",
+    "hints_used": 3,
+    "expected_weight": 0.10000000000000009
+  },
+  {
+    "id": "hint_weight_4",
+    "hints_used": 4,
+    "expected_weight": 0
+  },
+  {
+    "id": "hint_weight_5",
+    "hints_used": 5,
+    "expected_weight": 0
+  }
+]

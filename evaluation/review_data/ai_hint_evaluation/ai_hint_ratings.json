@@ -1,0 +1,1034 @@
+{
+  "assessment_type": "AI-assisted response-by-response rubric review; no human ratings",
+  "evaluator": "Codex assistant in this conversation; exact model build identifier unavailable",
+  "evaluated_at_utc": "2026-11-03T15:10:00.466141+00:00",
+  "protocol_deviation": "User requested AI evaluation after collection instead of the planned sole-author human scoring. The original author and video CSVs are preserved.",
+  "masking": "Condition mapping not opened during initial scoring. Response text may reveal conditions; judge previously saw aggregate automatic metrics and helped prepare this benchmark. Not independent or fully blinded.",
+  "source_sha256": "2ac87d0966523aa39d9b51b1dd7a14414eb4d3e605ec46d5594076cee8b33550",
+  "video_review_sha256": "aa2a8f92c1003589f561859a709bd932a854d6079333eec79736a2c639d7251f",
+  "rules": [
+    "Apply frozen 0/1/2 correctness and actionability scales to the whole response, including learning_tip. A correct final patch does not cancel an explicit materially false Java rule.",
+    "Reserve correctness 1 for partial/ambiguous/incomplete guidance, not an explicit materially false factual rule.",
+    "Read advice in its submitted-program context. Explicit all/always/any-number Java rules are evaluated as general claims; minor contextual shorthand is not automatically a factual failure.",
+    "Do not require a private reference literal or exact stdout when the public task does not expose that requirement. Valid alternative repairs are accepted. Catch-versus-throws is checked against successful handling, not a particular output word.",
+    "A local illustrative patch of at most two code lines is permitted even if it solves a small defect. A replay of the entire main-body computation, a longer code example, or an exact fix at hint_1 violates disclosure policy. Borderline whole-body calls are tagged.",
+    "Progression concerns hint_1 through hint_3, not whether the always-visible explanation already names a defect. It is assessed separately from factual correctness.",
+    "No extra model, Java, video or speech requests were made for these ratings. Official Java references were checked for disputed language rules."
+  ],
+  "official_references": [
+    "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.12.5",
+    "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Scanner.html",
+    "https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.17.2",
+    "https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.21.1",
+    "https://docs.oracle.com/javase/specs/jls/se25/html/jls-11.html#jls-11.2"
+  ],
+  "ratings": [
+    {
+      "review_id": "R001",
+      "task": "Read integers from numeric tokens",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 0,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "no",
+      "notes": "The constructor Scanner(String) is valid. The defect is nextInt() reading the nonnumeric token \"hello\", not using a string source. The response falsely contrasts strings with valid streams and changes the program to System.in without ensuring numeric input; under the supplied no-input scenario it can block or fail. A full corrected initialization is already exposed in hint_2 and repeated in hint_3.",
+      "issue_tags": [
+        "false_scanner_rule",
+        "wrong_repair_target",
+        "early_code_disclosure",
+        "repeated_fix"
+      ]
+    },
+    {
+      "review_id": "R002",
+      "task": "Initialize an iterator",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The null dereference and collection.iterator() repair are useful, but the explanation/learning tip falsely say that uninitialized local reference variables default to null. This local iterator was explicitly assigned null; local variables instead require definite assignment. The empty-collection example is a legal iterator repair; its false hasNext() result is not penalized solely for differing from a private reference example.",
+      "issue_tags": [
+        "false_local_default_initialization"
+      ]
+    },
+    {
+      "review_id": "R003",
+      "task": "Avoid unboxing a null boolean",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies null Boolean unboxing and suggests a short-circuit null guard. The right operand is not unboxed when b is null. Hints move from location to cause to a local patch. The guard differs from the reference initialization but is a valid repair of the publicly stated null-unboxing task; no private-output-match requirement is imposed.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R004",
+      "task": "Instantiate a concrete implementation",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies illegal abstract-class instantiation. However, making Base non-abstract alone leaves abstract value() illegal, and the proposed concrete subclass placeholder does not explain implementing value(). The concrete-subclass route is plausible but incompletely specified; hints become more specific.",
+      "issue_tags": [
+        "incomplete_abstract_repair"
+      ]
+    },
+    {
+      "review_id": "R005",
+      "task": "Keep boolean values boolean",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly diagnoses boolean-to-int incompatibility and directs the learner to boolean b=true. The limited declaration edit is appropriate for the boolean-valued task, with increasing specificity and no replacement program.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R006",
+      "task": "Do not index an empty array",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that an empty array has no valid index and offers avoiding access or providing elements. Adding elements is a valid alternative for the publicly stated failure, although it changes the example input. The final snippet replaces both statements constituting the entire main-body computation, exceeding the no-entire-solution rule despite fitting on one physical line. Disclosure judgment is a policy-boundary call.",
+      "issue_tags": [
+        "whole_body_replacement",
+        "policy_boundary_disclosure"
+      ]
+    },
+    {
+      "review_id": "R007",
+      "task": "Keep loop bounds exclusive",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "no",
+      "notes": "The length-versus-last-index explanation and i<a.length repair are correct. However, hint_1 already states the exact <= to < replacement; hint_2 returns to the concept and hint_3 repeats that fix. This reveals the repair at the gentlest level and reverses the intended progression.",
+      "issue_tags": [
+        "early_exact_patch",
+        "repeated_fix"
+      ]
+    },
+    {
+      "review_id": "R008",
+      "task": "Read integers from numeric tokens",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 0,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The summary treats a string literal as an invalid input source, although Scanner(String) is supported. The response notices that \"hello\" has no integers but redirects the solution to System.in rather than ensuring a numeric token. This does not reliably repair the self-contained task. Specificity increases, assessed separately from the incorrect repair.",
+      "issue_tags": [
+        "false_scanner_rule",
+        "wrong_repair_target"
+      ]
+    },
+    {
+      "review_id": "R009",
+      "task": "Use an equality operator",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies === as invalid Java syntax and explains the primitive-int equality replacement ==. The hint sequence locates the operator, describes its correction, then shows the limited expression edit.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R010",
+      "task": "Use a compatible numeric parser",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that Integer.parseInt does not accept a decimal point and selects Double.parseDouble for \"2.5\". All substantive advice matches the task, and the short final example is appropriately localized.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R011",
+      "task": "Keep a loop index in scope",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies the scope of the variable declared in the for initializer. Declaring i before the loop and assigning it in the initializer preserves its accessibility for printing afterward. The final code example is at most two code lines; progression is appropriate.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R012",
+      "task": "Compare compatible operand types",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The int-versus-String diagnosis and n==4 repair are useful, but the claim that an integer can only be compared with other integer values is false: numeric promotion permits comparisons with floating-point operands. The final snippet also replays the entire main-body computation (declaration and conditional print), rather than a minimal comparison edit. This disclosure decision is a policy-boundary call.",
+      "issue_tags": [
+        "false_numeric_comparison_rule",
+        "whole_body_replacement",
+        "policy_boundary_disclosure"
+      ]
+    },
+    {
+      "review_id": "R013",
+      "task": "Initialize an object before field access",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The null field access is correctly located and new Box() is a valid repair here. The categorical learning tip that object references must be initialized with new before member access is false: a reference may point to an existing object returned or supplied elsewhere. A non-null receiver is required, not a new expression at every initialization.",
+      "issue_tags": [
+        "false_mandatory_new_rule"
+      ]
+    },
+    {
+      "review_id": "R014",
+      "task": "Avoid averaging an empty count",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The integer count=0 diagnosis and nonzero guard are actionable. However, why states that dividing any number by zero throws ArithmeticException. This is false for floating-point division, which follows IEEE rules. The unqualified Java rule makes the whole response factually unsafe under the frozen rubric.",
+      "issue_tags": [
+        "false_universal_division_rule"
+      ]
+    },
+    {
+      "review_id": "R015",
+      "task": "Provide an assignment expression",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies the missing initializer expression after = and offers valid numeric initializer examples. The private reference uses 9, but the public task did not require that particular literal; valid alternative initializers are accepted. The repair stays local and hints increase in specificity.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R016",
+      "task": "Compare compatible operand types",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The incompatible int/String operands and n==4 or parseInt repair are correct. The explanation is imprecise in calling == string-comparison syntax and describing primitive equality as requiring matching types without explaining numeric promotion. The core repair is useful, but the type rule needs qualification.",
+      "issue_tags": [
+        "imprecise_numeric_comparison_explanation"
+      ]
+    },
+    {
+      "review_id": "R017",
+      "task": "Match digits to the radix",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies 9 as invalid in radix 8 and limits octal digits to 0-7. Replacing the input with valid octal digits repairs the parsing error. Both 17 and 10 are valid examples; matching the private reference literal is not required by the public task.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R018",
+      "task": "Do not assign a void return",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly diagnoses assignment of a void result. The suggestion to change only the return type omits adding a return value; removing only the assignment leaves println(x) unresolved. A complete repair requires coordinating the caller uses or the callee body. The offered alternatives are relevant but incomplete.",
+      "issue_tags": [
+        "incomplete_void_repair"
+      ]
+    },
+    {
+      "review_id": "R019",
+      "task": "Respect collection element types",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies insertion of a String into List<Integer>. Using the integer literal 7 (autoboxed to Integer) is a valid localized fix. The examples remain limited and the sequence progresses from generic type to incompatible value to repair.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R020",
+      "task": "Advance a while counter",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that i remains 0 in the empty while body and therefore never reaches the exit condition. Incrementing i in the body repairs termination and yields the intended final count. Hints become more concrete without supplying a full program.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R021",
+      "task": "Update the recursive argument",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The explanation and n*f(n-1) fix correctly identify the unchanged recursive argument. However, the summary ambiguously blames an improper base case although if(n==0)return 1 is already correct; it is unreachable from the unchanged positive argument. The response should distinguish reachability from a missing/incorrect base condition.",
+      "issue_tags": [
+        "misleading_base_case_summary"
+      ]
+    },
+    {
+      "review_id": "R022",
+      "task": "Do not assign a void return",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly diagnoses assignment of a void result. The suggestion to change only the return type omits adding a return value; removing only the assignment leaves println(x) unresolved. A complete repair requires coordinating the caller uses or the callee body. The offered alternatives are relevant but incomplete.",
+      "issue_tags": [
+        "incomplete_void_repair"
+      ]
+    },
+    {
+      "review_id": "R023",
+      "task": "Read integers from numeric tokens",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 0,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "no",
+      "notes": "The constructor Scanner(String) is valid. The defect is nextInt() reading the nonnumeric token \"hello\", not using a string source. The response falsely contrasts strings with valid streams and changes the program to System.in without ensuring numeric input; under the supplied no-input scenario it can block or fail. A full corrected initialization is already exposed in hint_2 and repeated in hint_3.",
+      "issue_tags": [
+        "false_scanner_rule",
+        "wrong_repair_target",
+        "early_code_disclosure",
+        "repeated_fix"
+      ]
+    },
+    {
+      "review_id": "R024",
+      "task": "Use a compatible numeric parser",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that Integer.parseInt does not accept a decimal point and selects Double.parseDouble for \"2.5\". All substantive advice matches the task, and the short final example is appropriately localized.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R025",
+      "task": "Use an equality operator",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The === to == repair is correct for the int expression. The learning tip then says to always use == for equality checks in Java, an unsafe false general rule for String/content comparison. The final local patch is actionable, but the response as a whole contains materially misleading Java advice.",
+      "issue_tags": [
+        "false_universal_equality_rule"
+      ]
+    },
+    {
+      "review_id": "R026",
+      "task": "Inspect a helper denominator",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly traces zero() returning 0 into integer division and proposes a nonzero denominator. The explanation nevertheless claims that division of any number by zero throws ArithmeticException, incorrectly including floating-point cases. Alternative nonzero values are not penalized just for differing from the private reference output.",
+      "issue_tags": [
+        "false_universal_division_rule"
+      ]
+    },
+    {
+      "review_id": "R027",
+      "task": "Provide an assignment expression",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies the missing initializer expression after = and offers valid numeric initializer examples. The private reference uses 9, but the public task did not require that particular literal; valid alternative initializers are accepted. The repair stays local and hints increase in specificity.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R028",
+      "task": "Use a compatible numeric parser",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that Integer.parseInt does not accept a decimal point and selects Double.parseDouble for \"2.5\". All substantive advice matches the task, and the short final example is appropriately localized.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R029",
+      "task": "Initialize a local on every branch",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains definite assignment: x can reach println without a value because assignment occurs only in the false branch. Initialization before the branch or assignment on every path is appropriate. Alternative illustrative values are accepted where the public task does not specify a literal.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R030",
+      "task": "Instantiate a concrete implementation",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies illegal abstract-class instantiation. However, making Base non-abstract alone leaves abstract value() illegal, and the proposed concrete subclass placeholder does not explain implementing value(). The concrete-subclass route is plausible but incompletely specified; hints become more specific.",
+      "issue_tags": [
+        "incomplete_abstract_repair"
+      ]
+    },
+    {
+      "review_id": "R031",
+      "task": "Use an equality operator",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The === to == repair is correct for the int expression. The learning tip then says to always use == for equality checks in Java, an unsafe false general rule for String/content comparison. The final local patch is actionable, but the response as a whole contains materially misleading Java advice.",
+      "issue_tags": [
+        "false_universal_equality_rule"
+      ]
+    },
+    {
+      "review_id": "R032",
+      "task": "Initialize an iterator",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies calling hasNext() on the explicitly null iterator and suggests obtaining a valid iterator from a collection. No claim that an uninitialized local automatically defaults to null is made. Progression is appropriate; someCollection is an illustrative placeholder, not asserted to exist in the submitted source.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R033",
+      "task": "Do not index an empty array",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that a zero-length array has no index 0. Providing an element is a valid alternative to avoid this access failure; the learning tip additionally recommends checking length. The short declaration example is a localized patch. It need not reproduce the private reference output 0.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R034",
+      "task": "Match digits to the radix",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies 9 as invalid in radix 8 and limits octal digits to 0-7. Replacing the input with valid octal digits repairs the parsing error. Both 17 and 10 are valid examples; matching the private reference literal is not required by the public task.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R035",
+      "task": "Qualify an instance field",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies value as a Box instance field that is not in static Main.main scope and directs the learner to b.value. The limited println edit is correct for the existing b object, with a coherent hint sequence.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R036",
+      "task": "Keep a loop index in scope",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies the scope of the variable declared in the for initializer. Declaring i before the loop and assigning it in the initializer preserves its accessibility for printing afterward. The final code example is at most two code lines; progression is appropriate.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R037",
+      "task": "Keep a loop index in scope",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The scope diagnosis and moving i outside the for initializer are correct. The hint_3 code block contains three Java lines (declaration, loop, print), exceeding the explicit two-line example policy. Code fences themselves are not counted as Java lines.",
+      "issue_tags": [
+        "code_example_over_two_lines"
+      ]
+    },
+    {
+      "review_id": "R038",
+      "task": "Do not assign a void return",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly diagnoses assignment of a void result. The suggestion to change only the return type omits adding a return value; removing only the assignment leaves println(x) unresolved. A complete repair requires coordinating the caller uses or the callee body. The offered alternatives are relevant but incomplete.",
+      "issue_tags": [
+        "incomplete_void_repair"
+      ]
+    },
+    {
+      "review_id": "R039",
+      "task": "Update the recursive argument",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The explanation and n*f(n-1) fix correctly identify the unchanged recursive argument. However, the summary ambiguously blames an improper base case although if(n==0)return 1 is already correct; it is unreachable from the unchanged positive argument. The response should distinguish reachability from a missing/incorrect base condition.",
+      "issue_tags": [
+        "misleading_base_case_summary"
+      ]
+    },
+    {
+      "review_id": "R040",
+      "task": "Compare string contents",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly diagnoses String reference versus content equality and gives s.equals(\"cat\"). The learning tip overgeneralizes content comparison via equals to all objects without noting that classes must define the desired equality semantics (arrays are a counterexample). The String-specific repair remains correct.",
+      "issue_tags": [
+        "overgeneralized_object_equality_advice"
+      ]
+    },
+    {
+      "review_id": "R041",
+      "task": "Keep boolean values boolean",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly diagnoses boolean-to-int incompatibility and directs the learner to boolean b=true. The limited declaration edit is appropriate for the boolean-valued task, with increasing specificity and no replacement program.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R042",
+      "task": "Initialize an object before field access",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly diagnoses b.n on null and proposes new Box(). The explanation falsely says a local object variable defaults to null if not initialized with new, confusing explicit null assignment with field defaults and definite assignment. The mandatory-new generalization is also false.",
+      "issue_tags": [
+        "false_local_default_initialization",
+        "false_mandatory_new_rule"
+      ]
+    },
+    {
+      "review_id": "R043",
+      "task": "Match digits to the radix",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies 9 as invalid in radix 8 and limits octal digits to 0-7. Replacing the input with valid octal digits repairs the parsing error. Both 17 and 10 are valid examples; matching the private reference literal is not required by the public task.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R044",
+      "task": "Keep loop bounds exclusive",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "no",
+      "notes": "The length-versus-last-index explanation and i<a.length repair are correct. However, hint_1 already states the exact <= to < replacement; hint_2 returns to the concept and hint_3 repeats that fix. This reveals the repair at the gentlest level and reverses the intended progression.",
+      "issue_tags": [
+        "early_exact_patch",
+        "repeated_fix"
+      ]
+    },
+    {
+      "review_id": "R045",
+      "task": "Respect collection element types",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies insertion of a String into List<Integer>. Using the integer literal 7 (autoboxed to Integer) is a valid localized fix. The examples remain limited and the sequence progresses from generic type to incompatible value to repair.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R046",
+      "task": "Initialize an object before field access",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The null field access is correctly located and new Box() is a valid repair here. The categorical learning tip that object references must be initialized with new before member access is false: a reference may point to an existing object returned or supplied elsewhere. A non-null receiver is required, not a new expression at every initialization.",
+      "issue_tags": [
+        "false_mandatory_new_rule"
+      ]
+    },
+    {
+      "review_id": "R047",
+      "task": "Keep list get within size",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly counts one list element at index 0 and explains why get(1) is invalid. Changing to get(0) retrieves 6. The hint sequence is localized, actionable and increasingly specific.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R048",
+      "task": "Inspect a shifted denominator",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "no",
+      "notes": "Correctly evaluates 1>>1 to 0 and identifies the integer division failure. However, the explanation already gives this result and hint_3 merely repeats it rather than supplying a stronger next repair step. The diagnostic is accurate but the final hint offers limited additional action.",
+      "issue_tags": [
+        "repeated_diagnosis_without_next_step"
+      ]
+    },
+    {
+      "review_id": "R049",
+      "task": "Separate for header clauses",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "no",
+      "notes": "Correctly identifies that the three for-header clauses require semicolon separators. Hint_1 already supplies the comma-to-semicolon correction, hint_2 restates it, and hint_3 repeats the complete header. The exact repair is disclosed too early for the gentlest-level policy.",
+      "issue_tags": [
+        "early_exact_patch",
+        "repeated_fix"
+      ]
+    },
+    {
+      "review_id": "R050",
+      "task": "Inspect a helper denominator",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly traces the zero-returning helper and suggests a nonzero denominator. The broad statement that dividing any number by zero throws ArithmeticException is false for floating-point division. The localized integer diagnosis is useful but does not make the universal teaching claim correct.",
+      "issue_tags": [
+        "false_universal_division_rule"
+      ]
+    },
+    {
+      "review_id": "R051",
+      "task": "Avoid averaging an empty count",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies integer division by count=0 and offers a nonzero initialization. The explanation and learning tip claim that any Java division requires a nonzero denominator and otherwise throws ArithmeticException. Floating-point zero division is a counterexample, so the response contains a false Java rule.",
+      "issue_tags": [
+        "false_universal_division_rule"
+      ]
+    },
+    {
+      "review_id": "R052",
+      "task": "Compare string contents",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that new String(\"cat\") is a different object from the interned literal and that equals compares their characters. The final println replacement is localized; the original and replacement together contain at most two code lines. The contextual reference-equality explanation is accepted.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R053",
+      "task": "Include the passing threshold",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies exclusion of mark=60 by >60 and changes the boundary test to >=60 to implement the publicly stated inclusive threshold. The case-specific policy is supported by the task, and the hints progress appropriately.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R054",
+      "task": "Qualify an instance field",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The b.value repair is correct in static Main.main. However, the learning tip categorically says instance fields cannot be accessed directly by name, which is false inside an appropriate instance context where this is implicit. This should be framed as a scope/receiver issue specific to Box.value here.",
+      "issue_tags": [
+        "false_unqualified_instance_field_rule"
+      ]
+    },
+    {
+      "review_id": "R055",
+      "task": "Advance a while counter",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that i remains 0 in the empty while body and therefore never reaches the exit condition. Incrementing i in the body repairs termination and yields the intended final count. Hints become more concrete without supplying a full program.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R056",
+      "task": "Handle a checked exception",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies the checked-exception compilation requirement and mentions catch or throws. Because fail() always throws, merely declaring IOException on main still terminates with an uncaught exception; the response does not distinguish compilation from a handled successful execution. The catch route is relevant but not developed.",
+      "issue_tags": [
+        "compile_only_exception_repair"
+      ]
+    },
+    {
+      "review_id": "R057",
+      "task": "Qualify an instance field",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The b.value repair is correct in static Main.main. However, the learning tip categorically says instance fields cannot be accessed directly by name, which is false inside an appropriate instance context where this is implicit. This should be framed as a scope/receiver issue specific to Box.value here.",
+      "issue_tags": [
+        "false_unqualified_instance_field_rule"
+      ]
+    },
+    {
+      "review_id": "R058",
+      "task": "Keep list get within size",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly counts one list element at index 0 and explains why get(1) is invalid. Changing to get(0) retrieves 6. The hint sequence is localized, actionable and increasingly specific.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R059",
+      "task": "Find a maximum in an all negative array",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains why starting m at 0 prevents every negative array element from becoming the maximum. Initializing to a[0] is valid for this known nonempty array and yields -2. Hints progress from initialization to negative-value edge case to a short patch.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R060",
+      "task": "Inspect a helper denominator",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly traces the zero-returning helper and suggests a nonzero denominator. The broad statement that dividing any number by zero throws ArithmeticException is false for floating-point division. The localized integer diagnosis is useful but does not make the universal teaching claim correct.",
+      "issue_tags": [
+        "false_universal_division_rule"
+      ]
+    },
+    {
+      "review_id": "R061",
+      "task": "Avoid averaging an empty count",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies integer division by count=0 and offers a nonzero initialization. The explanation and learning tip claim that any Java division requires a nonzero denominator and otherwise throws ArithmeticException. Floating-point zero division is a counterexample, so the response contains a false Java rule.",
+      "issue_tags": [
+        "false_universal_division_rule"
+      ]
+    },
+    {
+      "review_id": "R062",
+      "task": "Inspect a shifted denominator",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "no",
+      "notes": "Correctly evaluates 1>>1 to 0 and identifies the integer division failure. However, the explanation already gives this result and hint_3 merely repeats it rather than supplying a stronger next repair step. The diagnostic is accurate but the final hint offers limited additional action.",
+      "issue_tags": [
+        "repeated_diagnosis_without_next_step"
+      ]
+    },
+    {
+      "review_id": "R063",
+      "task": "Instantiate a concrete implementation",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains abstract-class instantiation and supplies a concrete subclass implementing value(). The method body is valid as an illustrative alternative; the private reference constant 2 is not a public requirement. The code block contains three Java lines and therefore exceeds the two-line snippet policy.",
+      "issue_tags": [
+        "code_example_over_two_lines"
+      ]
+    },
+    {
+      "review_id": "R064",
+      "task": "Handle a checked exception",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The checked-exception compilation diagnosis is correct, and catch is mentioned as an alternative. The final repair only adds throws to main; since fail() unconditionally throws, this does not handle the exception or achieve successful execution. The response needs to explain that difference and develop the catch path.",
+      "issue_tags": [
+        "compile_only_exception_repair"
+      ]
+    },
+    {
+      "review_id": "R065",
+      "task": "Include the passing threshold",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies exclusion of mark=60 by >60 and changes the boundary test to >=60 to implement the publicly stated inclusive threshold. The case-specific policy is supported by the task, and the hints progress appropriately.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R066",
+      "task": "Keep boolean values boolean",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly diagnoses boolean-to-int incompatibility and directs the learner to boolean b=true. The limited declaration edit is appropriate for the boolean-valued task, with increasing specificity and no replacement program.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R067",
+      "task": "Initialize an iterator",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The null dereference and collection.iterator() repair are useful, but the explanation/learning tip falsely say that uninitialized local reference variables default to null. This local iterator was explicitly assigned null; local variables instead require definite assignment. The empty-collection example is a legal iterator repair; its false hasNext() result is not penalized solely for differing from a private reference example.",
+      "issue_tags": [
+        "false_local_default_initialization"
+      ]
+    },
+    {
+      "review_id": "R068",
+      "task": "Initialize a local on every branch",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains definite assignment: x can reach println without a value because assignment occurs only in the false branch. Initialization before the branch or assignment on every path is appropriate. Alternative illustrative values are accepted where the public task does not specify a literal.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R069",
+      "task": "Update the recursive argument",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The n*f(n-1) repair is correct, but the response explicitly claims bugs in both the base case and recursive call while also acknowledging that returning 1 for n=0 is correct. The base case is not defective; the unchanged recursive argument makes it unreachable. The contradictory diagnosis is materially misleading.",
+      "issue_tags": [
+        "false_base_case_diagnosis"
+      ]
+    },
+    {
+      "review_id": "R070",
+      "task": "Avoid unboxing a null boolean",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies null Boolean unboxing and suggests a short-circuit null guard. The right operand is not unboxed when b is null. Hints move from location to cause to a local patch. The guard differs from the reference initialization but is a valid repair of the publicly stated null-unboxing task; no private-output-match requirement is imposed.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R071",
+      "task": "Advance a while counter",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that i remains 0 in the empty while body and therefore never reaches the exit condition. Incrementing i in the body repairs termination and yields the intended final count. Hints become more concrete without supplying a full program.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R072",
+      "task": "Separate for header clauses",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly distinguishes the three for-header clauses and semicolon separators. Hint_1 points to the commas without naming their replacement; hint_2 describes the separator rule and hint_3 gives one localized corrected header. Progression and snippet size fit the stated policy.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R073",
+      "task": "Avoid unboxing a null boolean",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies null Boolean unboxing and suggests a short-circuit null guard. The right operand is not unboxed when b is null. Hints move from location to cause to a local patch. The guard differs from the reference initialization but is a valid repair of the publicly stated null-unboxing task; no private-output-match requirement is imposed.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R074",
+      "task": "Compare compatible operand types",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The int-versus-String diagnosis and n==4 repair are useful, but the claim that an integer can only be compared with other integer values is false: numeric promotion permits comparisons with floating-point operands. The final snippet also replays the entire main-body computation (declaration and conditional print), rather than a minimal comparison edit. This disclosure decision is a policy-boundary call.",
+      "issue_tags": [
+        "false_numeric_comparison_rule",
+        "whole_body_replacement",
+        "policy_boundary_disclosure"
+      ]
+    },
+    {
+      "review_id": "R075",
+      "task": "Initialize a local on every branch",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains definite assignment: x can reach println without a value because assignment occurs only in the false branch. Initialization before the branch or assignment on every path is appropriate. Alternative illustrative values are accepted where the public task does not specify a literal.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R076",
+      "task": "Compare string contents",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that new String(\"cat\") is a different object from the interned literal and that equals compares their characters. The final println replacement is localized; the original and replacement together contain at most two code lines. The contextual reference-equality explanation is accepted.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R077",
+      "task": "Keep list get within size",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly counts one list element at index 0 and explains why get(1) is invalid. Changing to get(0) retrieves 6. The hint sequence is localized, actionable and increasingly specific.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R078",
+      "task": "Separate for header clauses",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly distinguishes the three for-header clauses and semicolon separators. Hint_1 points to the commas without naming their replacement; hint_2 describes the separator rule and hint_3 gives one localized corrected header. Progression and snippet size fit the stated policy.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R079",
+      "task": "Clear a loop control flag",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that running remains true in the empty loop and prevents the final print. Setting it false or using an appropriate exit repairs termination. Hints move from unchanged control flag to exit condition to a limited concrete statement.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R080",
+      "task": "Handle a checked exception",
+      "correctness_0_1_2": 1,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "N/A",
+      "notes": "Correctly identifies the checked IOException requirement, but catch and throws are presented as interchangeable fixes without explaining that throws still leaves this always-throwing call uncaught at runtime. Only two hint levels are present, so three-level progression is not applicable; the absent third level is not treated as an incorrect Java claim.",
+      "issue_tags": [
+        "compile_only_exception_repair",
+        "fewer_than_three_hints"
+      ]
+    },
+    {
+      "review_id": "R081",
+      "task": "Provide an assignment expression",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies the missing initializer expression after = and offers valid numeric initializer examples. The private reference uses 9, but the public task did not require that particular literal; valid alternative initializers are accepted. The repair stays local and hints increase in specificity.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R082",
+      "task": "Inspect a shifted denominator",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 1,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "no",
+      "notes": "Correctly evaluates the signed right shift 1>>1 to 0 and identifies the denominator. Hint_3 asks the learner to evaluate the same expression whose result was already supplied in why, so it repeats diagnosis rather than adding a useful next step. No corrected denominator is required for correctness, but actionability and progression are limited.",
+      "issue_tags": [
+        "repeated_diagnosis_without_next_step"
+      ]
+    },
+    {
+      "review_id": "R083",
+      "task": "Keep loop bounds exclusive",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "yes",
+      "progression_appropriate_yes_no": "no",
+      "notes": "The length-versus-last-index explanation and i<a.length repair are correct. However, hint_1 already states the exact <= to < replacement; hint_2 returns to the concept and hint_3 repeats that fix. This reveals the repair at the gentlest level and reverses the intended progression.",
+      "issue_tags": [
+        "early_exact_patch",
+        "repeated_fix"
+      ]
+    },
+    {
+      "review_id": "R084",
+      "task": "Clear a loop control flag",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that running remains true in the empty loop and prevents the final print. Setting it false or using an appropriate exit repairs termination. Hints move from unchanged control flag to exit condition to a limited concrete statement.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R085",
+      "task": "Clear a loop control flag",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that running remains true in the empty loop and prevents the final print. Setting it false or using an appropriate exit repairs termination. Hints move from unchanged control flag to exit condition to a limited concrete statement.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R086",
+      "task": "Include the passing threshold",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies exclusion of mark=60 by >60 and changes the boundary test to >=60 to implement the publicly stated inclusive threshold. The case-specific policy is supported by the task, and the hints progress appropriately.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R087",
+      "task": "Respect collection element types",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly identifies insertion of a String into List<Integer>. Using the integer literal 7 (autoboxed to Integer) is a valid localized fix. The examples remain limited and the sequence progresses from generic type to incompatible value to repair.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R088",
+      "task": "Find a maximum in an all negative array",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains why starting m at 0 prevents every negative array element from becoming the maximum. Initializing to a[0] is valid for this known nonempty array and yields -2. Hints progress from initialization to negative-value edge case to a short patch.",
+      "issue_tags": []
+    },
+    {
+      "review_id": "R089",
+      "task": "Find a maximum in an all negative array",
+      "correctness_0_1_2": 0,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "The a[0] initialization repair and final expected maximum -2 are correct. However, why calls 0 positive and inconsistently states that a positive starting maximum will find the largest negative number; in this loop it remains 0. These false/contradictory claims make the explanation materially unreliable.",
+      "issue_tags": [
+        "false_numeric_sign_claim",
+        "contradictory_maximum_explanation"
+      ]
+    },
+    {
+      "review_id": "R090",
+      "task": "Do not index an empty array",
+      "correctness_0_1_2": 2,
+      "actionability_0_1_2": 2,
+      "excessive_disclosure_yes_no": "no",
+      "progression_appropriate_yes_no": "yes",
+      "notes": "Correctly explains that a zero-length array has no index 0. Providing an element is a valid alternative to avoid this access failure; the learning tip additionally recommends checking length. The short declaration example is a localized patch. It need not reproduce the private reference output 0.",
+      "issue_tags": []
+    }
+  ]
+}

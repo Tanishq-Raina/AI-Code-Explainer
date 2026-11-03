@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import axios from "axios";
 import CodeEditor from "../components/editor/CodeEditor";
 import VideoPlayer from "../components/VideoPlayer";
 import { executeCode } from "../api/client";
+import { createVideoJob, watchVideoJob } from "../api/videoClient.js";
+import { requestErrorMessage } from "../api/config.js";
 
-// Render API routed through Vite proxy to avoid CORS issues
-const RENDER_API = axios.create({
-  baseURL: "/render-api",
-  timeout: 60000,
-});
+const SAVED_JOB_KEY = "codexa.activeVideoJob";
+function saveJob(id) {
+  try {
+    if (id) sessionStorage.setItem(SAVED_JOB_KEY, id);
+    else sessionStorage.removeItem(SAVED_JOB_KEY);
+  } catch { /* Tracking still works when browser storage is unavailable. */ }
+}
 
 const DEFAULT_CODE = `public class Main {
     public static void main(String[] args) {
@@ -88,16 +91,41 @@ function VideoGeneration() {
   const [videoUrl, setVideoUrl] = useState(null);
   const [videoError, setVideoError] = useState(null);
 
-  const pollIntervalRef = useRef(null);
+  const stopPollingRef = useRef(null);
+  const submittingRef = useRef(false);
+  const [submissionUncertain, setSubmissionUncertain] = useState(false);
 
-  // Cleanup polling on unmount
-  useEffect(() => {
-    return () => {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-      }
-    };
+  const pollJobStatus = useCallback((id) => {
+    stopPollingRef.current?.();
+    setJobId(id);
+    setIsGenerating(true);
+    setVideoError(null);
+    stopPollingRef.current = watchVideoJob(id, {
+      onProgress: (job) => {
+        setProgress(Math.min(99, Math.max(0, Number(job.progress) || 0)));
+        setStage(job.stage || job.status || "queued");
+      },
+      onComplete: (url) => {
+        setIsGenerating(false);
+        setProgress(100);
+        setVideoUrl(url);
+        saveJob(null);
+      },
+      onFailure: (message) => {
+        setIsGenerating(false);
+        setVideoError(message);
+        saveJob(null);
+      },
+      onConnectionIssue: () => setStage("Connection interrupted. Reconnecting to your existing video job..."),
+    });
   }, []);
+
+  useEffect(() => {
+    let saved;
+    try { saved = sessionStorage.getItem(SAVED_JOB_KEY); } catch { /* No storage. */ }
+    if (saved) pollJobStatus(saved);
+    return () => stopPollingRef.current?.();
+  }, [pollJobStatus]);
 
   const handleRun = async () => {
     try {
@@ -136,96 +164,39 @@ function VideoGeneration() {
       }
     } catch (err) {
       console.error(err);
-      setOutput("Backend connection failed. Check if backend is running on port 5000.");
+      setOutput(requestErrorMessage(err));
       setRunSuccess(false);
     } finally {
       setIsRunning(false);
     }
   };
 
-  const pollJobStatus = useCallback(
-    (id) => {
-      pollIntervalRef.current = setInterval(async () => {
-        try {
-          const response = await RENDER_API.get(`/jobs/${id}`);
-          const job = response?.data?.data ?? response?.data ?? {};
-
-          const jobProgress = job.progress ?? 0;
-          const jobStage = job.stage ?? "";
-          const jobStatus = job.status ?? "";
-
-          setProgress(jobProgress);
-          setStage(jobStage);
-
-          if (jobStatus === "completed" || jobStage === "completed") {
-            clearInterval(pollIntervalRef.current);
-            pollIntervalRef.current = null;
-            setIsGenerating(false);
-            setProgress(100);
-
-            setVideoUrl(`http://localhost:4000/api/jobs/${id}/video`);
-          } else if (jobStatus === "failed") {
-            clearInterval(pollIntervalRef.current);
-            pollIntervalRef.current = null;
-            setIsGenerating(false);
-            setVideoError(
-              job.error?.message || job.error || "Video generation failed."
-            );
-          }
-        } catch (err) {
-          console.error("Polling error:", err);
-          clearInterval(pollIntervalRef.current);
-          pollIntervalRef.current = null;
-          setIsGenerating(false);
-          setVideoError("Lost connection while checking progress.");
-        }
-      }, 1500);
-    },
-    []
-  );
-
   const handleGenerate = async () => {
-    if (!runSuccess) return;
-
+    if (!runSuccess || isGenerating || submissionUncertain || submittingRef.current) return;
+    submittingRef.current = true;
     try {
       setIsGenerating(true);
       setProgress(0);
       setStage("queued");
       setVideoUrl(null);
       setVideoError(null);
-
-      // Create a file blob from the code
-      const blob = new Blob([code], { type: "text/x-java" });
-      const formData = new FormData();
-      formData.append("file", blob, fileName);
-      formData.append("quality", quality);
-
-      const response = await RENDER_API.post("/render", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      const data = response?.data?.data ?? response?.data ?? {};
-      const id = data.job_id || data.id;
-
-      if (!id) {
-        throw new Error("No job ID returned from server.");
-      }
-
-      setJobId(id);
+      const id = await createVideoJob(code, fileName, quality);
+      saveJob(id);
       pollJobStatus(id);
     } catch (err) {
-      console.error(err);
       setIsGenerating(false);
-      const errMsg =
-        err?.response?.data?.error?.message ||
-        err?.response?.data?.message ||
-        err?.message ||
-        "Failed to start video generation.";
-      setVideoError(errMsg);
+      if (!err?.response || err.response.status >= 500) {
+        setSubmissionUncertain(true);
+        setVideoError("The video request could not be confirmed. It may still be running. Check the video service before submitting again; this request will not be retried automatically.");
+      } else {
+        setVideoError(err?.response?.data?.error?.message || err.message || "Failed to start video generation.");
+      }
+    } finally {
+      submittingRef.current = false;
     }
   };
 
-  const canGenerate = runSuccess && !isGenerating;
+  const canGenerate = runSuccess && !isRunning && !isGenerating && !submissionUncertain;
 
   return (
     <section className="workspace-page">
@@ -246,6 +217,7 @@ function VideoGeneration() {
               <input
                 type="text"
                 className="video-gen-filename-input"
+                disabled={isRunning || isGenerating}
                 value={fileName}
                 onChange={(e) => {
                   const newFileName = e.target.value;
@@ -270,7 +242,7 @@ function VideoGeneration() {
               <button
                 className="btn btn--ghost btn--sm"
                 onClick={handleRun}
-                disabled={isRunning}
+                disabled={isRunning || isGenerating}
               >
                 {isRunning ? (
                   <>
@@ -378,12 +350,14 @@ function VideoGeneration() {
           <div className="card video-gen-player-card">
             {videoUrl ? (
               <div className="video-gen-player-wrapper">
-                <VideoPlayer src={videoUrl} />
+                <VideoPlayer key={videoUrl} src={videoUrl} />
               </div>
             ) : isGenerating ? (
               <div className="video-gen-progress-section">
                 <div className="video-gen-progress-icon">🎞️</div>
                 <h3>Generating your video...</h3>
+                <p>Longer programs can take several minutes. You can reload this page to reconnect.</p>
+                {jobId && <p className="video-gen-hint">Job: {jobId}</p>}
                 <p className="video-gen-stage">
                   Stage: <span>{stage || "queued"}</span>
                 </p>

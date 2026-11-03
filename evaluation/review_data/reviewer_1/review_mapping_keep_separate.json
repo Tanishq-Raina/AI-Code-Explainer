@@ -1,0 +1,227 @@
+[
+  {
+    "review_id": "R001",
+    "case_id": "parsing_09",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R003",
+    "case_id": "null_06",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R004",
+    "case_id": "methods_09",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R005",
+    "case_id": "types_03",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R008",
+    "case_id": "parsing_09",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R013",
+    "case_id": "null_03",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R015",
+    "case_id": "syntax_06",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R021",
+    "case_id": "termination_03",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R023",
+    "case_id": "parsing_09",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R026",
+    "case_id": "arithmetic_06",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R027",
+    "case_id": "syntax_06",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R029",
+    "case_id": "scope_06",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R030",
+    "case_id": "methods_09",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R035",
+    "case_id": "scope_09",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R039",
+    "case_id": "termination_03",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R040",
+    "case_id": "logic_06",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R041",
+    "case_id": "types_03",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R042",
+    "case_id": "null_03",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R046",
+    "case_id": "null_03",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R047",
+    "case_id": "index_06",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R048",
+    "case_id": "arithmetic_09",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R050",
+    "case_id": "arithmetic_06",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R052",
+    "case_id": "logic_06",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R053",
+    "case_id": "logic_09",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R054",
+    "case_id": "scope_09",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R057",
+    "case_id": "scope_09",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R058",
+    "case_id": "index_06",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R060",
+    "case_id": "arithmetic_06",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R062",
+    "case_id": "arithmetic_09",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R063",
+    "case_id": "methods_09",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R065",
+    "case_id": "logic_09",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R066",
+    "case_id": "types_03",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R068",
+    "case_id": "scope_06",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R069",
+    "case_id": "termination_03",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R070",
+    "case_id": "null_06",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R073",
+    "case_id": "null_06",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R075",
+    "case_id": "scope_06",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R076",
+    "case_id": "logic_06",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R077",
+    "case_id": "index_06",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R079",
+    "case_id": "termination_09",
+    "condition": "full_pipeline"
+  },
+  {
+    "review_id": "R081",
+    "case_id": "syntax_06",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R082",
+    "case_id": "arithmetic_09",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R084",
+    "case_id": "termination_09",
+    "condition": "code_only"
+  },
+  {
+    "review_id": "R085",
+    "case_id": "termination_09",
+    "condition": "diagnostic_grounded"
+  },
+  {
+    "review_id": "R086",
+    "case_id": "logic_09",
+    "condition": "code_only"
+  }
+]

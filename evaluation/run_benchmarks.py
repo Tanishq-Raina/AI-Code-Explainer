@@ -10,6 +10,7 @@ import csv
 from datetime import datetime, timezone
 import hashlib
 import importlib
+import io
 from importlib.metadata import version as package_version
 import json
 import os
@@ -26,7 +27,7 @@ from urllib import request
 
 HERE=Path(__file__).resolve().parent
 PROJECT=HERE.parent
-DATA=HERE/'benchmark_v1'
+DATA=HERE/'benchmark_v2'
 sys.path.insert(0,str(PROJECT/'backend'))
 sys.path.insert(0,str(HERE))
 
@@ -52,21 +53,30 @@ def check_freeze():
 def json_http(url):
     # Metadata only. Inference lives exclusively in the explicitly invoked stage.
     opener=request.build_opener(request.ProxyHandler({}))
-    with opener.open(url,timeout=15) as response:return json.load(response)
+    try:
+        with opener.open(url,timeout=15) as response:return json.load(response)
+    except (OSError,ValueError) as exc:
+        raise RuntimeError(f'Cannot read local service metadata at {url}: {exc}. Check that the required local service is running; no inference was requested by this check.') from exc
 
 
-def preflight(protocol):
+def verify_ollama(protocol):
     o=protocol['ollama']
     tags=json_http(o['base_url']+'/api/tags')['models']
     model=next((m for m in tags if m['name']==o['model']),None)
-    if not model or model['digest']!=o['digest']:raise RuntimeError('Installed Ollama model differs from frozen digest')
+    if not model or model['digest']!=o['digest']:raise RuntimeError('Installed Ollama model differs from frozen digest; do not substitute weights during collection')
     version=json_http(o['base_url']+'/api/version')['version']
-    if version!=o['version']:raise RuntimeError('Ollama version changed; review before creating a new freeze')
+    if version!=o['version']:raise RuntimeError(f'Ollama version changed: frozen {o["version"]}, installed {version}. Stop and create a documented revision before collection; never bypass the check.')
+    return model,version
+
+
+def preflight(protocol):
+    model,version=verify_ollama(protocol)
     v=protocol['video']
     health=json_http(v['base_url']+'/health')
     if health.get('status')!='ok':raise RuntimeError('Video Render API unavailable or wrong port')
     inspected=json.loads(subprocess.run(['docker','inspect',v['container_name']],capture_output=True,text=True,check=True,timeout=20).stdout)[0]
     if inspected['Image']!=v['image_id']:raise RuntimeError('Video container image differs from freeze')
+    if not inspected['State']['Running']:raise RuntimeError('Frozen video container is stopped')
     env=dict(x.split('=',1) for x in inspected['Config']['Env'])
     if env.get('LLM_MODEL')!=v['model'] or env.get('LLM_BASE_URL','').rstrip('/')!=v['model_endpoint'].rstrip('/'):
         raise RuntimeError('Video provider/model configuration differs from freeze')
@@ -75,7 +85,8 @@ def preflight(protocol):
         if not (java/name).is_file():raise RuntimeError('Frozen Java runtime not found: '+str(java/name))
     node=protocol['node_executable']
     if not Path(node).is_file():raise RuntimeError('Frozen Node executable missing')
-    for module in ['requests','tree_sitter','tree_sitter_java','tree_sitter_python','pymongo']:
+    for module in ['requests','tree_sitter','tree_sitter_java','tree_sitter_python','pymongo',
+                   'ast_parser','hallucination_guard','topic_analyzer','fallback_engine']:
         importlib.import_module(module)
     if sys.version.split()[0]!=protocol['python_version']:raise RuntimeError('Python version changed')
     for package,expected in protocol['library_versions'].items():
@@ -114,13 +125,30 @@ def cached(folder,key,fn):
     value=fn();write(path,value);return value
 
 
+def cached_call(folder,key,fn):
+    """Never silently regenerate a response lost between a request and durable save."""
+    result=folder/(key+'.json');intent=folder/(key+'.intent.json')
+    if result.exists():return read(result)
+    if intent.exists():raise RuntimeError('Uncertain prior hint request: '+str(intent)+'. Preserve evidence and reconcile; no automatic repeat was sent.')
+    write(intent,{'started_at':stamp(),'status':'request_started','key':key})
+    value=fn();write(result,value)
+    write(intent,{'finished_at':stamp(),'status':'response_saved','key':key})
+    return value
+
+
 def execute_java(code,folder,protocol,execute=True):
     folder.mkdir(parents=True,exist_ok=True)
     (folder/'Main.java').write_text(code,encoding='utf-8')
     j=protocol['java'];tools=Path(j['home'])/'bin'
     begin=time.perf_counter()
-    compiled=subprocess.run([str(tools/'javac.exe'),'-J-Duser.language=en','-J-Duser.country=US','Main.java'],
-                            cwd=folder,capture_output=True,text=True,timeout=j['compile_timeout_seconds'])
+    environment={k:v for k,v in os.environ.items() if k.upper() not in {'JAVA_TOOL_OPTIONS','JDK_JAVA_OPTIONS','_JAVA_OPTIONS','CLASSPATH'}}
+    try:
+        compiled=subprocess.run([str(tools/'javac.exe'),'-J-Duser.language=en','-J-Duser.country=US','-encoding','UTF-8','Main.java'],
+                                cwd=folder,capture_output=True,text=True,encoding='utf-8',errors='replace',env=environment,
+                                timeout=j['compile_timeout_seconds'])
+    except subprocess.TimeoutExpired:
+        return {'status':'CompileTimeout','compiler_stdout':'','compiler_stderr':'Compiler exceeded time limit',
+                'output':'','error_message':'Compiler exceeded time limit','compile_seconds':time.perf_counter()-begin}
     result={'compile_seconds':time.perf_counter()-begin,'compiler_stdout':compiled.stdout,'compiler_stderr':compiled.stderr}
     if compiled.returncode!=0:
         line=re.search(r'Main.java:(\d+)',compiled.stderr)
@@ -129,11 +157,12 @@ def execute_java(code,folder,protocol,execute=True):
     if not execute:return {**result,'status':'Compiled'}
     try:
         begin=time.perf_counter()
-        ran=subprocess.run([str(tools/'java.exe'),'-Duser.language=en','-Duser.country=US',
+        ran=subprocess.run([str(tools/'java.exe'),'-Duser.language=en','-Duser.country=US','-Dfile.encoding=UTF-8',
                             '-Xmx'+j['heap_limit'],'-Xss'+j['stack_limit'],'-cp',str(folder.resolve()),'Main'],
-                           cwd=folder,capture_output=True,text=True,timeout=j['run_timeout_seconds'])
+                           cwd=folder,capture_output=True,text=True,encoding='utf-8',errors='replace',env=environment,
+                           timeout=j['run_timeout_seconds'])
         exception=re.search(r'(?:[\w$]+\.)*([A-Za-z]\w*(?:Exception|Error))',ran.stderr)
-        return {**result,'status':'Success' if ran.returncode==0 and not ran.stderr else 'RuntimeError',
+        return {**result,'status':'Success' if ran.returncode==0 else 'RuntimeError','exit_code':ran.returncode,
                 'output':ran.stdout.strip(),'error_message':ran.stderr,'run_seconds':time.perf_counter()-begin,
                 'exception_type':exception.group(1) if exception else None}
     except subprocess.TimeoutExpired:
@@ -222,10 +251,16 @@ def video_stage(out,protocol):
                                   capture_output=True,text=True,timeout=30)
             if copied.returncode:missing.append(filename)
         write(evidence/'archive_status.json',{'missing':missing,'status':state['status']})
+        if state['status']=='downloaded' and missing:
+            raise RuntimeError('Completed video is missing required provenance: '+case['id']+' '+', '.join(missing))
         if (evidence/'generation.json').exists():
             generated=read(evidence/'generation.json')
             if generated['java_sha256']!=hashlib.sha256(case['code'].encode('utf-8')).hexdigest():
                 raise RuntimeError('Server Java source differs from the frozen case: '+case['id'])
+        if state['status']=='downloaded':
+            payload=collector.unwrap(state['last_response']);artifact=payload.get('artifact',{})
+            if artifact.get('job_id')!=state['job_id'] or artifact.get('sha256')!=sha(folder/(case['id']+'.mp4')):
+                raise RuntimeError('Downloaded video identity/hash differs from server evidence: '+case['id'])
 
 
 def configure_local(protocol):
@@ -253,13 +288,28 @@ def capture_call(llm,system,user,seed,protocol):
                 'elapsed_seconds':time.perf_counter()-begin,'seed':seed}
 
 
+def bounded_diagnostic(result,protocol):
+    """Keep repetitive stack traces inside the frozen input budget; raw oracle stays intact."""
+    diagnostic=dict(result)
+    raw=str(diagnostic.get('error_message') or '')
+    limits=protocol['diagnostic_budget']
+    lines=raw.splitlines(keepends=True)
+    text=''.join(lines[:limits['max_error_lines']])[:limits['max_error_characters']]
+    if text!=raw:
+        diagnostic['error_message']=text+'\n[Remaining diagnostic omitted by the frozen input budget.]'
+        diagnostic['diagnostic_truncation']={'original_characters':len(raw),'original_lines':len(lines),
+            'original_sha256':hashlib.sha256(raw.encode()).hexdigest(),'max_error_characters':limits['max_error_characters'],
+            'max_error_lines':limits['max_error_lines']}
+    return diagnostic
+
+
 def hint_stage(out,protocol):
     llm=configure_local(protocol)
     import fallback_engine
     from hallucination_guard import validate_and_filter_response
     system=llm._build_system_prompt()
     warmup=read(DATA/'development.json')[0]
-    warmup_trace=cached(out/'hints','warmup_excluded',lambda:capture_call(llm,system,
+    warmup_trace=cached_call(out/'hints','warmup_excluded',lambda:capture_call(llm,system,
         llm._build_user_prompt(warmup['code'],{'status':'Unknown','error_message':'Development warmup; not scored'}),
         protocol['seed'],protocol))
     if not warmup_trace['transport_ok']:
@@ -271,12 +321,14 @@ def hint_stage(out,protocol):
     random.Random(protocol['seed']).shuffle(work)
     consecutive_errors=0
     for index,(case,repetition) in enumerate(work):
+        if index%20==0:verify_ollama(protocol)
         identifier=case['id']+f'_r{repetition}'
         path=out/'hints'/(identifier+'.json')
         if path.exists():continue
         diagnostic=dict(read(out/'oracles'/'records'/(case['id']+'.json')))
         if case['expected_status']=='WrongOutput':
             diagnostic.update(status='WrongOutput',error_message='Output does not match the task specification. Actual stdout: '+diagnostic['output'])
+        diagnostic=bounded_diagnostic(diagnostic,protocol)
         seed=protocol['seed']+repetition
         grounded=llm._build_user_prompt(case['code'],diagnostic,case['public_context'])
         footer=grounded[grounded.index('Please analyse the code and the error'):]
@@ -287,12 +339,12 @@ def hint_stage(out,protocol):
                   'condition_order':conditions,'started_at':stamp(),'diagnostic':diagnostic}
         # Persist each initial response independently to avoid rerunning completed inference after interruption.
         for condition in conditions:
-            evidence[condition]=cached(out/'hints'/'calls',identifier+'_'+condition,
+            evidence[condition]=cached_call(out/'hints'/'calls',identifier+'_'+condition,
                 lambda condition=condition:capture_call(llm,system,prompts[condition],seed,protocol))
             evidence[condition]['guard_accepts']=validate_and_filter_response(evidence[condition].get('parsed'),diagnostic) is not None
         retry=[]
         def traced_retry(system_prompt,user_prompt):
-            trace=cached(out/'hints'/'calls',identifier+'_strict_retry',
+            trace=cached_call(out/'hints'/'calls',identifier+'_strict_retry',
                 lambda:capture_call(llm,system_prompt,user_prompt,seed+10000,protocol))
             retry.append(trace)
             return trace.get('parsed',{})
@@ -303,6 +355,7 @@ def hint_stage(out,protocol):
         evidence['full_pipeline']={'output':final,'tier':final.get('_tier'),'retry_traces':retry,
                                   'postprocessing_wall_seconds':time.perf_counter()-begin,
                                   'initial_call_seconds':evidence['diagnostic_grounded']['elapsed_seconds']}
+        evidence['full_pipeline']['generation_seconds']=evidence['diagnostic_grounded']['elapsed_seconds']+sum(t['elapsed_seconds'] for t in retry)
         write(path,evidence)
         print(f'Hints {index+1}/{len(work)} {identifier}: {final.get("_tier")}',flush=True)
         failures=all(not evidence[c]['transport_ok'] for c in conditions)
@@ -311,6 +364,35 @@ def hint_stage(out,protocol):
     # Controls exercise the application's successful-execution eligibility gate, not an LLM accuracy test.
     write(out/'hints'/'controls_gate.json',{'count':len(read(DATA/'controls.json')),
           'model_calls':0,'scope':'Paired corrected controls passed execution oracles; success path does not request hints.'})
+
+
+def preserve_review_csv(path,rows):
+    if path.exists():return  # Never erase manual ratings when collection is resumed.
+    buffer=io.StringIO(newline='')
+    writer=csv.DictWriter(buffer,fieldnames=rows[0].keys());writer.writeheader();writer.writerows(rows)
+    temporary=path.with_suffix('.csv.tmp')
+    with temporary.open('w',encoding='utf-8-sig',newline='') as stream:
+        stream.write(buffer.getvalue());stream.flush();os.fsync(stream.fileno())
+    os.replace(temporary,path)
+
+
+def collection_integrity(out):
+    """Require every planned record, including failures, before declaring collection complete."""
+    expected={}
+    for filename,stage in [('guard_test.json','guard'),('analytics_test.json','analytics'),
+                           ('complexity_test.json','time_complexity/records'),('space_test.json','space_complexity/records')]:
+        expected[stage]={c['id'] for c in read(DATA/filename)}
+    expected['hints']={c['id']+f'_r{r}' for c in read(DATA/'hints_test.json')
+                       for r in range(3 if c['id'].endswith(('_03','_08')) else 1)}
+    for stage,identifiers in expected.items():
+        missing=[name for name in identifiers if not (out/stage/(name+'.json')).is_file()]
+        if missing:raise RuntimeError('Incomplete collection in '+stage+': '+', '.join(sorted(missing)))
+    for case in read(DATA/'video_test.json')['cases']:
+        path=out/'video'/(case['id']+'.json')
+        if not path.exists() or read(path)['status'] not in ('downloaded','failed','rejected'):
+            raise RuntimeError('Video collection is not terminal: '+case['id'])
+    write(out/'integrity_check.json',{'at':stamp(),'all_planned_records_present':True,
+                                    'counts':{k:len(v) for k,v in expected.items()}})
 
 
 def review_export(out,protocol):
@@ -332,15 +414,13 @@ def review_export(out,protocol):
                      'correctness_0_1_2':'','actionability_0_1_2':'','excessive_disclosure_yes_no':'','progression_appropriate_yes_no':'','notes':''})
         mapping.append({'review_id':blind,'case_id':value['id'],'condition':condition})
     if rows:
-        with (out/'author_review.csv').open('w',encoding='utf-8-sig',newline='') as stream:
-            writer=csv.DictWriter(stream,fieldnames=rows[0].keys());writer.writeheader();writer.writerows(rows)
+        preserve_review_csv(out/'author_review.csv',rows)
     write(out/'review_mapping_keep_separate.json',mapping)
     video_rows=[{'case_id':c['id'],'category':c['category'],'expected_stdout':c['expected_stdout'],
                  'expected_events':'; '.join(c['expected_events']),
                  'detection':'','dedicated_animation':'','generic_tracking':'','state_transitions_correct':'',
                  'narration_correct':'','output_correct':'','notes':''} for c in read(DATA/'video_test.json')['cases']]
-    with (out/'video_review.csv').open('w',encoding='utf-8-sig',newline='') as stream:
-        writer=csv.DictWriter(stream,fieldnames=video_rows[0].keys());writer.writeheader();writer.writerows(video_rows)
+    preserve_review_csv(out/'video_review.csv',video_rows)
     write(out/'collection_complete.json',{'at':stamp(),'meaning':'All planned collection stages traversed; inspect recorded failures.',
           'semantic_assessment':'pending author review; no independent ratings or learning outcomes'})
 
@@ -350,7 +430,7 @@ def main(argv=None):
     parser.add_argument('--preflight',action='store_true',help='Read local metadata only; no inference or Java execution')
     parser.add_argument('--run',action='store_true',help='Start the frozen suite; do NOT use until ready')
     parser.add_argument('--allow-external-video',action='store_true',help='Authorize this frozen synthetic video set to configured AbacusAI and Edge speech')
-    parser.add_argument('--out',type=Path,default=HERE/'runs'/'benchmark-v1')
+    parser.add_argument('--out',type=Path,default=HERE/'runs'/'benchmark-v2')
     args=parser.parse_args(argv)
     manifest=check_freeze();protocol=read(DATA/'protocol.json')
     print('Frozen file hashes verified. Dataset counts:',json.dumps(read(DATA/'dataset_summary.json')),flush=True)
@@ -368,8 +448,10 @@ def main(argv=None):
         else:write(path,{'contract':contract,'started_at':stamp(),'runtime_metadata':metadata})
         print('Stage 1: execute all oracles before inference',flush=True);oracle_validation(args.out,protocol)
         check_freeze();print('Stages 2-5: validator, analytics, time and space',flush=True);deterministic_stages(args.out,protocol)
-        check_freeze();print('Stage 6: sequential external video jobs',flush=True);video_stage(args.out,protocol)
-        check_freeze();print('Stage 7: local hint conditions and frozen repetitions',flush=True);hint_stage(args.out,protocol)
+        check_freeze();preflight(protocol);print('Stage 6: sequential external video jobs',flush=True);video_stage(args.out,protocol)
+        check_freeze();preflight(protocol);print('Stage 7: local hint conditions and frozen repetitions',flush=True);hint_stage(args.out,protocol)
+        check_freeze()
+        collection_integrity(args.out)
         print('Stage 8: export review sheets',flush=True);review_export(args.out,protocol)
         print('Collection finished. Failures remain in the dataset; author review and analysis are next.',flush=True)
 

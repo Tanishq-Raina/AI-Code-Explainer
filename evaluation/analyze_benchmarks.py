@@ -68,6 +68,11 @@ def analyze(root):
     for r in hints:
         tier=r['full_pipeline']['tier'];tiers[tier]=tiers.get(tier,0)+1
     result['hints']['full_pipeline_tiers']=tiers
+    pipeline_times=[r['full_pipeline']['generation_seconds'] for r in hints]
+    retries=[t for r in hints for t in r['full_pipeline']['retry_traces']]
+    result['hints']['full_pipeline_latency']={'p50_seconds':percentile(pipeline_times,.5),
+        'p95_seconds':percentile(pipeline_times,.95),'definition':'grounded initial generation plus recorded strict retry; excludes queue and oracle execution'}
+    result['hints']['strict_retries']={'calls':len(retries),'transport_failures':sum(not t['transport_ok'] for t in retries)}
     result['hints']['interpretation']='Format validity and fallback availability are not factual correctness or educational quality.'
     analytics=[read(p) for p in (root/'analytics').glob('*.json')]
     result['analytics']={'count':len(analytics),'passed':sum(r['passed'] for r in analytics),
@@ -80,15 +85,18 @@ def analyze(root):
     if review.exists():
         with review.open(encoding='utf-8-sig',newline='') as stream: ratings=list(csv.DictReader(stream))
         filled=[r for r in ratings if r['correctness_0_1_2'].strip() in ('0','1','2')]
-        result['author_review']={'expected_rows':len(ratings),'correctness_rows_filled':len(filled),
-                                'complete':len(filled)==len(ratings),'independent_raters':False}
+        complete=[r for r in filled if r['actionability_0_1_2'].strip() in ('0','1','2')
+                  and r['excessive_disclosure_yes_no'].strip().lower() in ('yes','no')
+                  and r['progression_appropriate_yes_no'].strip().lower() in ('yes','no','na','n/a')]
+        result['author_review']={'expected_rows':90,'actual_rows':len(ratings),'correctness_rows_filled':len(filled),
+                                'all_ratings_rows_filled':len(complete),'complete':len(complete)==len(ratings)==90,'independent_raters':False}
     result['collection_finished']=(root/'collection_complete.json').exists()
     return result
 
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--out',type=Path,default=Path(__file__).resolve().parent/'runs'/'benchmark-v1')
+    parser.add_argument('--out',type=Path,default=Path(__file__).resolve().parent/'runs'/'benchmark-v2')
     args=parser.parse_args()
     if not (args.out/'run_manifest.json').exists():raise SystemExit('No benchmark run exists. Nothing to analyze.')
     summary=analyze(args.out)

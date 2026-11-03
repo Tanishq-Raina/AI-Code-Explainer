@@ -1,0 +1,12 @@
+{
+  "purpose": "Shareable synthetic hint review inputs; no credentials or model/video services required",
+  "source_run": "benchmark-v2",
+  "response_count": 90,
+  "case_count": 30,
+  "assessment_type": "Review of AI-assisted ratings; teammate judgments are recorded separately",
+  "files": {
+    "author_review.csv": "2ac87d0966523aa39d9b51b1dd7a14414eb4d3e605ec46d5594076cee8b33550",
+    "review_mapping_keep_separate.json": "66bf8e03a23cc03249ec54cc4c4d20ae2082c07d78561c8bff31d7ebb6ef1c19",
+    "ai_hint_evaluation/ai_hint_ratings.json": "bd953ade1d97669c763216ec9aa8132145a3edb5794207571b3aa7e377c164b0"
+  }
+}

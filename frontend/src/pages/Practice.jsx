@@ -6,6 +6,7 @@ import HintPanel from "../components/panels/HintPanel";
 import ProblemGuidance from "../components/ProblemGuidance";
 import { getProblemById } from "../data/problems";
 import { submitCode } from "../api/client";
+import { requestErrorMessage } from "../api/config.js";
 
 // ─── Output normalization ──────────────────────────────────────
 // Java's println always terminates each line with a newline, and
@@ -242,8 +243,8 @@ function Practice({ attempts, setAttempts, selectedProblemId }) {
       ]);
     } catch (err) {
       console.error(err);
-      setStatus("Backend connection failed");
-      setOutput("Check if backend is running on port 5000");
+      setStatus("Feedback unavailable");
+      setOutput(requestErrorMessage(err));
       setHints(null);
       setErrorLine(null);
       setErrorMessage("");
@@ -335,11 +336,11 @@ function Practice({ attempts, setAttempts, selectedProblemId }) {
       ]);
     } catch (err) {
       console.error(err);
-      setStatus("Backend connection failed");
-      setOutput("Check if backend is running on port 5000");
+      setStatus("Feedback unavailable");
+      setOutput(requestErrorMessage(err));
       setVerdict({
         kind: "error",
-        message: "Couldn't reach the backend. Is the Flask server running?",
+        message: requestErrorMessage(err),
       });
     } finally {
       setIsSubmitting(false);

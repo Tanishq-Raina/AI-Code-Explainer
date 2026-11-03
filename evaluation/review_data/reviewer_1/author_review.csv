@@ -1,0 +1,953 @@
+﻿review_id,task,code,reference_code,expected_stdout,observed_error,problem_summary,why,hint_1,hint_2,hint_3,learning_tip,correctness_0_1_2,actionability_0_1_2,excessive_disclosure_yes_no,progression_appropriate_yes_no,notes
+R001,Read integers from numeric tokens,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Scanner s=new Scanner(""hello"");System.out.println(s.nextInt());
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Scanner s=new Scanner(""7"");System.out.println(s.nextInt());
+}
+}
+",7,"Exception in thread ""main"" java.util.InputMismatchException
+	at java.base/java.util.Scanner.throwFor(Scanner.java:977)
+	at java.base/java.util.Scanner.next(Scanner.java:1632)
+	at java.base/java.util.Scanner.nextInt(Scanner.java:2297)
+	at java.base/java.util.Scanner.nextInt(Scanner.java:2251)
+	at Main.main(Main.java:5)
+","The program tries to read an integer from a Scanner initialized with a string 'hello', which causes an InputMismatchException.","The Scanner class is designed to parse input from streams like System.in, not arbitrary strings. When you initialize a Scanner with a String like ""hello"", it treats that string as the entire input stream. The nextInt() method expects to find numeric tokens, but finds text instead, causing the exception.",Look at how you initialized the Scanner - you passed a string directly instead of using System.in,"To read from standard input, you should use Scanner s = new Scanner(System.in) instead of passing a string literal","Change this line: Scanner s=new Scanner(""hello""); To this: Scanner s = new Scanner(System.in);","Remember that Scanner can be initialized with different sources like System.in, files, or strings. When reading user input, always use System.in as the source.",,,,,
+R003,Avoid unboxing a null boolean,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Boolean b=null; if(b){System.out.println(""yes"");}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Boolean b=true; if(b){System.out.println(""yes"");}
+}
+}
+",yes,"Exception in thread ""main"" java.lang.NullPointerException: Cannot invoke ""java.lang.Boolean.booleanValue()"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The code tries to unbox a null Boolean object in an if statement condition.,"In Java, when you use a Boolean object (not a boolean primitive) in a conditional statement like 'if(b)', the compiler attempts to unbox it to a boolean primitive. However, if the Boolean object is null, this unboxing operation throws a NullPointerException because there's no primitive value to convert to.",Look at how you're using the Boolean variable b in the if statement condition.,You need to check if the Boolean object is null before trying to use it in a conditional expression.,"Add a null check before the if statement:
+if (b != null && b) {","Always remember that wrapper classes like Boolean, Integer, etc. can be null, while their primitive counterparts cannot. When using wrapper objects in conditions, always consider null safety.",,,,,
+R004,Instantiate a concrete implementation,"import java.util.*;
+public class Main {
+static abstract class Base{abstract int value();}
+public static void main(String[] args) {
+Base b=new Base(); System.out.println(b.value());
+}
+}
+","import java.util.*;
+public class Main {
+static abstract class Base{abstract int value();}
+public static void main(String[] args) {
+Base b=new Base(){int value(){return 2;}}; System.out.println(b.value());
+}
+}
+",2,"Main.java:5: error: Base is abstract; cannot be instantiated
+Base b=new Base(); System.out.println(b.value());
+       ^
+1 error
+","The code tries to instantiate an abstract class directly, which is not allowed in Java.","In Java, you cannot create objects of abstract classes because they are meant to be base classes that define a common interface for subclasses. The 'abstract' keyword prevents direct instantiation and forces developers to create concrete implementations that extend the abstract class.",Look at line 5 where you're trying to create an object of Base class.,You need to either make the Base class non-abstract or create a concrete subclass that extends Base and use that for instantiation.,You could add a concrete class like 'class Concrete extends Base {...}' and then instantiate that instead.,"Remember that abstract classes are meant to be extended, not instantiated directly. They serve as templates for other classes to inherit from.",,,,,
+R005,Keep boolean values boolean,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int b=true; System.out.println(b);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean b=true; System.out.println(b);
+}
+}
+",true,"Main.java:5: error: incompatible types: boolean cannot be converted to int
+int b=true; System.out.println(b);
+      ^
+1 error
+",The code tries to assign a boolean value true to an integer variable b.,"In Java, int and boolean are completely different data types. An int can only hold whole numbers like 1, 2, -5, etc., while a boolean can only hold true or false values. You cannot directly assign a boolean value to an integer variable because they are incompatible types.",Look at line 5 where you declare variable b as int but assign it the value true.,Think about what type of variable you need if you want to store the value true.,"Change the variable declaration from int b to boolean b.
+int b=true; should become boolean b=true;","Remember that Java is strongly typed, meaning variables must match their declared type exactly. Boolean variables can only hold true or false, while integer variables can only hold numeric values.",,,,,
+R008,Read integers from numeric tokens,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Scanner s=new Scanner(""hello"");System.out.println(s.nextInt());
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Scanner s=new Scanner(""7"");System.out.println(s.nextInt());
+}
+}
+",7,"Exception in thread ""main"" java.util.InputMismatchException
+	at java.base/java.util.Scanner.throwFor(Scanner.java:977)
+	at java.base/java.util.Scanner.next(Scanner.java:1632)
+	at java.base/java.util.Scanner.nextInt(Scanner.java:2297)
+	at java.base/java.util.Scanner.nextInt(Scanner.java:2251)
+	at Main.main(Main.java:5)
+",The program tries to use a Scanner with a string literal instead of an input source.,"A Scanner in Java is designed to read from input sources like System.in, files, or other streams. When you pass a string directly to the Scanner constructor like 'new Scanner(""hello"")', it creates a Scanner that reads from that exact string as if it were a stream of tokens. However, the string 'hello' contains no integers, so calling nextInt() throws an exception.",Look at how you're creating the Scanner - you're passing a string directly to its constructor.,"The Scanner constructor that takes a String parameter is meant for testing or parsing strings, not for reading from user input. For reading integers from user input, you should use System.in as the input source.","Change this line:
+Scanner s=new Scanner(""hello"");
+to:
+Scanner s=new Scanner(System.in);",Learn about different Scanner constructors and when to use each one - specifically the difference between Scanner(System.in) for user input vs. Scanner(String) for parsing string data.,,,,,
+R013,Initialize an object before field access,"import java.util.*;
+public class Main {
+static class Box{int n=4;}
+public static void main(String[] args) {
+Box b=null; System.out.println(b.n);
+}
+}
+","import java.util.*;
+public class Main {
+static class Box{int n=4;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(b.n);
+}
+}
+",4,"Exception in thread ""main"" java.lang.NullPointerException: Cannot read field ""n"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The code tries to access a field of a null object reference.,"In Java, when you declare an object reference like 'Box b=null;', you're only creating a reference variable that points to nothing (null). You must first create an actual object using 'new' before you can access any fields or methods of that object. Trying to access 'b.n' when b is null causes a NullPointerException.",Look at how the Box object 'b' is declared and initialized.,You need to create an actual Box object before trying to access its field 'n'.,Add 'new Box()' after assigning null to b. Box b = new Box();,"Always remember that object references must be initialized with 'new' before accessing their members, otherwise you'll get a NullPointerException.",,,,,
+R015,Provide an assignment expression,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=; System.out.println(n);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=9; System.out.println(n);
+}
+}
+",9,"Main.java:5: error: illegal start of expression
+int n=; System.out.println(n);
+      ^
+1 error
+",The variable declaration is missing the assignment value after the equals sign.,"In Java, when you declare a variable with an assignment, you must provide a value to assign to that variable. The syntax 'int n=' expects a value after the equals sign, but none is provided. This creates a compilation error because the compiler cannot determine what value should be stored in the variable n.",Look at the line where you declare the variable n - there's something missing after the equals sign.,"When declaring and assigning a variable in Java, you need to provide a valid value or expression after the equals sign.",Try adding a number like 'int n=5;' or 'int n=0;' after the equals sign.,Remember that variable declaration and initialization must follow proper syntax: 'type variableName = value;' - all parts are required for valid code.,,,,,
+R021,Update the recursive argument,"import java.util.*;
+public class Main {
+static int f(int n){if(n==0)return 1;return n*f(n);}
+public static void main(String[] args) {
+System.out.println(f(4));
+}
+}
+","import java.util.*;
+public class Main {
+static int f(int n){if(n==0)return 1;return n*f(n-1);}
+public static void main(String[] args) {
+System.out.println(f(4));
+}
+}
+",24,"Exception in thread ""main"" java.lang.StackOverflowError
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+
+[Remaining diagnostic omitted by the frozen input budget.]","The recursive function does not have a proper base case that stops the recursion, causing infinite recursion and a stack overflow error.","In the recursive call, the function is calling itself with the same value of n instead of a smaller value. This means the function keeps calling itself with n, n, n, and so on, never reaching the base case of n==0. Since there's no decrement in the recursive argument, the recursion never stops.",Look at how the recursive call is made inside the function.,The argument passed to the recursive call should be smaller than the current value of n to eventually reach the base case.,Change `return n*f(n);` to `return n*f(n-1);`,"When writing recursive functions, always ensure that each recursive call moves toward the base case. The recursive argument should be modified in a way that brings it closer to the stopping condition.",,,,,
+R023,Read integers from numeric tokens,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Scanner s=new Scanner(""hello"");System.out.println(s.nextInt());
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Scanner s=new Scanner(""7"");System.out.println(s.nextInt());
+}
+}
+",7,"Exception in thread ""main"" java.util.InputMismatchException
+	at java.base/java.util.Scanner.throwFor(Scanner.java:977)
+	at java.base/java.util.Scanner.next(Scanner.java:1632)
+	at java.base/java.util.Scanner.nextInt(Scanner.java:2297)
+	at java.base/java.util.Scanner.nextInt(Scanner.java:2251)
+	at Main.main(Main.java:5)
+","The program tries to read an integer from a Scanner initialized with a string 'hello', which causes an InputMismatchException.","The Scanner class is designed to parse input from streams like System.in, not arbitrary strings. When you initialize a Scanner with a String like ""hello"", it treats that string as the entire input stream. The nextInt() method expects to find numeric tokens, but finds text instead, causing the exception.",Look at how you initialized the Scanner - you passed a string directly instead of using System.in,"To read from standard input, you should use Scanner s = new Scanner(System.in) instead of passing a string literal","Change this line: Scanner s=new Scanner(""hello"");
+To this: Scanner s = new Scanner(System.in);","Remember that Scanner can be initialized with different sources like System.in, files, or strings. When reading user input, always use System.in as the source.",,,,,
+R026,Inspect a helper denominator,"import java.util.*;
+public class Main {
+static int zero(){return 0;}
+public static void main(String[] args) {
+System.out.println(4/zero());
+}
+}
+","import java.util.*;
+public class Main {
+static int zero(){return 0;}
+public static void main(String[] args) {
+System.out.println(zero()==0?0:4/zero());
+}
+}
+",0,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+",The program will throw an ArithmeticException at runtime because it attempts to divide by zero.,"In Java, dividing any number by zero (including zero itself) causes an ArithmeticException to be thrown at runtime. The method 'zero()' returns 0, so when 4 is divided by 0, the program crashes. This is a mathematical impossibility that Java handles by throwing an exception rather than allowing invalid operations.",Look at the division operation in your main method - what value are you dividing by?,"The zero() method returns a specific value that makes your division invalid, causing a runtime error instead of a compile-time error.","Try changing the return value of zero() to something other than 0.
+For example: return 1; or return 2;","Remember that while some errors are caught at compile time (like syntax errors), others like division by zero are runtime errors that occur when the program actually executes.",,,,,
+R027,Provide an assignment expression,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=; System.out.println(n);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=9; System.out.println(n);
+}
+}
+",9,"Main.java:5: error: illegal start of expression
+int n=; System.out.println(n);
+      ^
+1 error
+",The variable 'n' is declared but not initialized with a value.,"In Java, when you declare a local variable (like 'int n'), you must assign it a value before using it. The semicolon after 'int n=' is incomplete - it's missing the actual value to assign to the variable. This creates a compilation error because the compiler doesn't know what value to store in 'n'.",Look at the line where you declare the integer variable 'n'.,You need to provide a value after the equals sign when initializing the variable.,Try changing 'int n=;' to 'int n=5;' or another number.,"Remember that local variables in Java must be initialized before use, unlike class fields which have default values.",,,,,
+R029,Initialize a local on every branch,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x; boolean flag=false; if(flag){x=7;} System.out.println(x);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=0; boolean flag=false; if(flag){x=7;} System.out.println(x);
+}
+}
+",0,"Main.java:5: error: variable x might not have been initialized
+int x; boolean flag=false; if(flag){x=7;} System.out.println(x);
+                                                             ^
+1 error
+","The variable x is not initialized on all execution paths, causing a compilation error.","In Java, local variables must be definitely assigned before they can be used. The variable x is declared but only assigned a value inside the if block that only executes when flag is true. Since flag is false, x never gets assigned, yet it's still used in the print statement.",Look at where x is declared and where it gets assigned a value.,"The if statement creates a conditional path where x might never be assigned, but x is still used outside that condition.","You need to initialize x when you declare it, or ensure it gets assigned in all possible code paths. Try: int x = 0; or int x; x = 7; before the if statement.","Always initialize local variables when declaring them, or ensure they are definitely assigned before use. This is a fundamental rule to avoid compilation errors and prevent runtime bugs.",,,,,
+R030,Instantiate a concrete implementation,"import java.util.*;
+public class Main {
+static abstract class Base{abstract int value();}
+public static void main(String[] args) {
+Base b=new Base(); System.out.println(b.value());
+}
+}
+","import java.util.*;
+public class Main {
+static abstract class Base{abstract int value();}
+public static void main(String[] args) {
+Base b=new Base(){int value(){return 2;}}; System.out.println(b.value());
+}
+}
+",2,"Main.java:5: error: Base is abstract; cannot be instantiated
+Base b=new Base(); System.out.println(b.value());
+       ^
+1 error
+","The code tries to instantiate an abstract class directly, which is not allowed in Java.","In Java, you cannot create objects of abstract classes because they are meant to be base classes that define a common interface for subclasses. The 'abstract' keyword prevents direct instantiation and forces developers to create concrete implementations that extend the abstract class.",Look at line 5 where you're trying to create an object of Base class.,You need to either make the Base class non-abstract or create a concrete subclass that extends Base and use that for instantiation.,You could add a concrete class like 'class Concrete extends Base {...}' and then instantiate that instead.,"Remember that abstract classes are meant to be extended, not instantiated directly. They serve as templates for other classes to inherit from.",,,,,
+R035,Qualify an instance field,"import java.util.*;
+public class Main {
+static class Box {int value=11;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(value);
+}
+}
+","import java.util.*;
+public class Main {
+static class Box {int value=11;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(b.value);
+}
+}
+",11,"Main.java:5: error: cannot find symbol
+Box b=new Box(); System.out.println(value);
+                                    ^
+  symbol:   variable value
+  location: class Main
+1 error
+",The code tries to access an instance field 'value' without qualifying it with an object reference.,"In Java, instance fields belong to specific objects, not the class itself. When you create a Box object 'b', you must use 'b.value' to access its value field. The code is trying to reference 'value' directly as if it were a local variable or static field, but it's actually an instance field that requires an object reference.",Look at the line where you're printing 'value' - you need to specify which object's value field you want to access.,"You've created a Box object named 'b', so you should use that object reference to access its value field.",Change `System.out.println(value);` to `System.out.println(b.value);`,"Remember that instance fields must be accessed through an object reference, while static fields can be accessed directly through the class name.",,,,,
+R039,Update the recursive argument,"import java.util.*;
+public class Main {
+static int f(int n){if(n==0)return 1;return n*f(n);}
+public static void main(String[] args) {
+System.out.println(f(4));
+}
+}
+","import java.util.*;
+public class Main {
+static int f(int n){if(n==0)return 1;return n*f(n-1);}
+public static void main(String[] args) {
+System.out.println(f(4));
+}
+}
+",24,"Exception in thread ""main"" java.lang.StackOverflowError
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+
+[Remaining diagnostic omitted by the frozen input budget.]","The recursive function does not have a proper base case that stops the recursion, causing infinite recursion and a stack overflow error.","In the recursive call, the function is calling itself with the same value of n instead of a smaller value. This means the function keeps calling itself with n, n, n, and so on, never reaching the base case of n==0. Since there's no decrement in the recursive argument, the recursion never stops.",Look at how the recursive call is made inside the function.,The argument passed to the recursive call should be smaller than the current value of n to eventually reach the base case.,Change `return n*f(n);` to `return n*f(n-1);`,"When writing recursive functions, always ensure that each recursive call moves toward the base case. The recursive argument should be modified in a way that brings it closer to the stopping condition.",,,,,
+R040,Compare string contents,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+String s=new String(""cat"");System.out.println(s==""cat"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+String s=new String(""cat"");System.out.println(s.equals(""cat""));
+}
+}
+",true,Output does not match the task specification. Actual stdout: false,The code uses '==' to compare string contents instead of '.equals()',"In Java, '==' compares object references (whether two variables point to the same object in memory), not the actual content of strings. Even if two strings have the same characters, they might be different objects in memory, so '==' will return false. To compare string contents, you must use the '.equals()' method.",Look at how you're comparing the strings on the line with System.out.println,"The comparison operator '==' checks if two references point to the same object, but you want to check if the characters inside the strings are the same","Change 's==""cat""' to 's.equals(""cat"")'
+This will properly compare the contents of the strings","Remember that in Java, all objects (including Strings) should be compared for content using .equals() method, while primitive types can use == operator",,,,,
+R041,Keep boolean values boolean,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int b=true; System.out.println(b);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean b=true; System.out.println(b);
+}
+}
+",true,"Main.java:5: error: incompatible types: boolean cannot be converted to int
+int b=true; System.out.println(b);
+      ^
+1 error
+",The code tries to assign a boolean value true to an integer variable b.,"In Java, variables have specific data types that cannot be mixed. An int variable can only hold integer values like 1, 2, -5, etc. A boolean variable can only hold true or false values. Trying to assign a boolean value to an int variable causes a type mismatch error.",Look at the variable declaration on the line with 'int b=true;'.,"Think about what type of value you're trying to store in your variable, and make sure the variable type matches that value.","If you want to store a boolean value like true or false, declare your variable as 'boolean' instead of 'int'.","Remember that Java is strongly typed, meaning each variable must be declared with the correct data type that matches the values it will hold.",,,,,
+R042,Initialize an object before field access,"import java.util.*;
+public class Main {
+static class Box{int n=4;}
+public static void main(String[] args) {
+Box b=null; System.out.println(b.n);
+}
+}
+","import java.util.*;
+public class Main {
+static class Box{int n=4;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(b.n);
+}
+}
+",4,"Exception in thread ""main"" java.lang.NullPointerException: Cannot read field ""n"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The code tries to access a field of a null object reference.,"In Java, when you declare an object variable but don't initialize it with 'new', it defaults to null. Trying to access any field or method on a null reference causes a NullPointerException at runtime. The variable 'b' is declared as type Box but never actually created with the 'new' keyword.",Look at how the Box object 'b' is declared and initialized.,You need to create an actual Box object before trying to access its field 'n'.,"Add the 'new' keyword when declaring the Box object:
+Box b = new Box();",Always remember that object references must be initialized with 'new' before accessing their fields or methods. This is a fundamental concept in Java object-oriented programming.,,,,,
+R046,Initialize an object before field access,"import java.util.*;
+public class Main {
+static class Box{int n=4;}
+public static void main(String[] args) {
+Box b=null; System.out.println(b.n);
+}
+}
+","import java.util.*;
+public class Main {
+static class Box{int n=4;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(b.n);
+}
+}
+",4,"Exception in thread ""main"" java.lang.NullPointerException: Cannot read field ""n"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The code tries to access a field of a null object reference.,"In Java, when you declare an object reference like 'Box b=null;', you're only creating a reference variable that points to nothing (null). You must first create an actual object using 'new' before you can access any fields or methods of that object. Trying to access 'b.n' when b is null causes a NullPointerException.",Look at how the Box object 'b' is declared and initialized.,You need to create an actual Box object before trying to access its field 'n'.,"Add 'new Box()' after assigning null to b.
+Box b = new Box();","Always remember that object references must be initialized with 'new' before accessing their members, otherwise you'll get a NullPointerException.",,,,,
+R047,Keep list get within size,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>();a.add(6); System.out.println(a.get(1));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>();a.add(6); System.out.println(a.get(0));
+}
+}
+",6,"Exception in thread ""main"" java.lang.IndexOutOfBoundsException: Index 1 out of bounds for length 1
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
+	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
+	at java.base/java.util.Objects.checkIndex(Objects.java:365)
+	at java.base/java.util.ArrayList.get(ArrayList.java:428)
+	at Main.main(Main.java:5)
+",The code tries to access an index that doesn't exist in the list.,"The list only contains one element at index 0, but the code attempts to get the element at index 1. In Java, list indices start at 0, so for a list with 1 element, the valid index is only 0. Trying to access index 1 throws an IndexOutOfBoundsException.",Look at how many elements you added to the list versus how many you're trying to access.,"Remember that list indices start at 0, so if you add 1 element, what's the highest valid index?","The list has only one element, so valid indices are 0. Change get(1) to get(0).","Always check list size before accessing elements using get() method, or use enhanced for loop for safe iteration.",,,,,
+R048,Inspect a shifted denominator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int d=1>>1;System.out.println(6/d);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int d=1<<1;System.out.println(6/d);
+}
+}
+",3,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+",The program attempts to divide by zero because the denominator evaluates to 0.,"The expression `1>>1` performs a right bitwise shift operation, which moves the bits of the number 1 one position to the right. Since 1 in binary is `1`, shifting it right by 1 gives `0`. When you divide by zero, Java throws an ArithmeticException.",Look at the denominator expression `1>>1` and think about what value it evaluates to.,Consider how bitwise right shift operations work with small positive integers.,"Try evaluating `1>>1` manually: 1 in binary is `1`, shifting right by 1 gives `0`. So the denominator becomes 0.","Remember that bitwise shift operations can produce unexpected results with small numbers, and always check for zero before division.",,,,,
+R050,Inspect a helper denominator,"import java.util.*;
+public class Main {
+static int zero(){return 0;}
+public static void main(String[] args) {
+System.out.println(4/zero());
+}
+}
+","import java.util.*;
+public class Main {
+static int zero(){return 0;}
+public static void main(String[] args) {
+System.out.println(zero()==0?0:4/zero());
+}
+}
+",0,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+","The program attempts to divide by zero, which causes an ArithmeticException at runtime.","In Java, dividing any number by zero (including zero itself) results in an ArithmeticException because it's mathematically undefined. The method 'zero()' returns 0, so 4/zero() becomes 4/0, which is not allowed.",Look at the denominator in your division operation - what value does zero() return?,"Think about what happens mathematically when you divide by zero, and how that relates to your helper method.",The line 'System.out.println(4/zero());' needs to be changed so the denominator isn't zero. Try using a different value instead of calling zero().,Remember that division by zero is undefined in mathematics and throws an ArithmeticException in Java. Always validate your inputs before performing division operations.,,,,,
+R052,Compare string contents,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+String s=new String(""cat"");System.out.println(s==""cat"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+String s=new String(""cat"");System.out.println(s.equals(""cat""));
+}
+}
+",true,Output does not match the task specification. Actual stdout: false,The code uses reference comparison instead of content comparison for strings.,"In Java, the '==' operator checks if two variables refer to the same object in memory, not if they have the same content. Even though the string literal 'cat' and the string object created with new String('cat') contain the same text, they are different objects in memory, so '==' returns false.","Look at how you're comparing strings - you're using '==' which checks memory addresses, not content.","To compare string contents in Java, you need to use the .equals() method instead of '=='.","Change this line: System.out.println(s==""cat""); to: System.out.println(s.equals(""cat""));","Remember that in Java, String literals are interned and may refer to the same object, but objects created with 'new' are always new instances. Always use .equals() for content comparison of strings.",,,,,
+R053,Include the passing threshold,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int mark=60;System.out.println(mark>60?""P"":""F"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int mark=60;System.out.println(mark>=60?""P"":""F"");
+}
+}
+",P,Output does not match the task specification. Actual stdout: F,The code doesn't correctly handle the passing threshold when the mark equals 60.,"The condition in the ternary operator uses '>' (greater than) instead of '>=' (greater than or equal to). This means that when the mark is exactly 60, it's not considered passing, so it outputs 'F' instead of 'P'. The task requires including the passing threshold, which implies that a mark of 60 should be considered passing.",Look at the comparison operator in your ternary condition.,Think about what happens when the mark equals the threshold value.,"Change the '>' to '>=' in your condition.
+Example: mark>=60 instead of mark>60","Remember that inclusive thresholds (passing at exactly the minimum) use >=, while exclusive thresholds use >.",,,,,
+R054,Qualify an instance field,"import java.util.*;
+public class Main {
+static class Box {int value=11;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(value);
+}
+}
+","import java.util.*;
+public class Main {
+static class Box {int value=11;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(b.value);
+}
+}
+",11,"Main.java:5: error: cannot find symbol
+Box b=new Box(); System.out.println(value);
+                                    ^
+  symbol:   variable value
+  location: class Main
+1 error
+",The code tries to print a field 'value' without properly qualifying it with an object reference.,"In Java, instance fields belong to specific objects, not to the class itself. When you write 'value' directly, the compiler doesn't know which object's 'value' field you're referring to. You need to use an object reference to access the field, like 'b.value' where 'b' is your Box object.",Look at line 5 where you're trying to print 'value' without an object prefix.,You need to specify which object's 'value' field you want to access by using the object reference variable 'b'.,Change 'System.out.println(value);' to 'System.out.println(b.value);',"Remember that instance fields are accessed through object references, not directly by their names. This is fundamental to understanding object-oriented programming in Java.",,,,,
+R057,Qualify an instance field,"import java.util.*;
+public class Main {
+static class Box {int value=11;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(value);
+}
+}
+","import java.util.*;
+public class Main {
+static class Box {int value=11;}
+public static void main(String[] args) {
+Box b=new Box(); System.out.println(b.value);
+}
+}
+",11,"Main.java:5: error: cannot find symbol
+Box b=new Box(); System.out.println(value);
+                                    ^
+  symbol:   variable value
+  location: class Main
+1 error
+",The code tries to print a field 'value' without properly qualifying it with an object reference.,"In Java, instance fields belong to specific objects, not to the class itself. When you write 'value' directly, the compiler doesn't know which object's 'value' field you're referring to. You need to use an object reference to access the field, like 'b.value' where 'b' is your Box object.",Look at line 5 where you're trying to print 'value' without an object prefix.,You need to specify which object's 'value' field you want to access by using the object reference variable 'b'.,Change 'System.out.println(value);' to 'System.out.println(b.value);',"Remember that instance fields are accessed through object references, not directly by their names. This is fundamental to understanding object-oriented programming in Java.",,,,,
+R058,Keep list get within size,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>();a.add(6); System.out.println(a.get(1));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>();a.add(6); System.out.println(a.get(0));
+}
+}
+",6,"Exception in thread ""main"" java.lang.IndexOutOfBoundsException: Index 1 out of bounds for length 1
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
+	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
+	at java.base/java.util.Objects.checkIndex(Objects.java:365)
+	at java.base/java.util.ArrayList.get(ArrayList.java:428)
+	at Main.main(Main.java:5)
+",The code tries to access an index that doesn't exist in the list.,"The list 'a' only has one element (at index 0) because you only added one element with add(6). When you try to get element at index 1, it throws an IndexOutOfBoundsException because valid indices are only 0 in this case.",Look at how many elements you're adding to the list versus how many you're trying to access.,"Remember that ArrayList indices start at 0, so if you add only one element, what's the highest valid index?",Try changing get(1) to get(0) to access the only element in the list.,Always check that your array/list indices are within valid range (0 to size-1) before accessing elements.,,,,,
+R060,Inspect a helper denominator,"import java.util.*;
+public class Main {
+static int zero(){return 0;}
+public static void main(String[] args) {
+System.out.println(4/zero());
+}
+}
+","import java.util.*;
+public class Main {
+static int zero(){return 0;}
+public static void main(String[] args) {
+System.out.println(zero()==0?0:4/zero());
+}
+}
+",0,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+","The program attempts to divide by zero, which causes an ArithmeticException at runtime.","In Java, dividing any number by zero (including zero itself) results in an ArithmeticException because it's mathematically undefined. The method 'zero()' returns 0, so 4/zero() becomes 4/0, which is not allowed.",Look at the denominator in your division operation - what value does zero() return?,"Think about what happens mathematically when you divide by zero, and how that relates to your helper method.","The line 'System.out.println(4/zero());' needs to be changed so the denominator isn't zero.
+Try using a different value instead of calling zero().",Remember that division by zero is undefined in mathematics and throws an ArithmeticException in Java. Always validate your inputs before performing division operations.,,,,,
+R062,Inspect a shifted denominator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int d=1>>1;System.out.println(6/d);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int d=1<<1;System.out.println(6/d);
+}
+}
+",3,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+",The program attempts to divide by zero because the denominator evaluates to 0.,"The expression `1>>1` performs a right bitwise shift operation, which moves the bits of the number 1 one position to the right. Since 1 in binary is `1`, shifting it right by 1 gives `0`. When you divide by zero, Java throws an ArithmeticException.",Look at the denominator expression `1>>1` and think about what value it evaluates to.,Consider how bitwise right shift operations work with small positive integers.,"Try evaluating `1>>1` manually: 1 in binary is `1`, shifting right by 1 gives `0`. So the denominator becomes 0.","Remember that bitwise shift operations can produce unexpected results with small numbers, and always check for zero before division.",,,,,
+R063,Instantiate a concrete implementation,"import java.util.*;
+public class Main {
+static abstract class Base{abstract int value();}
+public static void main(String[] args) {
+Base b=new Base(); System.out.println(b.value());
+}
+}
+","import java.util.*;
+public class Main {
+static abstract class Base{abstract int value();}
+public static void main(String[] args) {
+Base b=new Base(){int value(){return 2;}}; System.out.println(b.value());
+}
+}
+",2,"Main.java:5: error: Base is abstract; cannot be instantiated
+Base b=new Base(); System.out.println(b.value());
+       ^
+1 error
+","The code tries to instantiate an abstract class directly, which is not allowed in Java.","In Java, you cannot create objects of abstract classes directly because they are meant to be base classes that provide common functionality for subclasses. The 'abstract' keyword prevents instantiation and forces subclasses to implement the abstract methods. When you try to use 'new Base()', the compiler throws an error because it knows that Base is abstract.",Look at the class declaration - what keyword makes this class abstract?,"To fix this, you need to create a concrete subclass that extends this abstract class and implements the abstract method.","You could add a concrete implementation like:
+```
+class Concrete extends Base {
+    int value() { return 42; }
+}
+```
+Then use 'new Concrete()' instead of 'new Base()'.","Remember that abstract classes are meant to be extended, not instantiated directly. They serve as templates for subclasses to inherit from and implement required methods.",,,,,
+R065,Include the passing threshold,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int mark=60;System.out.println(mark>60?""P"":""F"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int mark=60;System.out.println(mark>=60?""P"":""F"");
+}
+}
+",P,Output does not match the task specification. Actual stdout: F,The code doesn't correctly handle the passing threshold when the mark equals 60.,"The condition in the ternary operator uses '>' (greater than) instead of '>=' (greater than or equal to). This means that when the mark is exactly 60, it's not considered passing, so it outputs 'F' instead of 'P'. The task requires including the passing threshold, which implies that a mark of 60 should be considered passing.",Look at the comparison operator in your ternary condition.,Think about what happens when the mark equals the threshold value.,Change the '>' to '>=' in your condition. Example: mark>=60 instead of mark>60,"Remember that inclusive thresholds (passing at exactly the minimum) use >=, while exclusive thresholds use >.",,,,,
+R066,Keep boolean values boolean,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int b=true; System.out.println(b);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean b=true; System.out.println(b);
+}
+}
+",true,"Main.java:5: error: incompatible types: boolean cannot be converted to int
+int b=true; System.out.println(b);
+      ^
+1 error
+",The code tries to assign a boolean value true to an integer variable b.,"In Java, int and boolean are completely different data types. An int can only hold whole numbers like 1, 2, -5, etc., while a boolean can only hold true or false values. You cannot directly assign a boolean value to an integer variable because they are incompatible types.",Look at line 5 where you declare variable b as int but assign it the value true.,Think about what type of variable you need if you want to store the value true.,Change the variable declaration from int b to boolean b. int b=true; should become boolean b=true;,"Remember that Java is strongly typed, meaning variables must match their declared type exactly. Boolean variables can only hold true or false, while integer variables can only hold numeric values.",,,,,
+R068,Initialize a local on every branch,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x; boolean flag=false; if(flag){x=7;} System.out.println(x);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=0; boolean flag=false; if(flag){x=7;} System.out.println(x);
+}
+}
+",0,"Main.java:5: error: variable x might not have been initialized
+int x; boolean flag=false; if(flag){x=7;} System.out.println(x);
+                                                             ^
+1 error
+","The variable x is not initialized on all execution paths, causing a compilation error.","In Java, local variables must be definitely assigned before they can be used. The variable x is declared but only assigned a value inside the if block that only executes when flag is true. Since flag is false, x never gets assigned, yet it's still used in the print statement.",Look at where x is declared and where it gets assigned a value.,"The if statement creates a conditional path where x might never be assigned, but x is still used outside that condition.","You need to initialize x when you declare it, or ensure it gets assigned in all possible code paths.
+Try: int x = 0; or int x; x = 7; before the if statement.","Always initialize local variables when declaring them, or ensure they are definitely assigned before use. This is a fundamental rule to avoid compilation errors and prevent runtime bugs.",,,,,
+R069,Update the recursive argument,"import java.util.*;
+public class Main {
+static int f(int n){if(n==0)return 1;return n*f(n);}
+public static void main(String[] args) {
+System.out.println(f(4));
+}
+}
+","import java.util.*;
+public class Main {
+static int f(int n){if(n==0)return 1;return n*f(n-1);}
+public static void main(String[] args) {
+System.out.println(f(4));
+}
+}
+",24,"Exception in thread ""main"" java.lang.StackOverflowError
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+	at Main.f(Main.java:3)
+
+[Remaining diagnostic omitted by the frozen input budget.]",The recursive function has incorrect base case and recursive call that will cause infinite recursion.,"The function is supposed to calculate factorial but has a bug in both the base case and recursive call. When n=0, it returns 1 (correct), but then the recursive call uses n*f(n) instead of n*f(n-1). This means each recursive call multiplies by the same value of n, causing infinite recursion rather than approaching the base case.",Look carefully at what happens in the recursive call - it's not reducing the problem size properly.,The recursive call should pass n-1 to move closer to the base case of n=0.,Change the line to: `return n * f(n - 1);`,"In recursion, always ensure that each recursive call moves toward the base case by reducing the problem size, otherwise you'll get infinite recursion.",,,,,
+R070,Avoid unboxing a null boolean,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Boolean b=null; if(b){System.out.println(""yes"");}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Boolean b=true; if(b){System.out.println(""yes"");}
+}
+}
+",yes,"Exception in thread ""main"" java.lang.NullPointerException: Cannot invoke ""java.lang.Boolean.booleanValue()"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The code tries to unbox a null Boolean variable in an if statement condition.,"In Java, when you use a Boolean object in a boolean context like an if statement, it needs to be unboxed to a primitive boolean. However, if the Boolean object is null, this unboxing operation throws a NullPointerException because there's no primitive value to convert to.",Look at the variable 'b' that's declared as Boolean and set to null.,The issue occurs when you try to use 'b' directly in the if condition - Java attempts to unbox it automatically.,"You need to check if b is not null before using it in the condition:
+if (b != null && b) { ... }","Always remember that Boolean objects can be null, and when using them in boolean contexts, you must handle the null case explicitly to avoid NullPointerException.",,,,,
+R073,Avoid unboxing a null boolean,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Boolean b=null; if(b){System.out.println(""yes"");}
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+Boolean b=true; if(b){System.out.println(""yes"");}
+}
+}
+",yes,"Exception in thread ""main"" java.lang.NullPointerException: Cannot invoke ""java.lang.Boolean.booleanValue()"" because ""<local1>"" is null
+	at Main.main(Main.java:5)
+",The code tries to unbox a null Boolean variable in an if statement condition.,"In Java, when you use a Boolean object in a boolean context like an if statement, it needs to be unboxed to a primitive boolean. However, if the Boolean object is null, this unboxing operation throws a NullPointerException because there's no primitive value to convert to.",Look at the variable 'b' that's declared as Boolean and set to null.,The issue occurs when you try to use 'b' directly in the if condition - Java attempts to unbox it automatically.,You need to check if b is not null before using it in the condition: if (b != null && b) { ... },"Always remember that Boolean objects can be null, and when using them in boolean contexts, you must handle the null case explicitly to avoid NullPointerException.",,,,,
+R075,Initialize a local on every branch,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x; boolean flag=false; if(flag){x=7;} System.out.println(x);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int x=0; boolean flag=false; if(flag){x=7;} System.out.println(x);
+}
+}
+",0,"Main.java:5: error: variable x might not have been initialized
+int x; boolean flag=false; if(flag){x=7;} System.out.println(x);
+                                                             ^
+1 error
+","The variable x is not initialized on all execution paths, causing a compilation error.","In Java, local variables must be definitely assigned before they are used. The variable x is only assigned when flag is true (in the if block), but it's referenced in the System.out.println() statement regardless of the flag's value. This creates a path where x might be used without being initialized.",Look at the if statement and notice that x is only assigned in one branch.,You need to ensure x gets a value in all possible execution paths before using it.,"Initialize x when you declare it, like: int x = 0; or move the assignment outside the if block.",Remember that local variables in Java must be definitely assigned before use - this is part of Java's definite assignment rules.,,,,,
+R076,Compare string contents,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+String s=new String(""cat"");System.out.println(s==""cat"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+String s=new String(""cat"");System.out.println(s.equals(""cat""));
+}
+}
+",true,Output does not match the task specification. Actual stdout: false,The code uses reference comparison instead of content comparison for strings.,"In Java, the '==' operator checks if two variables refer to the same object in memory, not if they have the same content. Even though the string literal 'cat' and the string object created with new String('cat') contain the same text, they are different objects in memory, so '==' returns false.","Look at how you're comparing strings - you're using '==' which checks memory addresses, not content.","To compare string contents in Java, you need to use the .equals() method instead of '=='.","Change this line: 
+System.out.println(s==""cat"");
+to:
+System.out.println(s.equals(""cat""));","Remember that in Java, String literals are interned and may refer to the same object, but objects created with 'new' are always new instances. Always use .equals() for content comparison of strings.",,,,,
+R077,Keep list get within size,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>();a.add(6); System.out.println(a.get(1));
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+List<Integer> a=new ArrayList<>();a.add(6); System.out.println(a.get(0));
+}
+}
+",6,"Exception in thread ""main"" java.lang.IndexOutOfBoundsException: Index 1 out of bounds for length 1
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
+	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:302)
+	at java.base/java.util.Objects.checkIndex(Objects.java:365)
+	at java.base/java.util.ArrayList.get(ArrayList.java:428)
+	at Main.main(Main.java:5)
+",The code tries to access an index that doesn't exist in the list.,"The list 'a' only has one element (at index 0) because you only added one element with add(6). When you try to get element at index 1, it throws an IndexOutOfBoundsException because valid indices are only 0 in this case.",Look at how many elements you're adding to the list versus how many you're trying to access.,"Remember that ArrayList indices start at 0, so if you add only one element, what's the highest valid index?",Try changing get(1) to get(0) to access the only element in the list.,Always check that your array/list indices are within valid range (0 to size-1) before accessing elements.,,,,,
+R079,Clear a loop control flag,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean running=true;while(running){}System.out.println(""done"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean running=true;while(running){running=false;}System.out.println(""done"");
+}
+}
+",done,Execution time exceeded the frozen limit,"The loop control flag is never updated, causing an infinite loop that exceeds the execution time limit.","The variable 'running' is set to true at the beginning, but there's no code inside the while loop to change its value. Since the condition never becomes false, the loop runs forever and causes a timeout. This is a classic infinite loop scenario where the loop control variable is not properly managed.",Look at the while loop condition - it depends on the 'running' variable that's never modified inside the loop body.,"You need to add code inside the loop that will eventually set 'running' to false, allowing the loop to exit.",Consider adding a statement like 'running = false;' somewhere inside the loop braces. Or use a break statement to exit the loop.,"Always ensure loop control variables are updated within the loop body, or use break statements when appropriate. This prevents infinite loops which cause runtime errors.",,,,,
+R081,Provide an assignment expression,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=; System.out.println(n);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int n=9; System.out.println(n);
+}
+}
+",9,"Main.java:5: error: illegal start of expression
+int n=; System.out.println(n);
+      ^
+1 error
+",The variable declaration is missing the assignment value after the equals sign.,"In Java, when you declare a variable with an assignment, you must provide a value to assign to that variable. The syntax 'int n=' expects a value after the equals sign, but none is provided. This creates a compilation error because the compiler cannot determine what value should be stored in the variable n.",Look at the line where you declare the variable n - there's something missing after the equals sign.,"When declaring and assigning a variable in Java, you need to provide a valid value or expression after the equals sign.",Try adding a number like 'int n=5;' or 'int n=0;' after the equals sign.,Remember that variable declaration and initialization must follow proper syntax: 'type variableName = value;' - all parts are required for valid code.,,,,,
+R082,Inspect a shifted denominator,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int d=1>>1;System.out.println(6/d);
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int d=1<<1;System.out.println(6/d);
+}
+}
+",3,"Exception in thread ""main"" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:5)
+",The code has a division by zero error due to incorrect bit shifting operation.,"The expression '1>>1' performs a right bit shift on 1 by 1 position, which results in 0. When you divide by 0, it causes a runtime error. Bit shifting works differently than expected here - shifting 1 to the right by 1 position gives 0, not 1.",Look at the expression '1>>1' - this is a bit shift operation that changes the value of the denominator.,"The right shift operator (>>) moves bits to the right, and when you shift 1 by 1 position, what value do you actually get?","Try evaluating '1>>1' separately - what is the result? 
+int d = 1 >> 1; // What does this equal?","Review how bit shift operators work in Java. Right shift (>>) moves bits right and fills with the sign bit, while left shift (<<) moves bits left and fills with zeros.",,,,,
+R084,Clear a loop control flag,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean running=true;while(running){}System.out.println(""done"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean running=true;while(running){running=false;}System.out.println(""done"");
+}
+}
+",done,Execution time exceeded the frozen limit,The loop runs infinitely because the control flag is never updated inside the loop.,"The variable 'running' is set to true and used as a condition for the while loop. However, there's no code inside the loop body to change the value of 'running' to false. This means the loop condition will always be true, creating an infinite loop that never reaches the print statement.",Look at the while loop condition and notice that the control variable is never modified inside the loop body.,You need to add code inside the loop that will eventually set 'running' to false so the loop can exit.,"Consider adding a statement like 'running = false;' inside the loop body, or use a different loop structure entirely.","Always ensure loop control variables are updated within the loop body, or use alternative loop structures like for loops with proper termination conditions.",,,,,
+R085,Clear a loop control flag,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean running=true;while(running){}System.out.println(""done"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+boolean running=true;while(running){running=false;}System.out.println(""done"");
+}
+}
+",done,Execution time exceeded the frozen limit,"The loop control flag is never updated, causing an infinite loop that exceeds the execution time limit.","The variable 'running' is set to true at the beginning, but there's no code inside the while loop to change its value. Since the condition never becomes false, the loop runs forever and causes a timeout. This is a classic infinite loop scenario where the loop control variable is not properly managed.",Look at the while loop condition - it depends on the 'running' variable that's never modified inside the loop body.,"You need to add code inside the loop that will eventually set 'running' to false, allowing the loop to exit.","Consider adding a statement like 'running = false;' somewhere inside the loop braces.
+Or use a break statement to exit the loop.","Always ensure loop control variables are updated within the loop body, or use break statements when appropriate. This prevents infinite loops which cause runtime errors.",,,,,
+R086,Include the passing threshold,"import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int mark=60;System.out.println(mark>60?""P"":""F"");
+}
+}
+","import java.util.*;
+public class Main {
+
+public static void main(String[] args) {
+int mark=60;System.out.println(mark>=60?""P"":""F"");
+}
+}
+",P,Output does not match the task specification. Actual stdout: F,The code doesn't correctly handle the passing threshold when the mark equals 60.,The condition uses '>' (greater than) instead of '>=' (greater than or equal to). This means a student who scores exactly 60% will be marked as 'F' (fail) even though 60% is typically considered the passing grade. The logic doesn't include the boundary case where mark equals the threshold.,Look at the comparison operator in your conditional statement.,Consider what happens when the mark is exactly equal to 60 - should that be a pass or fail?,Change `mark>60` to `mark>=60` to include the threshold value.,"When working with thresholds or boundaries in programming, always consider whether the boundary values should be included using >= or <= operators.",,,,,

@@ -1,0 +1,3 @@
+# Preserve the exact input bytes used by the rating ledger across platforms.
+*.csv -text
+*.json -text

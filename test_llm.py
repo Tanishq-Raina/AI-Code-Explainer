@@ -227,15 +227,15 @@ class TestParseLlmResponse:
 
     def test_returns_fallback_on_complete_garbage(self):
         result = _parse_llm_response("Sorry, I cannot assist with that.")
-        # Fallback must contain all required keys
-        for key in ("problem_summary", "why", "hint_1", "hint_2", "hint_3", "learning_tip"):
-            assert key in result
+        # Parse failures must reach the actual fallback layer, not masquerade as hints.
+        assert result["status"] == "LLMError"
+        assert "hint_1" not in result
 
     def test_fallback_values_are_non_empty_strings(self):
         result = _parse_llm_response("not json at all !!!")
-        for key in ("problem_summary", "why", "hint_1"):
-            assert isinstance(result[key], str)
-            assert len(result[key]) > 0
+        assert result["status"] == "LLMError"
+        assert isinstance(result["message"], str)
+        assert result["message"]
 
     def test_returns_dict(self):
         result = _parse_llm_response(json.dumps(FULL_HINTS))

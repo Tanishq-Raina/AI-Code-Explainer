@@ -1,0 +1,255 @@
+{
+  "evaluation_date": "2026-06-09T12:48:37.936795",
+  "total_samples": 30,
+  "overall_accuracy": 1.0,
+  "long_programs_accuracy": 1.0,
+  "category_results": {
+    "O(1)": 1.0,
+    "O(n)": 1.0,
+    "O(n^2)": 1.0,
+    "O(log n)": 1.0,
+    "O(n^3)": 1.0
+  },
+  "results": [
+    {
+      "id": 1,
+      "algorithm": "Swap two variables",
+      "lines_of_code": 10,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 2,
+      "algorithm": "Iterative sum (no array)",
+      "lines_of_code": 12,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 3,
+      "algorithm": "Find max in array (in place)",
+      "lines_of_code": 15,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 4,
+      "algorithm": "Iterative factorial (no extra storage)",
+      "lines_of_code": 12,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 5,
+      "algorithm": "Reverse array in place",
+      "lines_of_code": 18,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 6,
+      "algorithm": "Iterative fibonacci O(1) space",
+      "lines_of_code": 15,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 7,
+      "algorithm": "Create copy of array",
+      "lines_of_code": 14,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 8,
+      "algorithm": "Build prefix sum array",
+      "lines_of_code": 16,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 9,
+      "algorithm": "Memoized fibonacci with array",
+      "lines_of_code": 16,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 10,
+      "algorithm": "Recursive sum (recursion stack O(n))",
+      "lines_of_code": 11,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 11,
+      "algorithm": "Recursive factorial",
+      "lines_of_code": 11,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 12,
+      "algorithm": "Build doubled array",
+      "lines_of_code": 14,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 13,
+      "algorithm": "Create n by n matrix",
+      "lines_of_code": 15,
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 14,
+      "algorithm": "Build adjacency matrix",
+      "lines_of_code": 13,
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 15,
+      "algorithm": "Multiply matrices result",
+      "lines_of_code": 19,
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 16,
+      "algorithm": "Binary search recursive",
+      "lines_of_code": 19,
+      "expected": "O(log n)",
+      "computed": "O(log n)",
+      "correct": true
+    },
+    {
+      "id": 17,
+      "algorithm": "Long: Selection sort (O(1) auxiliary space)",
+      "lines_of_code": 24,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 18,
+      "algorithm": "Long: Counting sort with count array (O(n))",
+      "lines_of_code": 25,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 19,
+      "algorithm": "Long: Pascal's triangle (2D array O(n^2))",
+      "lines_of_code": 22,
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 20,
+      "algorithm": "Long: Recursive merge sort (O(n) auxiliary)",
+      "lines_of_code": 53,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 21,
+      "algorithm": "Long: Linear search (in place O(1))",
+      "lines_of_code": 28,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 22,
+      "algorithm": "Long: Build histogram (O(k) bucket array)",
+      "lines_of_code": 24,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 23,
+      "algorithm": "Long: Recursive tree traversal (O(n) stack)",
+      "lines_of_code": 26,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 24,
+      "algorithm": "Long: Build identity matrix (O(n^2))",
+      "lines_of_code": 32,
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 25,
+      "algorithm": "Long: Two sum with iteration (O(1) extra)",
+      "lines_of_code": 23,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 26,
+      "algorithm": "Long: Dynamic programming with table (O(n^2))",
+      "lines_of_code": 28,
+      "expected": "O(n^2)",
+      "computed": "O(n^2)",
+      "correct": true
+    },
+    {
+      "id": 27,
+      "algorithm": "Long: Quick sort with O(log n) recursion stack (best case)",
+      "lines_of_code": 33,
+      "expected": "O(log n)",
+      "computed": "O(log n)",
+      "correct": true
+    },
+    {
+      "id": 28,
+      "algorithm": "Long: Multiple variable declarations only (O(1))",
+      "lines_of_code": 20,
+      "expected": "O(1)",
+      "computed": "O(1)",
+      "correct": true
+    },
+    {
+      "id": 29,
+      "algorithm": "Long: Build new array of squares (O(n))",
+      "lines_of_code": 32,
+      "expected": "O(n)",
+      "computed": "O(n)",
+      "correct": true
+    },
+    {
+      "id": 30,
+      "algorithm": "Long: 3D array allocation (O(n^3))",
+      "lines_of_code": 18,
+      "expected": "O(n^3)",
+      "computed": "O(n^3)",
+      "correct": true
+    }
+  ]
+}

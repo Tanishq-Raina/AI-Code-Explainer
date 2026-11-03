@@ -1,0 +1,94 @@
+{
+  "version": "v1",
+  "status": "prepared not executed",
+  "seed": 20261103,
+  "ollama": {
+    "base_url": "http://localhost:11434",
+    "model": "qwen3-coder:30b",
+    "digest": "06c1097efce0431c2045fe7b2e5108366e43bee1b4603a7aded8f21689e90bca",
+    "version": "0.40.13",
+    "quantization": "Q4_K_M",
+    "temperature": 0.3,
+    "num_predict": 1200,
+    "num_ctx": 8192,
+    "request_timeout_seconds": 600,
+    "json_mode": "prompt only; same for both conditions; no schema-constrained decoding",
+    "warmup": "one excluded legacy development example, raw output retained"
+  },
+  "video": {
+    "base_url": "http://localhost:4000/api",
+    "container_name": "codexa-video-benchmark-v1",
+    "image": "codexa-video:benchmark-v1",
+    "image_id": "sha256:b3318be6e3053987a348a63385a6b208855161d6efafac1b1df36a8742091aec",
+    "model": "qwen/qwen3-coder-480b-a35b-instruct",
+    "model_endpoint": "https://routellm.abacus.ai/v1",
+    "speech_client": "edge-tts 7.3.1",
+    "speech_destination": "speech.platform.bing.com",
+    "quality": "low",
+    "poll_seconds": 10,
+    "max_wait_seconds": 7200,
+    "concurrency": 1,
+    "temperature": 0.2,
+    "max_tokens": 600,
+    "model_request_timeout_seconds": 60,
+    "voice": "en-CA-LiamNeural",
+    "rate": "+0%",
+    "volume": "+0%",
+    "coverage_criteria": "See REVIEW_RUBRIC.md and each case expected_events; parser detection, dedicated visuals and generic tracking are separate."
+  },
+  "java": {
+    "home": "C:/Program Files/Java/jdk-25",
+    "compile_timeout_seconds": 30,
+    "run_timeout_seconds": 3,
+    "heap_limit": "128m",
+    "stack_limit": "512k",
+    "locale": "English US",
+    "oracle_failure_policy": "stop the suite before inference; never silently drop or relabel samples",
+    "compiler_version": "javac 25"
+  },
+  "execution_order": [
+    "oracle_validation",
+    "guard",
+    "analytics",
+    "time_complexity",
+    "space_complexity",
+    "video",
+    "hints",
+    "review_export"
+  ],
+  "hint_conditions": [
+    "code_only",
+    "diagnostic_grounded",
+    "full_pipeline_reusing_grounded_initial_response"
+  ],
+  "hint_repetitions": {
+    "all_100_cases": 1,
+    "preselected_subset": "suffix 03 and 08 in each category",
+    "additional_runs_on_subset": 2
+  },
+  "initial_llm_calls": 280,
+  "maximum_strict_retry_calls": 140,
+  "generation_order": "Program/repetition order shuffled with frozen seed; paired condition order alternates, giving 70 first positions per condition.",
+  "controls": "20 paired corrected reference programs; check success gate only, not independent LLM factual-correctness samples",
+  "assessment": {
+    "automatic": "schema, rule acceptance, fallback tier, availability, execution outcomes, exact complexity labels, timing and video integrity",
+    "human": "author review only; no independent raters, no inter-rater agreement, no learning study",
+    "review_subset": "hint cases suffix 03, 06 and 09 in each category; one first-run output per condition; 30 programs",
+    "inference_statistics": "paired case-level differences and case bootstrap intervals; repeated generations averaged within program first",
+    "limitations": "synthetic author-constructed data, related rule/control-flow families, unknown model pretraining overlap"
+  },
+  "no_automatic_analysis_claims": "Raw data and review sheets do not establish semantic correctness or learning gains. Video clips require manual inspection.",
+  "recovery": "configuration and source hashes must match; finished cases are retained; failures are not silently rerun; uncertain video submissions require reconciliation",
+  "node_executable": "C:/Program Files/nodejs/node.exe",
+  "node_version": "v24.12.0",
+  "python_version": "3.13.5",
+  "library_versions": {
+    "requests": "2.32.5",
+    "tree-sitter": "0.25.2",
+    "tree-sitter-java": "0.23.5",
+    "tree-sitter-python": "0.25.0",
+    "pymongo": "4.16.0",
+    "python-dotenv": "1.2.2",
+    "certifi": "2026.2.25"
+  }
+}

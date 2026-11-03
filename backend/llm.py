@@ -6,7 +6,7 @@ LLM integration layer for the Adaptive AI-Based Java Programming Tutor.
 Responsibilities
 ~~~~~~~~~~~~~~~~
 * Build structured system and user prompts for Qwen Coder 30B.
-* Call the LM Studio local API (OpenAI-compatible chat completions endpoint).
+* Call a configured compatible API or the native local Ollama chat endpoint.
 * Parse the model's plain-text response into a structured Python dictionary.
 * Enforce the no-full-solution teaching policy at the prompt level.
 * Support progressive hint levels (1 → 2 → 3) so the UI can reveal hints
@@ -35,6 +35,8 @@ Architecture rules
 import json
 import logging
 import os
+import time
+from urllib.parse import urlsplit
 from typing import Optional
 
 import requests
@@ -60,6 +62,7 @@ LLM_ENABLED: bool = os.getenv("LLM_ENABLED", "false").lower() == "true"
 
 # Seconds to wait for LM Studio to respond before timing out
 LLM_TIMEOUT: int = int(os.getenv("LLM_TIMEOUT", "30"))
+LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "openai_compatible").lower()
 
 ROUTELLM_API_KEY = (
     os.getenv("ROUTELLM_API_KEY", "")
@@ -68,8 +71,8 @@ ROUTELLM_API_KEY = (
 )
 
 # Generation parameters
-_TEMPERATURE: float = 0.3
-_MAX_TOKENS:  int   = 1200
+_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.3"))
+_MAX_TOKENS:  int   = int(os.getenv("LLM_MAX_TOKENS", "1200"))
 
 
 # ---------------------------------------------------------------------------
@@ -197,11 +200,15 @@ def _parse_llm_response(raw_text: str) -> dict:
     code fence or added surrounding text, we locate and extract the JSON
     object manually before parsing.
 
-    Returns a valid hint dict on success, or a fallback dict on failure.
+    Returns the parsed object, or an explicit LLMError on failure. Recovery is
+    owned by fallback_engine so malformed model output is never hidden as a hint.
     """
     # First attempt: direct JSON parse (ideal case — model followed instructions)
     try:
-        return json.loads(raw_text.strip())
+        parsed = json.loads(raw_text.strip())
+        if isinstance(parsed, dict):
+            return parsed
+        return {"status": "LLMError", "message": "Model output is not a JSON object."}
     except json.JSONDecodeError:
         pass
 
@@ -209,20 +216,15 @@ def _parse_llm_response(raw_text: str) -> dict:
     try:
         start = raw_text.index("{")
         end   = raw_text.rindex("}") + 1
-        return json.loads(raw_text[start:end])
+        parsed = json.loads(raw_text[start:end])
+        if isinstance(parsed, dict):
+            return parsed
     except (ValueError, json.JSONDecodeError):
         pass
 
-    # Fallback: parsing completely failed — return a safe generic response
-    logger.warning("LLM response could not be parsed as JSON. Raw: %s", raw_text[:200])
-    return {
-        "problem_summary": "An error was detected in your code.",
-        "why":             "The model could not produce a structured explanation. Try reviewing the error message directly.",
-        "hint_1":          "Read the error message carefully — it usually tells you the line and type of problem.",
-        "hint_2":          "Search for the error type in the Java documentation or a beginner tutorial site.",
-        "hint_3":          "Try commenting out sections of code to narrow down where the problem is.",
-        "learning_tip":    "Practice reading Java stack traces — they are your most powerful debugging tool.",
-    }
+    # The fallback layer owns recovery. Do not disguise parse failures as model hints.
+    logger.warning("LLM response could not be parsed as a JSON object")
+    return {"status": "LLMError", "message": "Model output could not be parsed as a JSON object."}
 
 
 def _filter_by_hint_level(hints: dict, hint_level: int) -> dict:
@@ -258,6 +260,68 @@ def _filter_by_hint_level(hints: dict, hint_level: int) -> dict:
 # Core LLM call  (private)
 # ---------------------------------------------------------------------------
 
+def call_llm_detailed(system_prompt: str, user_prompt: str, *, seed: int | None = None,
+                      num_ctx: int = 8192) -> dict:
+    """Transport evidence before filtering/fallback; no calls occur until invoked.
+
+    Native Ollama returns load/token timing. Local requests never carry cloud keys.
+    Prompt-only JSON is deliberate; no schema constraint hides format failures.
+    """
+    native = LLM_PROVIDER == "ollama"
+    endpoint = LLM_API_URL
+    payload = {"model": LLM_MODEL, "messages": [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt}],
+        "temperature": _TEMPERATURE, "max_tokens": _MAX_TOKENS}
+    if native:
+        parts = urlsplit(endpoint)
+        if parts.hostname not in ("localhost", "127.0.0.1", "::1"):
+            raise ValueError("Native Ollama hint inference must use a loopback endpoint")
+        endpoint = f"{parts.scheme}://{parts.netloc}/api/chat"
+        options = {"temperature": _TEMPERATURE, "num_predict": _MAX_TOKENS, "num_ctx": num_ctx}
+        if seed is not None:
+            options["seed"] = seed
+        payload = {"model": LLM_MODEL, "messages": payload["messages"],
+                   "stream": False, "keep_alive": "5m", "options": options}
+    headers = {"Content-Type": "application/json"}
+    local = urlsplit(endpoint).hostname in ("localhost", "127.0.0.1", "::1")
+    if ROUTELLM_API_KEY and not local:
+        headers["Authorization"] = f"Bearer {ROUTELLM_API_KEY}"
+    kwargs = {"headers": headers, "json": payload, "timeout": LLM_TIMEOUT}
+    if local:
+        kwargs["proxies"] = {"http": "", "https": ""}
+    started = time.perf_counter()
+    response = requests.post(endpoint, **kwargs)
+    response.raise_for_status()
+    envelope = None
+    try:
+        envelope = response.json()
+        if native:
+            content = envelope["message"]["content"]
+            truncated = envelope.get("done_reason") == "length"
+        else:
+            content = envelope["choices"][0]["message"]["content"]
+            truncated = envelope["choices"][0].get("finish_reason") == "length"
+        if not isinstance(content, str):
+            raise ValueError("Assistant content is not text")
+    except (ValueError, KeyError, IndexError, TypeError):
+        body = getattr(response, "text", None)
+        return {"endpoint": endpoint, "request": payload, "response": envelope,
+                "response_body": body if isinstance(body, str) else None,
+                "raw_text": "", "parsed": {"status": "LLMError", "message": "Unexpected response from LLM"},
+                "truncated": False, "parse_ok": False, "response_shape_ok": False,
+                "elapsed_seconds": time.perf_counter() - started}
+    parsed = _parse_llm_response(content)
+    if native and envelope.get("done") is not True:
+        parsed = {"status": "LLMError", "message": "Ollama did not finish the response."}
+    if truncated:
+        parsed = {"status": "LLMError", "message": "Model response reached its token limit."}
+    return {"endpoint": endpoint, "request": payload, "response": envelope,
+            "raw_text": content, "parsed": parsed, "truncated": truncated,
+            "elapsed_seconds": time.perf_counter() - started,
+            "parse_ok": parsed.get("status") != "LLMError", "response_shape_ok": True}
+
+
 def _call_llm(system_prompt: str, user_prompt: str) -> dict:
     """
     POST a chat-completions request to LM Studio and return the parsed dict.
@@ -274,37 +338,7 @@ def _call_llm(system_prompt: str, user_prompt: str) -> dict:
     requests.exceptions.HTTPError
         When LM Studio returns a non-2xx HTTP status.
     """
-    payload = {
-        "model":    LLM_MODEL,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user",   "content": user_prompt},
-        ],
-        "temperature": _TEMPERATURE,
-        "max_tokens":  _MAX_TOKENS,
-    }
-
-    logger.debug("Sending request to LLM at %s (model=%s)", LLM_API_URL, LLM_MODEL)
-
-    headers = {
-        "Content-Type": "application/json",
-    }
-    if ROUTELLM_API_KEY:
-        headers["Authorization"] = f"Bearer {ROUTELLM_API_KEY}"
-
-    response = requests.post(
-        LLM_API_URL,
-        headers=headers,
-        json=payload,
-        timeout=LLM_TIMEOUT,
-    )
-    response.raise_for_status()  # raises HTTPError for 4xx / 5xx responses
-
-    # Extract the assistant's message from the standard OpenAI response shape
-    raw_content: str = response.json()["choices"][0]["message"]["content"]
-    logger.debug("LLM raw response received (%d chars)", len(raw_content))
-
-    return _parse_llm_response(raw_content)
+    return call_llm_detailed(system_prompt, user_prompt)["parsed"]
 
 
 # ---------------------------------------------------------------------------
@@ -366,8 +400,7 @@ def generate_hints(
         raw_hints = _call_llm(system_prompt, user_prompt)
 
     except requests.exceptions.ConnectionError:
-        # LM Studio process is not running or is refusing connections
-        logger.error("LLM connection failed — is LM Studio running at %s?", LLM_API_URL)
+        logger.error("LLM connection failed at configured endpoint %s", LLM_API_URL)
         return {"status": "LLMError", "message": "LLM unavailable"}
 
     except requests.exceptions.Timeout:
@@ -378,6 +411,8 @@ def generate_hints(
         logger.error("LLM API returned HTTP error: %s", exc)
         status_code = exc.response.status_code if exc.response is not None else "unknown"
         if status_code in (401, 403):
+            if LLM_PROVIDER == "ollama":
+                return {"status": "LLMError", "message": "Local Ollama rejected the request; check its server configuration."}
             return {
                 "status": "LLMError",
                 "message": "LLM authorization failed. Set ROUTELLM_API_KEY (or LLM_API_KEY/OPENAI_API_KEY).",
@@ -393,6 +428,8 @@ def generate_hints(
         logger.exception("Unexpected error during LLM call")
         return {"status": "LLMError", "message": f"Unexpected LLM error: {exc}"}
 
+    if raw_hints.get("status") == "LLMError":
+        return raw_hints
     # Filter the full hint set down to the requested level and return
     return _filter_by_hint_level(raw_hints, hint_level)
 

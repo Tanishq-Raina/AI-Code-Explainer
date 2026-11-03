@@ -1,0 +1,365 @@
+{
+  "purpose": "Frozen capability benchmark; not prevalence or general accuracy",
+  "cases": [
+    {
+      "id": "video_01",
+      "filename": "Main.java",
+      "category": "one_dimensional_array",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={4,1,7};int t=a[0];a[0]=a[2];a[2]=t;System.out.println(Arrays.toString(a));\n}\n}\n",
+      "expected_stdout": "[7, 1, 4]",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Show [4,1,7] changing to [7,1,4] by swapping indexes 0 and 2."
+      ]
+    },
+    {
+      "id": "video_02",
+      "filename": "Main.java",
+      "category": "matrix",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[][] a={{1,3},{5,7}};a[1][0]+=2;System.out.println(a[1][0]);\n}\n}\n",
+      "expected_stdout": "7",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Matrix cell [1][0] changes from 5 to 7."
+      ]
+    },
+    {
+      "id": "video_03",
+      "filename": "Main.java",
+      "category": "array_list",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nArrayList<Integer> a=new ArrayList<>();a.add(3);a.add(6);a.add(9);a.remove(1);System.out.println(a);\n}\n}\n",
+      "expected_stdout": "[3, 9]",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Append 3,6,9, then remove index 1 leaving [3,9]."
+      ]
+    },
+    {
+      "id": "video_04",
+      "filename": "Main.java",
+      "category": "linked_list_api",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nLinkedList<Integer> a=new LinkedList<>();a.add(5);a.addFirst(2);a.addLast(8);a.removeFirst();System.out.println(a);\n}\n}\n",
+      "expected_stdout": "[5, 8]",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "List goes [5], [2,5], [2,5,8], then [5,8]."
+      ]
+    },
+    {
+      "id": "video_05",
+      "filename": "Main.java",
+      "category": "map",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nMap<String,Integer> m=new LinkedHashMap<>();m.put(\"x\",3);m.put(\"y\",8);m.put(\"x\",5);m.remove(\"y\");System.out.println(m.get(\"x\"));\n}\n}\n",
+      "expected_stdout": "5",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Map x=3,y=8 changes to x=5, then removes y."
+      ]
+    },
+    {
+      "id": "video_06",
+      "filename": "Main.java",
+      "category": "stack",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nStack<Integer> s=new Stack<>();s.push(4);s.push(8);int x=s.pop();s.push(2);System.out.println(x);System.out.println(s.peek());\n}\n}\n",
+      "expected_stdout": "8\n2",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Push 4 then 8, pop 8, push 2; top is 2."
+      ]
+    },
+    {
+      "id": "video_07",
+      "filename": "Main.java",
+      "category": "binary_search_tree",
+      "code": "import java.util.*;\npublic class Main {\nstatic class Node{int val;Node left,right;Node(int v){val=v;}}static void inorder(Node n){if(n==null)return;inorder(n.left);System.out.println(n.val);inorder(n.right);}\npublic static void main(String[] args) {\nNode r=new Node(8);r.left=new Node(3);r.right=new Node(11);inorder(r);\n}\n}\n",
+      "expected_stdout": "3\n8\n11",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "BST root 8 with left 3/right 11; inorder visit 3,8,11."
+      ]
+    },
+    {
+      "id": "video_08",
+      "filename": "Main.java",
+      "category": "directed_graph_list",
+      "code": "import java.util.*;\npublic class Main {\nstatic void dfs(int n,List<List<Integer>> a,boolean[] v){v[n]=true;System.out.println(n);for(int i=0;i<a.get(n).size();i++){int k=a.get(n).get(i);if(!v[k])dfs(k,a,v);}}\npublic static void main(String[] args) {\nList<List<Integer>> a=new ArrayList<>();for(int i=0;i<3;i++)a.add(new ArrayList<>());a.get(0).add(1);a.get(1).add(2);boolean[] v=new boolean[3];dfs(0,a,v);\n}\n}\n",
+      "expected_stdout": "0\n1\n2",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Directed edges 0->1->2, visited in order 0,1,2."
+      ]
+    },
+    {
+      "id": "video_09",
+      "filename": "Main.java",
+      "category": "directed_graph_map",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nMap<Integer,List<Integer>> g=new HashMap<>();g.put(0,new ArrayList<>());g.put(1,new ArrayList<>());g.get(0).add(1);System.out.println(g.get(0).get(0));\n}\n}\n",
+      "expected_stdout": "1",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Directed map edge 0->1; show direction, not just an object card."
+      ]
+    },
+    {
+      "id": "video_10",
+      "filename": "Main.java",
+      "category": "directed_graph_matrix",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[][] g=new int[3][3];g[0][1]=1;g[1][2]=1;System.out.println(g[0][1]);System.out.println(g[1][2]);\n}\n}\n",
+      "expected_stdout": "1\n1",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Matrix entries encode directed edges 0->1 and 1->2; graph-specific visual differs from a plain grid."
+      ]
+    },
+    {
+      "id": "video_11",
+      "filename": "Main.java",
+      "category": "undirected_graph",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nList<List<Integer>> g=new ArrayList<>();for(int i=0;i<3;i++)g.add(new ArrayList<>());g.get(0).add(1);g.get(1).add(0);g.get(1).add(2);g.get(2).add(1);System.out.println(g.get(1));\n}\n}\n",
+      "expected_stdout": "[0, 2]",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Undirected chain 0--1--2 has symmetric adjacency; no traversal claim is tested."
+      ]
+    },
+    {
+      "id": "video_12",
+      "filename": "Main.java",
+      "category": "recursion_call_tree",
+      "code": "import java.util.*;\npublic class Main {\nstatic int digitSum(int n){if(n==0)return 0;return n%10+digitSum(n/10);}\npublic static void main(String[] args) {\nSystem.out.println(digitSum(352));\n}\n}\n",
+      "expected_stdout": "10",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "digitSum calls 352,35,3,0 and returns 0,3,8,10."
+      ]
+    },
+    {
+      "id": "video_13",
+      "filename": "Main.java",
+      "category": "objects",
+      "code": "import java.util.*;\npublic class Main {\nstatic class Counter{int value;Counter(int n){value=n;}void inc(){value++;}}\npublic static void main(String[] args) {\nCounter c=new Counter(4);c.inc();c.inc();System.out.println(c.value);\n}\n}\n",
+      "expected_stdout": "6",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Counter instance value changes 4,5,6."
+      ]
+    },
+    {
+      "id": "video_14",
+      "filename": "Main.java",
+      "category": "temporary_merge_arrays",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] left={1,5},right={2,6},merged=new int[4];int i=0,j=0,k=0;while(i<2&&j<2){if(left[i]<right[j])merged[k++]=left[i++];else merged[k++]=right[j++];}while(i<2)merged[k++]=left[i++];while(j<2)merged[k++]=right[j++];System.out.println(Arrays.toString(merged));\n}\n}\n",
+      "expected_stdout": "[1, 2, 5, 6]",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Separate left [1,5] and right [2,6], merged into [1,2,5,6]."
+      ]
+    },
+    {
+      "id": "video_15",
+      "filename": "Main.java",
+      "category": "queue",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nQueue<Integer> q=new ArrayDeque<>();q.add(7);q.add(2);System.out.println(q.remove());System.out.println(q.peek());\n}\n}\n",
+      "expected_stdout": "7\n2",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "FIFO: enqueue 7,2, remove 7, peek 2."
+      ]
+    },
+    {
+      "id": "video_16",
+      "filename": "Main.java",
+      "category": "priority_queue",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nPriorityQueue<Integer> q=new PriorityQueue<>();q.add(7);q.add(2);q.add(5);System.out.println(q.poll());System.out.println(q.poll());\n}\n}\n",
+      "expected_stdout": "2\n5",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Min-priority behavior: remove 2 then 5, leaving 7."
+      ]
+    },
+    {
+      "id": "video_17",
+      "filename": "Main.java",
+      "category": "set",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSet<Integer> s=new HashSet<>();s.add(3);s.add(3);s.add(8);System.out.println(s.size());System.out.println(s.contains(8));\n}\n}\n",
+      "expected_stdout": "2\ntrue",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Duplicate insertion of 3 does not increase set size; {3,8} size 2."
+      ]
+    },
+    {
+      "id": "video_18",
+      "filename": "Main.java",
+      "category": "custom_singly_linked_list",
+      "code": "import java.util.*;\npublic class Main {\nstatic class Node{int val;Node next;Node(int n){val=n;}}\npublic static void main(String[] args) {\nNode a=new Node(2);a.next=new Node(5);a.next.next=new Node(9);for(Node n=a;n!=null;n=n.next)System.out.println(n.val);\n}\n}\n",
+      "expected_stdout": "2\n5\n9",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Singly linked chain 2->5->9 and traversal in that order."
+      ]
+    },
+    {
+      "id": "video_19",
+      "filename": "Main.java",
+      "category": "array_heap",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] h={2,5,4};int t=h[0];h[0]=h[2];h[2]=t;int heapSize=2;if(h[0]>h[1]){t=h[0];h[0]=h[1];h[1]=t;}System.out.println(h[0]);\n}\n}\n",
+      "expected_stdout": "4",
+      "inspection": "Active heap size becomes two after removal; assess heap-specific interpretation separately from plain-array animation.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Extract minimum 2, active heap [4,5] with heapSize=2; do not count the removed last cell as live heap."
+      ]
+    },
+    {
+      "id": "video_20",
+      "filename": "Main.java",
+      "category": "trie",
+      "code": "import java.util.*;\npublic class Main {\nstatic class Trie{Trie[] child=new Trie[2];boolean end;}\npublic static void main(String[] args) {\nTrie r=new Trie();r.child[0]=new Trie();r.child[0].child[1]=new Trie();r.child[0].child[1].end=true;System.out.println(r.child[0].child[1].end);\n}\n}\n",
+      "expected_stdout": "true",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Binary trie path child[0].child[1], with the terminal end flag true."
+      ]
+    },
+    {
+      "id": "video_21",
+      "filename": "Main.java",
+      "category": "balanced_tree_rotation",
+      "code": "import java.util.*;\npublic class Main {\nstatic class Node{int val;Node left,right;Node(int v){val=v;}}\npublic static void main(String[] args) {\nNode a=new Node(3);a.left=new Node(2);a.left.left=new Node(1);Node b=a.left;a.left=b.right;b.right=a;System.out.println(b.val);System.out.println(b.right.val);\n}\n}\n",
+      "expected_stdout": "2\n3",
+      "inspection": "A right rotation is demonstrated; a generic node display alone is not dedicated balancing support.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Right rotation changes root 3(left 2(left 1)) into root 2(left 1,right 3); not a full AVL implementation."
+      ]
+    },
+    {
+      "id": "video_22",
+      "filename": "Main.java",
+      "category": "doubly_linked_list",
+      "code": "import java.util.*;\npublic class Main {\nstatic class Node{int val;Node next,prev;Node(int n){val=n;}}\npublic static void main(String[] args) {\nNode a=new Node(4),b=new Node(6);a.next=b;b.prev=a;System.out.println(b.prev.val);\n}\n}\n",
+      "expected_stdout": "4",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Node 4 next points to 6 and node 6 prev points to 4."
+      ]
+    },
+    {
+      "id": "video_23",
+      "filename": "Main.java",
+      "category": "fenwick_tree",
+      "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] tree=new int[6];int i=2;while(i<tree.length){tree[i]+=3;i+=i&-i;}int sum=0;i=4;while(i>0){sum+=tree[i];i-=i&-i;}System.out.println(sum);\n}\n}\n",
+      "expected_stdout": "3",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Fenwick update touches indexes 2,4; prefix query at 4 returns 3."
+      ]
+    },
+    {
+      "id": "video_24",
+      "filename": "Main.java",
+      "category": "union_find",
+      "code": "import java.util.*;\npublic class Main {\nstatic int find(int[] p,int x){while(p[x]!=x)x=p[x];return x;}\npublic static void main(String[] args) {\nint[] p={0,1,2};p[find(p,1)]=find(p,0);System.out.println(find(p,1)==find(p,0));\n}\n}\n",
+      "expected_stdout": "true",
+      "inspection": "Check every relevant state transition and final output.",
+      "split": "test",
+      "provenance": "AI-assisted author-constructed capability example; execution validation pending",
+      "dedicated_visualization": "not yet assessed",
+      "detection": "not yet assessed",
+      "expected_events": [
+        "Union changes parent[1] to 0; find(1)==find(0), with element 2 separate."
+      ]
+    }
+  ]
+}

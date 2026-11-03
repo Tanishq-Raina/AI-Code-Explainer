@@ -1,0 +1,1802 @@
+[
+  {
+    "id": "syntax_01",
+    "category": "syntax",
+    "name": "Terminate a variable declaration",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint age=12\nSystem.out.println(age);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint age=12; System.out.println(age);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "12",
+    "public_context": {
+      "title": "Terminate a variable declaration",
+      "description": "Terminate a variable declaration. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Terminate a variable declaration",
+    "template_family": "syntax_01"
+  },
+  {
+    "id": "syntax_02",
+    "category": "syntax",
+    "name": "Parenthesize an if condition",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint x=4; if x>2 {System.out.println(x);}\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint x=4; if (x>2) {System.out.println(x);}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Parenthesize an if condition",
+      "description": "Parenthesize an if condition. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Parenthesize an if condition",
+    "template_family": "syntax_02"
+  },
+  {
+    "id": "syntax_03",
+    "category": "syntax",
+    "name": "Separate for header clauses",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nfor(int i=0, i<2, i++){System.out.println(i);}\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nfor(int i=0; i<2; i++){System.out.println(i);}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "0\n1",
+    "public_context": {
+      "title": "Separate for header clauses",
+      "description": "Separate for header clauses. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Separate for header clauses",
+    "template_family": "syntax_03"
+  },
+  {
+    "id": "syntax_04",
+    "category": "syntax",
+    "name": "Close a method call",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(\"ready\";\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(\"ready\");\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "ready",
+    "public_context": {
+      "title": "Close a method call",
+      "description": "Close a method call. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Close a method call",
+    "template_family": "syntax_04"
+  },
+  {
+    "id": "syntax_05",
+    "category": "syntax",
+    "name": "Use double quotes for a string",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s='hello'; System.out.println(s);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=\"hello\"; System.out.println(s);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "hello",
+    "public_context": {
+      "title": "Use double quotes for a string",
+      "description": "Use double quotes for a string. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Use double quotes for a string",
+    "template_family": "syntax_05"
+  },
+  {
+    "id": "syntax_06",
+    "category": "syntax",
+    "name": "Provide an assignment expression",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=; System.out.println(n);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=9; System.out.println(n);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "9",
+    "public_context": {
+      "title": "Provide an assignment expression",
+      "description": "Provide an assignment expression. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Provide an assignment expression",
+    "template_family": "syntax_06"
+  },
+  {
+    "id": "syntax_07",
+    "category": "syntax",
+    "name": "Write the else keyword",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean ok=false; if(ok){System.out.println(1);} otherwise {System.out.println(2);}\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean ok=false; if(ok){System.out.println(1);} else {System.out.println(2);}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Write the else keyword",
+      "description": "Write the else keyword. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Write the else keyword",
+    "template_family": "syntax_07"
+  },
+  {
+    "id": "syntax_08",
+    "category": "syntax",
+    "name": "Use array initializer braces",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a=[2,4]; System.out.println(a[1]);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={2,4}; System.out.println(a[1]);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Use array initializer braces",
+      "description": "Use array initializer braces. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Use array initializer braces",
+    "template_family": "syntax_08"
+  },
+  {
+    "id": "syntax_09",
+    "category": "syntax",
+    "name": "Use an equality operator",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint x=3; if(x === 3){System.out.println(\"yes\");}\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint x=3; if(x == 3){System.out.println(\"yes\");}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "yes",
+    "public_context": {
+      "title": "Use an equality operator",
+      "description": "Use an equality operator. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Use an equality operator",
+    "template_family": "syntax_09"
+  },
+  {
+    "id": "syntax_10",
+    "category": "syntax",
+    "name": "Close the loop body",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0; while(i<1){System.out.println(i);i++;\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0; while(i<1){System.out.println(i);i++;}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "0",
+    "public_context": {
+      "title": "Close the loop body",
+      "description": "Close the loop body. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Close the loop body",
+    "template_family": "syntax_10"
+  },
+  {
+    "id": "scope_01",
+    "category": "scope",
+    "name": "Declare the printed identifier",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(total);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint total=14; System.out.println(total);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "14",
+    "public_context": {
+      "title": "Declare the printed identifier",
+      "description": "Declare the printed identifier. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Declare the printed identifier",
+    "template_family": "scope_01"
+  },
+  {
+    "id": "scope_02",
+    "category": "scope",
+    "name": "Keep a conditional result in scope",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nif(true){int result=6;} System.out.println(result);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint result=0; if(true){result=6;} System.out.println(result);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "6",
+    "public_context": {
+      "title": "Keep a conditional result in scope",
+      "description": "Keep a conditional result in scope. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep a conditional result in scope",
+    "template_family": "scope_02"
+  },
+  {
+    "id": "scope_03",
+    "category": "scope",
+    "name": "Keep a loop index in scope",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nfor(int i=0;i<2;i++){} System.out.println(i);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0; for(;i<2;i++){} System.out.println(i);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Keep a loop index in scope",
+      "description": "Keep a loop index in scope. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep a loop index in scope",
+    "template_family": "scope_03"
+  },
+  {
+    "id": "scope_04",
+    "category": "scope",
+    "name": "Match identifier capitalization",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint count=5; System.out.println(Count);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint count=5; System.out.println(count);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "5",
+    "public_context": {
+      "title": "Match identifier capitalization",
+      "description": "Match identifier capitalization. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Match identifier capitalization",
+    "template_family": "scope_04"
+  },
+  {
+    "id": "scope_05",
+    "category": "scope",
+    "name": "Declare before use",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(size); int size=8;\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint size=8; System.out.println(size);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "8",
+    "public_context": {
+      "title": "Declare before use",
+      "description": "Declare before use. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Declare before use",
+    "template_family": "scope_05"
+  },
+  {
+    "id": "scope_06",
+    "category": "scope",
+    "name": "Initialize a local on every branch",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint x; boolean flag=false; if(flag){x=7;} System.out.println(x);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint x=0; boolean flag=false; if(flag){x=7;} System.out.println(x);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "0",
+    "public_context": {
+      "title": "Initialize a local on every branch",
+      "description": "Initialize a local on every branch. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize a local on every branch",
+    "template_family": "scope_06"
+  },
+  {
+    "id": "scope_07",
+    "category": "scope",
+    "name": "Avoid duplicate local declarations",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=2; int n=3; System.out.println(n);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=2; n=3; System.out.println(n);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Avoid duplicate local declarations",
+      "description": "Avoid duplicate local declarations. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Avoid duplicate local declarations",
+    "template_family": "scope_07"
+  },
+  {
+    "id": "scope_08",
+    "category": "scope",
+    "name": "Use the catch parameter inside its scope",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\ntry{Integer.parseInt(\"x\");}catch(Exception e){} System.out.println(e.getClass().getSimpleName());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\ntry{Integer.parseInt(\"x\");}catch(Exception e){System.out.println(e.getClass().getSimpleName());}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "NumberFormatException",
+    "public_context": {
+      "title": "Use the catch parameter inside its scope",
+      "description": "Use the catch parameter inside its scope. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Use the catch parameter inside its scope",
+    "template_family": "scope_08"
+  },
+  {
+    "id": "scope_09",
+    "category": "scope",
+    "name": "Qualify an instance field",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic class Box {int value=11;}\npublic static void main(String[] args) {\nBox b=new Box(); System.out.println(value);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic class Box {int value=11;}\npublic static void main(String[] args) {\nBox b=new Box(); System.out.println(b.value);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "11",
+    "public_context": {
+      "title": "Qualify an instance field",
+      "description": "Qualify an instance field. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Qualify an instance field",
+    "template_family": "scope_09"
+  },
+  {
+    "id": "scope_10",
+    "category": "scope",
+    "name": "Keep enhanced loop elements in scope",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={3}; for(int item:a){} System.out.println(item);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={3}; for(int item:a){System.out.println(item);}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Keep enhanced loop elements in scope",
+      "description": "Keep enhanced loop elements in scope. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep enhanced loop elements in scope",
+    "template_family": "scope_10"
+  },
+  {
+    "id": "types_01",
+    "category": "types",
+    "name": "Convert floating point explicitly",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=3.8; System.out.println(n);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=(int)3.8; System.out.println(n);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Convert floating point explicitly",
+      "description": "Convert floating point explicitly. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Convert floating point explicitly",
+    "template_family": "types_01"
+  },
+  {
+    "id": "types_02",
+    "category": "types",
+    "name": "Parse a numeric string",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=\"12\"; System.out.println(n);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=Integer.parseInt(\"12\"); System.out.println(n);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "12",
+    "public_context": {
+      "title": "Parse a numeric string",
+      "description": "Parse a numeric string. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Parse a numeric string",
+    "template_family": "types_02"
+  },
+  {
+    "id": "types_03",
+    "category": "types",
+    "name": "Keep boolean values boolean",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint b=true; System.out.println(b);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean b=true; System.out.println(b);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "true",
+    "public_context": {
+      "title": "Keep boolean values boolean",
+      "description": "Keep boolean values boolean. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep boolean values boolean",
+    "template_family": "types_03"
+  },
+  {
+    "id": "types_04",
+    "category": "types",
+    "name": "Distinguish array and element types",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint a=new int[]{4}; System.out.println(a[0]);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a=new int[]{4}; System.out.println(a[0]);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Distinguish array and element types",
+      "description": "Distinguish array and element types. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Distinguish array and element types",
+    "template_family": "types_04"
+  },
+  {
+    "id": "types_05",
+    "category": "types",
+    "name": "Convert an integer to text",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=5; System.out.println(s);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=String.valueOf(5); System.out.println(s);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "5",
+    "public_context": {
+      "title": "Convert an integer to text",
+      "description": "Convert an integer to text. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Convert an integer to text",
+    "template_family": "types_05"
+  },
+  {
+    "id": "types_06",
+    "category": "types",
+    "name": "Compare compatible operand types",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=4; if(n==\"4\"){System.out.println(n);}\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=4; if(n==4){System.out.println(n);}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Compare compatible operand types",
+      "description": "Compare compatible operand types. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Compare compatible operand types",
+    "template_family": "types_06"
+  },
+  {
+    "id": "types_07",
+    "category": "types",
+    "name": "Construct a string from characters",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=new char[]{'h','i'}; System.out.println(s);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=new String(new char[]{'h','i'}); System.out.println(s);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "hi",
+    "public_context": {
+      "title": "Construct a string from characters",
+      "description": "Construct a string from characters. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Construct a string from characters",
+    "template_family": "types_07"
+  },
+  {
+    "id": "types_08",
+    "category": "types",
+    "name": "Construct an integer wrapper from text",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nInteger n=\"9\"; System.out.println(n);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nInteger n=Integer.valueOf(\"9\"); System.out.println(n);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "9",
+    "public_context": {
+      "title": "Construct an integer wrapper from text",
+      "description": "Construct an integer wrapper from text. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Construct an integer wrapper from text",
+    "template_family": "types_08"
+  },
+  {
+    "id": "types_09",
+    "category": "types",
+    "name": "Respect collection element types",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nList<Integer> a=new ArrayList<>(); a.add(\"7\"); System.out.println(a);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nList<Integer> a=new ArrayList<>(); a.add(7); System.out.println(a);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "[7]",
+    "public_context": {
+      "title": "Respect collection element types",
+      "description": "Respect collection element types. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Respect collection element types",
+    "template_family": "types_09"
+  },
+  {
+    "id": "types_10",
+    "category": "types",
+    "name": "Use compatible conditional branches",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean b=true; int n=b?1:\"two\"; System.out.println(n);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean b=true; int n=b?1:2; System.out.println(n);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "1",
+    "public_context": {
+      "title": "Use compatible conditional branches",
+      "description": "Use compatible conditional branches. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Use compatible conditional branches",
+    "template_family": "types_10"
+  },
+  {
+    "id": "methods_01",
+    "category": "methods",
+    "name": "Pass a required method argument",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int twice(int x){return x*2;}\npublic static void main(String[] args) {\nSystem.out.println(twice());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int twice(int x){return x*2;}\npublic static void main(String[] args) {\nSystem.out.println(twice(3));\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "6",
+    "public_context": {
+      "title": "Pass a required method argument",
+      "description": "Pass a required method argument. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Pass a required method argument",
+    "template_family": "methods_01"
+  },
+  {
+    "id": "methods_02",
+    "category": "methods",
+    "name": "Pass a compatible method argument",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int square(int x){return x*x;}\npublic static void main(String[] args) {\nSystem.out.println(square(\"4\"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int square(int x){return x*x;}\npublic static void main(String[] args) {\nSystem.out.println(square(4));\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "16",
+    "public_context": {
+      "title": "Pass a compatible method argument",
+      "description": "Pass a compatible method argument. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Pass a compatible method argument",
+    "template_family": "methods_02"
+  },
+  {
+    "id": "methods_03",
+    "category": "methods",
+    "name": "Do not assign a void return",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic void log(){System.out.println(4);}\npublic static void main(String[] args) {\nint x=log(); System.out.println(x);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic void log(){System.out.println(4);}\npublic static void main(String[] args) {\nlog();\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Do not assign a void return",
+      "description": "Do not assign a void return. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Do not assign a void return",
+    "template_family": "methods_03"
+  },
+  {
+    "id": "methods_04",
+    "category": "methods",
+    "name": "Call an instance method through an instance",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nint score(){return 6;}\npublic static void main(String[] args) {\nSystem.out.println(score());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nint score(){return 6;}\npublic static void main(String[] args) {\nSystem.out.println(new Main().score());\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "6",
+    "public_context": {
+      "title": "Call an instance method through an instance",
+      "description": "Call an instance method through an instance. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Call an instance method through an instance",
+    "template_family": "methods_04"
+  },
+  {
+    "id": "methods_05",
+    "category": "methods",
+    "name": "Respect a private field",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(new Box().n);\n}\n}\nclass Box{private int n=8; int get(){return n;}}",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(new Box().get());\n}\n}\nclass Box{private int n=8; int get(){return n;}}",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "8",
+    "public_context": {
+      "title": "Respect a private field",
+      "description": "Respect a private field. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Respect a private field",
+    "template_family": "methods_05"
+  },
+  {
+    "id": "methods_06",
+    "category": "methods",
+    "name": "Handle a checked exception",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic void fail() throws java.io.IOException {throw new java.io.IOException();}\npublic static void main(String[] args) {\nfail();\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic void fail() throws java.io.IOException {throw new java.io.IOException();}\npublic static void main(String[] args) {\ntry{fail();}catch(java.io.IOException e){System.out.println(\"handled\");}\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "handled",
+    "public_context": {
+      "title": "Handle a checked exception",
+      "description": "Handle a checked exception. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Handle a checked exception",
+    "template_family": "methods_06"
+  },
+  {
+    "id": "methods_07",
+    "category": "methods",
+    "name": "Do not return a value from void main",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nreturn 5;\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(5);\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "5",
+    "public_context": {
+      "title": "Do not return a value from void main",
+      "description": "Do not return a value from void main. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Do not return a value from void main",
+    "template_family": "methods_07"
+  },
+  {
+    "id": "methods_08",
+    "category": "methods",
+    "name": "Match the declared argument count",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int pick(){return 7;}\npublic static void main(String[] args) {\nSystem.out.println(pick(1));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int pick(){return 7;}\npublic static void main(String[] args) {\nSystem.out.println(pick());\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "7",
+    "public_context": {
+      "title": "Match the declared argument count",
+      "description": "Match the declared argument count. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Match the declared argument count",
+    "template_family": "methods_08"
+  },
+  {
+    "id": "methods_09",
+    "category": "methods",
+    "name": "Instantiate a concrete implementation",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic abstract class Base{abstract int value();}\npublic static void main(String[] args) {\nBase b=new Base(); System.out.println(b.value());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic abstract class Base{abstract int value();}\npublic static void main(String[] args) {\nBase b=new Base(){int value(){return 2;}}; System.out.println(b.value());\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Instantiate a concrete implementation",
+      "description": "Instantiate a concrete implementation. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Instantiate a concrete implementation",
+    "template_family": "methods_09"
+  },
+  {
+    "id": "methods_10",
+    "category": "methods",
+    "name": "Implement an interface before instantiation",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\ninterface Op{int get();}\npublic static void main(String[] args) {\nOp x=new Op(); System.out.println(x.get());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\ninterface Op{int get();}\npublic static void main(String[] args) {\nOp x=()->3; System.out.println(x.get());\n}\n}\n",
+    "expected_status": "CompilationError",
+    "expected_exception": null,
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Implement an interface before instantiation",
+      "description": "Implement an interface before instantiation. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Implement an interface before instantiation",
+    "template_family": "methods_10"
+  },
+  {
+    "id": "null_01",
+    "category": "null",
+    "name": "Initialize a string before length",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=null; System.out.println(s.length());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=\"cat\"; System.out.println(s.length());\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Initialize a string before length",
+      "description": "Initialize a string before length. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize a string before length",
+    "template_family": "null_01"
+  },
+  {
+    "id": "null_02",
+    "category": "null",
+    "name": "Initialize an array before reading length",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a=null; System.out.println(a.length);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={1,2}; System.out.println(a.length);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Initialize an array before reading length",
+      "description": "Initialize an array before reading length. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize an array before reading length",
+    "template_family": "null_02"
+  },
+  {
+    "id": "null_03",
+    "category": "null",
+    "name": "Initialize an object before field access",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic class Box{int n=4;}\npublic static void main(String[] args) {\nBox b=null; System.out.println(b.n);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic class Box{int n=4;}\npublic static void main(String[] args) {\nBox b=new Box(); System.out.println(b.n);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Initialize an object before field access",
+      "description": "Initialize an object before field access. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize an object before field access",
+    "template_family": "null_03"
+  },
+  {
+    "id": "null_04",
+    "category": "null",
+    "name": "Initialize a builder before append",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nStringBuilder b=null; b.append(\"x\"); System.out.println(b);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nStringBuilder b=new StringBuilder(); b.append(\"x\"); System.out.println(b);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "x",
+    "public_context": {
+      "title": "Initialize a builder before append",
+      "description": "Initialize a builder before append. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize a builder before append",
+    "template_family": "null_04"
+  },
+  {
+    "id": "null_05",
+    "category": "null",
+    "name": "Avoid unboxing a null integer",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nInteger n=null; System.out.println(n+1);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nInteger n=5; System.out.println(n+1);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "6",
+    "public_context": {
+      "title": "Avoid unboxing a null integer",
+      "description": "Avoid unboxing a null integer. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Avoid unboxing a null integer",
+    "template_family": "null_05"
+  },
+  {
+    "id": "null_06",
+    "category": "null",
+    "name": "Avoid unboxing a null boolean",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nBoolean b=null; if(b){System.out.println(\"yes\");}\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nBoolean b=true; if(b){System.out.println(\"yes\");}\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "yes",
+    "public_context": {
+      "title": "Avoid unboxing a null boolean",
+      "description": "Avoid unboxing a null boolean. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Avoid unboxing a null boolean",
+    "template_family": "null_06"
+  },
+  {
+    "id": "null_07",
+    "category": "null",
+    "name": "Initialize reference array elements",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString[] a=new String[1]; System.out.println(a[0].length());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString[] a={\"ok\"}; System.out.println(a[0].length());\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Initialize reference array elements",
+      "description": "Initialize reference array elements. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize reference array elements",
+    "template_family": "null_07"
+  },
+  {
+    "id": "null_08",
+    "category": "null",
+    "name": "Handle missing map values",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nMap<String,Integer> m=new HashMap<>(); int n=m.get(\"age\"); System.out.println(n);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nMap<String,Integer> m=new HashMap<>(); int n=m.getOrDefault(\"age\",4); System.out.println(n);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Handle missing map values",
+      "description": "Handle missing map values. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Handle missing map values",
+    "template_family": "null_08"
+  },
+  {
+    "id": "null_09",
+    "category": "null",
+    "name": "Initialize an iterator",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nIterator<Integer> it=null; System.out.println(it.hasNext());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nIterator<Integer> it=Arrays.asList(1).iterator(); System.out.println(it.hasNext());\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "true",
+    "public_context": {
+      "title": "Initialize an iterator",
+      "description": "Initialize an iterator. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize an iterator",
+    "template_family": "null_09"
+  },
+  {
+    "id": "null_10",
+    "category": "null",
+    "name": "Initialize an exception reference",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nRuntimeException e=null; System.out.println(e.getMessage());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nRuntimeException e=new RuntimeException(\"x\"); System.out.println(e.getMessage());\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NullPointerException",
+    "expected_stdout": "x",
+    "public_context": {
+      "title": "Initialize an exception reference",
+      "description": "Initialize an exception reference. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize an exception reference",
+    "template_family": "null_10"
+  },
+  {
+    "id": "index_01",
+    "category": "index",
+    "name": "Keep an array index below length",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={2,4}; System.out.println(a[a.length]);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={2,4}; System.out.println(a[a.length-1]);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArrayIndexOutOfBoundsException",
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Keep an array index below length",
+      "description": "Keep an array index below length. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep an array index below length",
+    "template_family": "index_01"
+  },
+  {
+    "id": "index_02",
+    "category": "index",
+    "name": "Avoid a negative array index",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={8}; System.out.println(a[-1]);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={8}; System.out.println(a[0]);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArrayIndexOutOfBoundsException",
+    "expected_stdout": "8",
+    "public_context": {
+      "title": "Avoid a negative array index",
+      "description": "Avoid a negative array index. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Avoid a negative array index",
+    "template_family": "index_02"
+  },
+  {
+    "id": "index_03",
+    "category": "index",
+    "name": "Do not index an empty array",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={}; System.out.println(a[0]);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={}; System.out.println(a.length);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArrayIndexOutOfBoundsException",
+    "expected_stdout": "0",
+    "public_context": {
+      "title": "Do not index an empty array",
+      "description": "Do not index an empty array. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Do not index an empty array",
+    "template_family": "index_03"
+  },
+  {
+    "id": "index_04",
+    "category": "index",
+    "name": "Keep charAt within the string",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=\"code\"; System.out.println(s.charAt(4));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=\"code\"; System.out.println(s.charAt(3));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "StringIndexOutOfBoundsException",
+    "expected_stdout": "e",
+    "public_context": {
+      "title": "Keep charAt within the string",
+      "description": "Keep charAt within the string. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep charAt within the string",
+    "template_family": "index_04"
+  },
+  {
+    "id": "index_05",
+    "category": "index",
+    "name": "Keep substring end within length",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=\"java\"; System.out.println(s.substring(1,6));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=\"java\"; System.out.println(s.substring(1,4));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "StringIndexOutOfBoundsException",
+    "expected_stdout": "ava",
+    "public_context": {
+      "title": "Keep substring end within length",
+      "description": "Keep substring end within length. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep substring end within length",
+    "template_family": "index_05"
+  },
+  {
+    "id": "index_06",
+    "category": "index",
+    "name": "Keep list get within size",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nList<Integer> a=new ArrayList<>();a.add(6); System.out.println(a.get(1));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nList<Integer> a=new ArrayList<>();a.add(6); System.out.println(a.get(0));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "IndexOutOfBoundsException",
+    "expected_stdout": "6",
+    "public_context": {
+      "title": "Keep list get within size",
+      "description": "Keep list get within size. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep list get within size",
+    "template_family": "index_06"
+  },
+  {
+    "id": "index_07",
+    "category": "index",
+    "name": "Use a valid matrix row",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[][] a={{1,2},{3,4}};System.out.println(a[2][0]);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[][] a={{1,2},{3,4}};System.out.println(a[1][0]);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArrayIndexOutOfBoundsException",
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Use a valid matrix row",
+      "description": "Use a valid matrix row. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Use a valid matrix row",
+    "template_family": "index_07"
+  },
+  {
+    "id": "index_08",
+    "category": "index",
+    "name": "Use the current jagged row length",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[][] a={{2},{4,6}};System.out.println(a[0][1]);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[][] a={{2},{4,6}};System.out.println(a[1][1]);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArrayIndexOutOfBoundsException",
+    "expected_stdout": "6",
+    "public_context": {
+      "title": "Use the current jagged row length",
+      "description": "Use the current jagged row length. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Use the current jagged row length",
+    "template_family": "index_08"
+  },
+  {
+    "id": "index_09",
+    "category": "index",
+    "name": "Keep loop bounds exclusive",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={1,2};for(int i=0;i<=a.length;i++){System.out.println(a[i]);}\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={1,2};for(int i=0;i<a.length;i++){System.out.println(a[i]);}\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArrayIndexOutOfBoundsException",
+    "expected_stdout": "1\n2",
+    "public_context": {
+      "title": "Keep loop bounds exclusive",
+      "description": "Keep loop bounds exclusive. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Keep loop bounds exclusive",
+    "template_family": "index_09"
+  },
+  {
+    "id": "index_10",
+    "category": "index",
+    "name": "Validate a character deletion index",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nStringBuilder s=new StringBuilder(\"ab\");s.deleteCharAt(2);System.out.println(s);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nStringBuilder s=new StringBuilder(\"ab\");s.deleteCharAt(1);System.out.println(s);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "StringIndexOutOfBoundsException",
+    "expected_stdout": "a",
+    "public_context": {
+      "title": "Validate a character deletion index",
+      "description": "Validate a character deletion index. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Validate a character deletion index",
+    "template_family": "index_10"
+  },
+  {
+    "id": "arithmetic_01",
+    "category": "arithmetic",
+    "name": "Check a division denominator",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint d=0;System.out.println(12/d);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint d=3;System.out.println(12/d);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Check a division denominator",
+      "description": "Check a division denominator. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Check a division denominator",
+    "template_family": "arithmetic_01"
+  },
+  {
+    "id": "arithmetic_02",
+    "category": "arithmetic",
+    "name": "Check a remainder denominator",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint d=0;System.out.println(8%d);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint d=3;System.out.println(8%d);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Check a remainder denominator",
+      "description": "Check a remainder denominator. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Check a remainder denominator",
+    "template_family": "arithmetic_02"
+  },
+  {
+    "id": "arithmetic_03",
+    "category": "arithmetic",
+    "name": "Avoid averaging an empty count",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint count=0;System.out.println(9/count);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint count=3;System.out.println(9/count);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Avoid averaging an empty count",
+      "description": "Avoid averaging an empty count. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Avoid averaging an empty count",
+    "template_family": "arithmetic_03"
+  },
+  {
+    "id": "arithmetic_04",
+    "category": "arithmetic",
+    "name": "Check empty input before division",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={};System.out.println(1/a.length);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={};if(a.length==0){System.out.println(0);}else{System.out.println(1/a.length);}\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "0",
+    "public_context": {
+      "title": "Check empty input before division",
+      "description": "Check empty input before division. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Check empty input before division",
+    "template_family": "arithmetic_04"
+  },
+  {
+    "id": "arithmetic_05",
+    "category": "arithmetic",
+    "name": "Inspect a zero difference denominator",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=5;System.out.println(10/(n-n));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint n=5;System.out.println(10/n);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Inspect a zero difference denominator",
+      "description": "Inspect a zero difference denominator. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Inspect a zero difference denominator",
+    "template_family": "arithmetic_05"
+  },
+  {
+    "id": "arithmetic_06",
+    "category": "arithmetic",
+    "name": "Inspect a helper denominator",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int zero(){return 0;}\npublic static void main(String[] args) {\nSystem.out.println(4/zero());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int zero(){return 0;}\npublic static void main(String[] args) {\nSystem.out.println(zero()==0?0:4/zero());\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "0",
+    "public_context": {
+      "title": "Inspect a helper denominator",
+      "description": "Inspect a helper denominator. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Inspect a helper denominator",
+    "template_family": "arithmetic_06"
+  },
+  {
+    "id": "arithmetic_07",
+    "category": "arithmetic",
+    "name": "Inspect integer conversion before division",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\ndouble d=0.5;System.out.println(7/(int)d);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\ndouble d=0.5;System.out.println(7/d);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "14.0",
+    "public_context": {
+      "title": "Inspect integer conversion before division",
+      "description": "Inspect integer conversion before division. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Inspect integer conversion before division",
+    "template_family": "arithmetic_07"
+  },
+  {
+    "id": "arithmetic_08",
+    "category": "arithmetic",
+    "name": "Zero has no nonzero integer sign",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint d=-0;System.out.println(3/d);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint d=-1;System.out.println(3/d);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "-3",
+    "public_context": {
+      "title": "Zero has no nonzero integer sign",
+      "description": "Zero has no nonzero integer sign. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Zero has no nonzero integer sign",
+    "template_family": "arithmetic_08"
+  },
+  {
+    "id": "arithmetic_09",
+    "category": "arithmetic",
+    "name": "Inspect a shifted denominator",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint d=1>>1;System.out.println(6/d);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint d=1<<1;System.out.println(6/d);\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Inspect a shifted denominator",
+      "description": "Inspect a shifted denominator. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Inspect a shifted denominator",
+    "template_family": "arithmetic_09"
+  },
+  {
+    "id": "arithmetic_10",
+    "category": "arithmetic",
+    "name": "Check a mapped divisor",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nMap<String,Integer> m=new HashMap<>();m.put(\"d\",0);System.out.println(9/m.get(\"d\"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nMap<String,Integer> m=new HashMap<>();m.put(\"d\",3);System.out.println(9/m.get(\"d\"));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "ArithmeticException",
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Check a mapped divisor",
+      "description": "Check a mapped divisor. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Check a mapped divisor",
+    "template_family": "arithmetic_10"
+  },
+  {
+    "id": "parsing_01",
+    "category": "parsing",
+    "name": "Parse decimal digits",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\"abc\"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\"123\"));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NumberFormatException",
+    "expected_stdout": "123",
+    "public_context": {
+      "title": "Parse decimal digits",
+      "description": "Parse decimal digits. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Parse decimal digits",
+    "template_family": "parsing_01"
+  },
+  {
+    "id": "parsing_02",
+    "category": "parsing",
+    "name": "Trim numeric whitespace",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\" 7 \"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\" 7 \".trim()));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NumberFormatException",
+    "expected_stdout": "7",
+    "public_context": {
+      "title": "Trim numeric whitespace",
+      "description": "Trim numeric whitespace. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Trim numeric whitespace",
+    "template_family": "parsing_02"
+  },
+  {
+    "id": "parsing_03",
+    "category": "parsing",
+    "name": "Use a compatible numeric parser",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\"2.5\"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Double.parseDouble(\"2.5\"));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NumberFormatException",
+    "expected_stdout": "2.5",
+    "public_context": {
+      "title": "Use a compatible numeric parser",
+      "description": "Use a compatible numeric parser. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Use a compatible numeric parser",
+    "template_family": "parsing_03"
+  },
+  {
+    "id": "parsing_04",
+    "category": "parsing",
+    "name": "Select a wide enough numeric type",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\"2147483648\"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Long.parseLong(\"2147483648\"));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NumberFormatException",
+    "expected_stdout": "2147483648",
+    "public_context": {
+      "title": "Select a wide enough numeric type",
+      "description": "Select a wide enough numeric type. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Select a wide enough numeric type",
+    "template_family": "parsing_04"
+  },
+  {
+    "id": "parsing_05",
+    "category": "parsing",
+    "name": "Provide digits for long parsing",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Long.parseLong(\"\"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Long.parseLong(\"10\"));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NumberFormatException",
+    "expected_stdout": "10",
+    "public_context": {
+      "title": "Provide digits for long parsing",
+      "description": "Provide digits for long parsing. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Provide digits for long parsing",
+    "template_family": "parsing_05"
+  },
+  {
+    "id": "parsing_06",
+    "category": "parsing",
+    "name": "Match digits to the radix",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\"19\",8));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\"17\",8));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NumberFormatException",
+    "expected_stdout": "15",
+    "public_context": {
+      "title": "Match digits to the radix",
+      "description": "Match digits to the radix. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Match digits to the radix",
+    "template_family": "parsing_06"
+  },
+  {
+    "id": "parsing_07",
+    "category": "parsing",
+    "name": "Respect hexadecimal prefix handling",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.parseInt(\"0x10\"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Integer.decode(\"0x10\"));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NumberFormatException",
+    "expected_stdout": "16",
+    "public_context": {
+      "title": "Respect hexadecimal prefix handling",
+      "description": "Respect hexadecimal prefix handling. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Respect hexadecimal prefix handling",
+    "template_family": "parsing_07"
+  },
+  {
+    "id": "parsing_08",
+    "category": "parsing",
+    "name": "Provide valid floating point text",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Double.parseDouble(\"two\"));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nSystem.out.println(Double.parseDouble(\"2.0\"));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "NumberFormatException",
+    "expected_stdout": "2.0",
+    "public_context": {
+      "title": "Provide valid floating point text",
+      "description": "Provide valid floating point text. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Provide valid floating point text",
+    "template_family": "parsing_08"
+  },
+  {
+    "id": "parsing_09",
+    "category": "parsing",
+    "name": "Read integers from numeric tokens",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nScanner s=new Scanner(\"hello\");System.out.println(s.nextInt());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nScanner s=new Scanner(\"7\");System.out.println(s.nextInt());\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "InputMismatchException",
+    "expected_stdout": "7",
+    "public_context": {
+      "title": "Read integers from numeric tokens",
+      "description": "Read integers from numeric tokens. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Read integers from numeric tokens",
+    "template_family": "parsing_09"
+  },
+  {
+    "id": "parsing_10",
+    "category": "parsing",
+    "name": "Read booleans from boolean tokens",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nScanner s=new Scanner(\"maybe\");System.out.println(s.nextBoolean());\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nScanner s=new Scanner(\"true\");System.out.println(s.nextBoolean());\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "InputMismatchException",
+    "expected_stdout": "true",
+    "public_context": {
+      "title": "Read booleans from boolean tokens",
+      "description": "Read booleans from boolean tokens. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Read booleans from boolean tokens",
+    "template_family": "parsing_10"
+  },
+  {
+    "id": "termination_01",
+    "category": "termination",
+    "name": "Provide a recursive base case",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int f(int n){return f(n-1);}\npublic static void main(String[] args) {\nSystem.out.println(f(3));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int f(int n){if(n<=0)return 0;return f(n-1);}\npublic static void main(String[] args) {\nSystem.out.println(f(3));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "StackOverflowError",
+    "expected_stdout": "0",
+    "public_context": {
+      "title": "Provide a recursive base case",
+      "description": "Provide a recursive base case. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Provide a recursive base case",
+    "template_family": "termination_01"
+  },
+  {
+    "id": "termination_02",
+    "category": "termination",
+    "name": "Move toward a recursive base case",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int f(int n){if(n==0)return 0;return f(n+1);}\npublic static void main(String[] args) {\nSystem.out.println(f(2));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int f(int n){if(n==0)return 0;return f(n-1);}\npublic static void main(String[] args) {\nSystem.out.println(f(2));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "StackOverflowError",
+    "expected_stdout": "0",
+    "public_context": {
+      "title": "Move toward a recursive base case",
+      "description": "Move toward a recursive base case. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Move toward a recursive base case",
+    "template_family": "termination_02"
+  },
+  {
+    "id": "termination_03",
+    "category": "termination",
+    "name": "Update the recursive argument",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int f(int n){if(n==0)return 1;return n*f(n);}\npublic static void main(String[] args) {\nSystem.out.println(f(4));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int f(int n){if(n==0)return 1;return n*f(n-1);}\npublic static void main(String[] args) {\nSystem.out.println(f(4));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "StackOverflowError",
+    "expected_stdout": "24",
+    "public_context": {
+      "title": "Update the recursive argument",
+      "description": "Update the recursive argument. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Update the recursive argument",
+    "template_family": "termination_03"
+  },
+  {
+    "id": "termination_04",
+    "category": "termination",
+    "name": "Handle both parity paths in termination",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int f(int n){if(n==0)return 0;return f(n-2);}\npublic static void main(String[] args) {\nSystem.out.println(f(3));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int f(int n){if(n<=0)return 0;return f(n-2);}\npublic static void main(String[] args) {\nSystem.out.println(f(3));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "StackOverflowError",
+    "expected_stdout": "0",
+    "public_context": {
+      "title": "Handle both parity paths in termination",
+      "description": "Handle both parity paths in termination. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Handle both parity paths in termination",
+    "template_family": "termination_04"
+  },
+  {
+    "id": "termination_05",
+    "category": "termination",
+    "name": "Terminate mutual recursion",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\nstatic int f(int n){return g(n);}static int g(int n){return f(n);}\npublic static void main(String[] args) {\nSystem.out.println(f(2));\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\nstatic int f(int n){if(n==0)return 1;return g(n-1);}static int g(int n){return f(n);}\npublic static void main(String[] args) {\nSystem.out.println(f(2));\n}\n}\n",
+    "expected_status": "RuntimeError",
+    "expected_exception": "StackOverflowError",
+    "expected_stdout": "1",
+    "public_context": {
+      "title": "Terminate mutual recursion",
+      "description": "Terminate mutual recursion. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Terminate mutual recursion",
+    "template_family": "termination_05"
+  },
+  {
+    "id": "termination_06",
+    "category": "termination",
+    "name": "Advance a while counter",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0;while(i<3){}System.out.println(i);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0;while(i<3){i++;}System.out.println(i);\n}\n}\n",
+    "expected_status": "Timeout",
+    "expected_exception": null,
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Advance a while counter",
+      "description": "Advance a while counter. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Advance a while counter",
+    "template_family": "termination_06"
+  },
+  {
+    "id": "termination_07",
+    "category": "termination",
+    "name": "Provide a for update",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0;for(;i<2;){}System.out.println(i);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0;for(;i<2;i++){}System.out.println(i);\n}\n}\n",
+    "expected_status": "Timeout",
+    "expected_exception": null,
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Provide a for update",
+      "description": "Provide a for update. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Provide a for update",
+    "template_family": "termination_07"
+  },
+  {
+    "id": "termination_08",
+    "category": "termination",
+    "name": "Update the variable tested by a loop",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0,j=0;while(i<2){j++;}System.out.println(i);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0,j=0;while(i<2){j++;i++;}System.out.println(i);\n}\n}\n",
+    "expected_status": "Timeout",
+    "expected_exception": null,
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Update the variable tested by a loop",
+      "description": "Update the variable tested by a loop. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Update the variable tested by a loop",
+    "template_family": "termination_08"
+  },
+  {
+    "id": "termination_09",
+    "category": "termination",
+    "name": "Clear a loop control flag",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean running=true;while(running){}System.out.println(\"done\");\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean running=true;while(running){running=false;}System.out.println(\"done\");\n}\n}\n",
+    "expected_status": "Timeout",
+    "expected_exception": null,
+    "expected_stdout": "done",
+    "public_context": {
+      "title": "Clear a loop control flag",
+      "description": "Clear a loop control flag. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Clear a loop control flag",
+    "template_family": "termination_09"
+  },
+  {
+    "id": "termination_10",
+    "category": "termination",
+    "name": "Advance a do while counter",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0;do{}while(i<4);System.out.println(i);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint i=0;do{i++;}while(i<4);System.out.println(i);\n}\n}\n",
+    "expected_status": "Timeout",
+    "expected_exception": null,
+    "expected_stdout": "4",
+    "public_context": {
+      "title": "Advance a do while counter",
+      "description": "Advance a do while counter. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Advance a do while counter",
+    "template_family": "termination_10"
+  },
+  {
+    "id": "logic_01",
+    "category": "logic",
+    "name": "Sum all integers from one through five",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint s=0;for(int i=1;i<5;i++)s+=i;System.out.println(s);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint s=0;for(int i=1;i<=5;i++)s+=i;System.out.println(s);\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "15",
+    "public_context": {
+      "title": "Sum all integers from one through five",
+      "description": "Sum all integers from one through five. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Sum all integers from one through five",
+    "template_family": "logic_01"
+  },
+  {
+    "id": "logic_02",
+    "category": "logic",
+    "name": "Initialize a product with the multiplicative identity",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint p=0;for(int i=1;i<=4;i++)p*=i;System.out.println(p);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint p=1;for(int i=1;i<=4;i++)p*=i;System.out.println(p);\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "24",
+    "public_context": {
+      "title": "Initialize a product with the multiplicative identity",
+      "description": "Initialize a product with the multiplicative identity. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Initialize a product with the multiplicative identity",
+    "template_family": "logic_02"
+  },
+  {
+    "id": "logic_03",
+    "category": "logic",
+    "name": "Find a maximum in an all negative array",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={-5,-2,-8};int m=0;for(int x:a)if(x>m)m=x;System.out.println(m);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={-5,-2,-8};int m=a[0];for(int x:a)if(x>m)m=x;System.out.println(m);\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "-2",
+    "public_context": {
+      "title": "Find a maximum in an all negative array",
+      "description": "Find a maximum in an all negative array. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Find a maximum in an all negative array",
+    "template_family": "logic_03"
+  },
+  {
+    "id": "logic_04",
+    "category": "logic",
+    "name": "Find a minimum in an all positive array",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={7,3,9};int m=0;for(int x:a)if(x<m)m=x;System.out.println(m);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint[] a={7,3,9};int m=a[0];for(int x:a)if(x<m)m=x;System.out.println(m);\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "3",
+    "public_context": {
+      "title": "Find a minimum in an all positive array",
+      "description": "Find a minimum in an all positive array. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Find a minimum in an all positive array",
+    "template_family": "logic_04"
+  },
+  {
+    "id": "logic_05",
+    "category": "logic",
+    "name": "Count the even values",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint c=0;for(int x:new int[]{1,2,4})if(x%2==1)c++;System.out.println(c);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint c=0;for(int x:new int[]{1,2,4})if(x%2==0)c++;System.out.println(c);\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "2",
+    "public_context": {
+      "title": "Count the even values",
+      "description": "Count the even values. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Count the even values",
+    "template_family": "logic_05"
+  },
+  {
+    "id": "logic_06",
+    "category": "logic",
+    "name": "Compare string contents",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=new String(\"cat\");System.out.println(s==\"cat\");\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nString s=new String(\"cat\");System.out.println(s.equals(\"cat\"));\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "true",
+    "public_context": {
+      "title": "Compare string contents",
+      "description": "Compare string contents. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Compare string contents",
+    "template_family": "logic_06"
+  },
+  {
+    "id": "logic_07",
+    "category": "logic",
+    "name": "Compute a nonintegral mean",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint a=5,b=2;System.out.println(a/b);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint a=5,b=2;System.out.println((double)a/b);\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "2.5",
+    "public_context": {
+      "title": "Compute a nonintegral mean",
+      "description": "Compute a nonintegral mean. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Compute a nonintegral mean",
+    "template_family": "logic_07"
+  },
+  {
+    "id": "logic_08",
+    "category": "logic",
+    "name": "Subtract the smaller value from the larger",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint a=8,b=3;System.out.println(b-a);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint a=8,b=3;System.out.println(a-b);\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "5",
+    "public_context": {
+      "title": "Subtract the smaller value from the larger",
+      "description": "Subtract the smaller value from the larger. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Subtract the smaller value from the larger",
+    "template_family": "logic_08"
+  },
+  {
+    "id": "logic_09",
+    "category": "logic",
+    "name": "Include the passing threshold",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint mark=60;System.out.println(mark>60?\"P\":\"F\");\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nint mark=60;System.out.println(mark>=60?\"P\":\"F\");\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "P",
+    "public_context": {
+      "title": "Include the passing threshold",
+      "description": "Include the passing threshold. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Include the passing threshold",
+    "template_family": "logic_09"
+  },
+  {
+    "id": "logic_10",
+    "category": "logic",
+    "name": "Preserve a found search result",
+    "split": "test",
+    "provenance": "AI-assisted author-constructed; static review; execution validation pending",
+    "code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean found=false;for(int x:new int[]{2,5,9}){found=(x==5);}System.out.println(found);\n}\n}\n",
+    "reference_code": "import java.util.*;\npublic class Main {\n\npublic static void main(String[] args) {\nboolean found=false;for(int x:new int[]{2,5,9}){if(x==5)found=true;}System.out.println(found);\n}\n}\n",
+    "expected_status": "WrongOutput",
+    "expected_exception": null,
+    "expected_stdout": "true",
+    "public_context": {
+      "title": "Preserve a found search result",
+      "description": "Preserve a found search result. Diagnose the submitted program without giving a complete replacement."
+    },
+    "intended_change": "Preserve a found search result",
+    "template_family": "logic_10"
+  }
+]

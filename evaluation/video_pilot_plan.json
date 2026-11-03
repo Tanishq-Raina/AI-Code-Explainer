@@ -1,0 +1,27 @@
+{
+  "purpose": "Development pilot only. These examples are excluded from the final held-out benchmark.",
+  "provenance": "Copied from video-service test_inputs on 2026-11-03. All three programs compiled and their expected stdout was verified using local JDK 25 on 2026-11-03. This does not validate the video service simulator or narration.",
+  "cases": [
+    {
+      "id": "addition",
+      "filename": "Main.java",
+      "category": "straight-line arithmetic",
+      "expected_stdout": "30",
+      "code": "class Main {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 20;\n        System.out.println(a + b);\n    }\n}\n"
+    },
+    {
+      "id": "stack",
+      "filename": "StackDemo.java",
+      "category": "collection state changes",
+      "expected_stdout": "Top: 30\nPopped: 30\nSize: 2",
+      "code": "import java.util.Stack;\npublic class StackDemo {\n    public static void main(String[] args) {\n        Stack<Integer> stack = new Stack<>();\n        stack.push(10);\n        stack.push(20);\n        stack.push(30);\n        int top = stack.peek();\n        System.out.println(\"Top: \" + top);\n        int popped = stack.pop();\n        System.out.println(\"Popped: \" + popped);\n        System.out.println(\"Size: \" + stack.size());\n    }\n}\n"
+    },
+    {
+      "id": "recursion",
+      "filename": "Factorial.java",
+      "category": "recursive execution",
+      "expected_stdout": "fact(5) = 120",
+      "code": "public class Factorial {\n    public static void main(String[] args) {\n        int n = 5;\n        int result = fact(n);\n        System.out.println(\"fact(\" + n + \") = \" + result);\n    }\n    public static int fact(int n) {\n        if (n <= 1) {\n            return 1;\n        }\n        return n * fact(n - 1);\n    }\n}\n"
+    }
+  ]
+}

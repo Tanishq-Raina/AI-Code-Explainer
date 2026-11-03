@@ -61,6 +61,15 @@ function collectCalls(node, calls = []) {
 function inferArrayContribution(valueNode) {
   if (!valueNode || valueNode.type !== "ArrayExpression") return null;
 
+  // Prefer the explicit `dimensions` field set by the AST adapter.
+  // dimensions: 1 -> O(n), 2 -> O(n^2), 3+ -> O(n^k)
+  if (typeof valueNode.dimensions === "number" && valueNode.dimensions > 0) {
+    if (valueNode.dimensions === 1) return "n";
+    if (valueNode.dimensions === 2) return "n^2";
+    if (valueNode.dimensions >= 3) return "n^" + valueNode.dimensions;
+  }
+
+  // Fallback to scanning elements for nested ArrayExpression nodes (legacy path).
   const elements = valueNode.elements || [];
   const hasNestedArray = elements.some((el) => el?.type === "ArrayExpression");
   if (hasNestedArray) return "n^2";
@@ -68,9 +77,15 @@ function inferArrayContribution(valueNode) {
 }
 
 function contributionRank(term) {
-  if (term === "n^2") return 4;
+  // Higher rank = higher space cost. Handle arbitrary n^k.
+  if (/^n\^(\d+)$/.test(term)) {
+    const exp = parseInt(term.match(/^n\^(\d+)$/)[1], 10);
+    return 3 + exp; // n^2=5, n^3=6, n^4=7, etc.
+  }
+  if (term === "n^2") return 5;
   if (term === "n") return 3;
-  if (term === "stack") return 2;
+  if (term === "stack") return 3; // stack recursion is O(n) level
+  if (term === "log_stack") return 2; // O(log n) recursion
   return 1;
 }
 
@@ -82,9 +97,13 @@ function dominantContribution(contributions) {
 }
 
 function contributionToBigO(contribution) {
+  if (contribution === "log_stack") return "O(log n)";
   if (contribution === "stack") return "O(n)";
   if (contribution === "n^2") return "O(n^2)";
   if (contribution === "n") return "O(n)";
+  // Handle n^k for k >= 3
+  const nkMatch = contribution.match(/^n\^(\d+)$/);
+  if (nkMatch) return `O(n^${nkMatch[1]})`;
   return "O(1)";
 }
 
@@ -153,6 +172,189 @@ function processCallTargets(node, context) {
   }
 }
 
+/**
+ * Detect if a function body contains a divide-by-2 pattern, indicating
+ * a divide-and-conquer algorithm with O(log n) recursion depth.
+ * Also detects divide-and-conquer double-recursion where only one branch executes
+ * per call or where a partition split is used.
+ */
+function _functionHasDividePattern(fnNode) {
+  const body = fnNode?.body || [];
+  // Check for explicit /2 midpoint calculation
+  if (_searchForDividePattern(body)) return true;
+
+  // Check for double self-recursion in an if-else pattern or with a partition.
+  // KEY DISTINCTION:
+  //  - Binary search: 2 recursive calls in SEPARATE if/else branches → only 1 runs → O(log n)
+  //  - Quick sort: 2 calls but with a partition midpoint → O(log n) depth
+  //  - Tree traversal: 2 calls both execute unconditionally → O(n) depth
+  const fnName = fnNode?.name;
+  if (fnName) {
+    // Check if recursive calls are in separate if/else branches (only one executes)
+    if (_hasConditionalSelfRecursion(body, fnName)) return true;
+
+    // Check for partition-style: calls a helper function then two self-calls
+    // (quicksort pattern — the partition effectively halves)
+    const selfCalls = _countSelfCalls(body, fnName);
+    const hasPartition = _hasHelperCallBeforeSelfCalls(body, fnName);
+    if (selfCalls >= 2 && hasPartition) return true;
+  }
+
+  return false;
+}
+
+/**
+ * Check if recursive calls are in separate branches of if/else,
+ * meaning only one recursive call executes per invocation.
+ */
+function _hasConditionalSelfRecursion(body, fnName) {
+  for (const node of body) {
+    if (!node || node.type !== "IfStatement") continue;
+
+    const conseqCalls = _countSelfCalls(node.consequent || [], fnName);
+    const altCalls = _countSelfCalls(node.alternate || [], fnName);
+
+    // Both branches have self-calls → binary search pattern: only one runs
+    if (conseqCalls >= 1 && altCalls >= 1) return true;
+  }
+  return false;
+}
+
+/**
+ * Check if there's a non-recursive helper call (like partition) before self-calls.
+ * This indicates a partition-based divide-and-conquer.
+ */
+function _hasHelperCallBeforeSelfCalls(body, fnName) {
+  // Flatten: if the body is a single IfStatement, look inside its consequent
+  let statements = body;
+  if (body.length === 1 && body[0]?.type === "IfStatement") {
+    statements = body[0].consequent || [];
+  }
+
+  let foundHelperCall = false;
+
+  for (const node of statements) {
+    if (!node) continue;
+
+    // Look for helper function calls (not self-calls) in variable declarations
+    if (node.type === "VariableDeclaration" && node.value?.type === "CallExpression") {
+      if (node.value.callee?.name !== fnName) {
+        foundHelperCall = true;
+      }
+    }
+    // Look for helper calls in expression statements
+    if (node.type === "ExpressionStatement" && node.expression?.type === "CallExpression") {
+      if (node.expression.callee?.name !== fnName) {
+        foundHelperCall = true;
+      }
+    }
+  }
+
+  if (!foundHelperCall) return false;
+
+  // Now check if there are 2+ self-calls after the helper
+  const selfCalls = _countSelfCalls(statements, fnName);
+  return selfCalls >= 2;
+}
+
+function _countSelfCalls(nodes, fnName) {
+  let count = 0;
+  for (const node of nodes) {
+    if (!node || typeof node !== "object") continue;
+    count += _countCallsInNode(node, fnName);
+  }
+  return count;
+}
+
+function _countCallsInNode(node, fnName) {
+  if (!node || typeof node !== "object") return 0;
+  let count = 0;
+
+  // Direct call expression
+  if (node.type === "CallExpression" && (node.callee?.name === fnName || node.name === fnName)) {
+    return 1;
+  }
+
+  // Return statement with call
+  if (node.type === "ReturnStatement" && node.argument) {
+    count += _countCallsInNode(node.argument, fnName);
+  }
+
+  // Expression statement
+  if (node.type === "ExpressionStatement" && node.expression) {
+    count += _countCallsInNode(node.expression, fnName);
+  }
+
+  // If statement branches
+  if (node.type === "IfStatement") {
+    for (const child of node.consequent || []) {
+      count += _countCallsInNode(child, fnName);
+    }
+    for (const child of node.alternate || []) {
+      count += _countCallsInNode(child, fnName);
+    }
+  }
+
+  // Variable declaration with call
+  if (node.type === "VariableDeclaration" && node.value) {
+    count += _countCallsInNode(node.value, fnName);
+  }
+
+  // Assignment with call
+  if (node.type === "Assignment" && node.value) {
+    count += _countCallsInNode(node.value, fnName);
+  }
+
+  return count;
+}
+
+function _searchForDividePattern(nodes) {
+  for (const node of nodes) {
+    if (!node || typeof node !== "object") continue;
+
+    // Check VariableDeclaration: int mid = (low + high) / 2;
+    if (node.type === "VariableDeclaration") {
+      if (_hasDivideByTwo(node.value)) return true;
+    }
+
+    // Check Assignment: mid = (low + high) / 2;
+    if (node.type === "Assignment") {
+      if (_hasDivideByTwo(node.value)) return true;
+    }
+
+    // Recurse into if-blocks, loops
+    if (node.type === "IfStatement") {
+      if (_searchForDividePattern(node.consequent || [])) return true;
+      if (_searchForDividePattern(node.alternate || [])) return true;
+    }
+    if (node.type === "ForStatement" || node.type === "WhileStatement") {
+      if (_searchForDividePattern(node.body || [])) return true;
+    }
+  }
+  return false;
+}
+
+function _hasDivideByTwo(expr) {
+  if (!expr || typeof expr !== "object") return false;
+  if (expr.type === "BinaryExpression" && expr.operator === "/") {
+    const rightVal = expr.right?.type === "Literal" ? Number(expr.right.value) : NaN;
+    if (rightVal === 2) return true;
+  }
+  // Recurse into sub-expressions
+  for (const key of Object.keys(expr)) {
+    const val = expr[key];
+    if (val && typeof val === "object" && !Array.isArray(val)) {
+      if (_hasDivideByTwo(val)) return true;
+    }
+    if (Array.isArray(val)) {
+      for (const item of val) {
+        if (_hasDivideByTwo(item)) return true;
+      }
+    }
+  }
+  return false;
+}
+
 function processStatement(node, context) {
   if (!node || typeof node !== "object") return;
   const {
@@ -164,6 +366,52 @@ function processStatement(node, context) {
 
   if (node.type === "VariableDeclaration") {
     const arrayContribution = inferArrayContribution(node.value);
+
+    // Array literals in the entry function (main) represent input data,
+    // not auxiliary space. Only count 'new' allocations as extra space
+    // when inside main. In helper functions, all arrays count.
+    // Constant-size allocations (e.g., new int[2]) are O(1) everywhere.
+    const isInputData =
+      arrayContribution &&
+      node.value?.allocation === "literal" &&
+      context.currentFunction === "main";
+
+    const isConstantSize =
+      arrayContribution &&
+      node.value?.allocation === "constant";
+
+    if (isInputData || isConstantSize) {
+      memory.stack.push({ name: node.name, value: isConstantSize ? "fixed-array" : "input" });
+      contributions.push("1");
+      emitStep({
+        lineNumber: node.lineNumber,
+        event: "space_variable",
+        narration: isConstantSize
+          ? "This array has a fixed constant size."
+          : "Input data is provided, not extra space.",
+        bubble: isConstantSize
+          ? "Fixed-size array.\nConstant space only."
+          : "This is input data.\nIt doesn't count as extra space.",
+        complexityContribution: "1",
+      });
+      return;
+    }
+
+    // Handle n^k for k >= 3 (3D, 4D arrays etc.)
+    if (arrayContribution && /^n\^(\d+)$/.test(arrayContribution) && arrayContribution !== "n^2") {
+      const dim = arrayContribution.match(/^n\^(\d+)$/)[1];
+      memory.heap.push({ name: node.name, shape: `${dim}d-array`, size: arrayContribution });
+      contributions.push(arrayContribution);
+      contributionBuckets.arrays2d += 1;
+      emitStep({
+        lineNumber: node.lineNumber,
+        event: "space_array_nd",
+        narration: `We create a ${dim}D array.`,
+        bubble: `We create a ${dim}D array.\nSpace grows with ${arrayContribution}.`,
+        complexityContribution: arrayContribution,
+      });
+      return;
+    }
 
     if (arrayContribution === "n^2") {
       memory.heap.push({ name: node.name, shape: "2d-array", size: "n^2" });
@@ -264,8 +512,19 @@ function executeFunction(functionName, callLineNumber, context) {
 
   const isRecursiveCall = context.callStack.includes(functionName);
 
+  // Detect logarithmic recursion depth: if the function body contains
+  // a midpoint calculation (dividing by 2), it's likely a divide-and-conquer
+  // pattern (binary search, quicksort) with O(log n) stack depth.
+  let recursionTerm = "stack"; // default: O(n) stack depth
+  if (isRecursiveCall) {
+    const hasMidpoint = _functionHasDividePattern(fnNode);
+    if (hasMidpoint) {
+      recursionTerm = "log_stack";
+    }
+  }
+
   context.memory.stack.push({ name: `${functionName}()`, value: "frame" });
-  context.contributions.push(isRecursiveCall ? "stack" : "1");
+  context.contributions.push(isRecursiveCall ? recursionTerm : "1");
   if (isRecursiveCall) {
     context.contributionBuckets.recursion += 1;
   } else {
@@ -279,9 +538,11 @@ function executeFunction(functionName, callLineNumber, context) {
       ? `Control enters ${functionName}() again.`
       : `Control enters ${functionName}().`,
     bubble: isRecursiveCall
-      ? `Move into ${functionName}().\nThis is recursive, so stack can grow.`
+      ? (recursionTerm === "log_stack"
+        ? `Move into ${functionName}().\nThis is recursive with halving, stack grows with log n.`
+        : `Move into ${functionName}().\nThis is recursive, so stack can grow.`)
       : `Move into ${functionName}().\nA stack frame is added.`,
-    complexityContribution: isRecursiveCall ? "stack" : "1",
+    complexityContribution: isRecursiveCall ? recursionTerm : "1",
   });
 
   if (!isRecursiveCall) {
@@ -376,12 +637,24 @@ function buildSpaceComplexityTimeline(parsedRepresentation) {
     });
   }
   if (contributionBuckets.recursion > 0) {
-    contributionItems.push({
-      key: "recursion",
-      label: "recursive calls",
-      complexity: "O(n)",
-      explanation: "Recursive calls add stack layers.",
-    });
+    // Determine if the recursion detected is logarithmic or linear
+    const hasLogRecursion = contributions.includes("log_stack");
+    const hasLinearRecursion = contributions.includes("stack");
+    if (hasLogRecursion && !hasLinearRecursion) {
+      contributionItems.push({
+        key: "recursion",
+        label: "recursive calls",
+        complexity: "O(log n)",
+        explanation: "Divide-and-conquer recursion uses log n stack depth.",
+      });
+    } else {
+      contributionItems.push({
+        key: "recursion",
+        label: "recursive calls",
+        complexity: "O(n)",
+        explanation: "Recursive calls add stack layers.",
+      });
+    }
   }
   if (contributionBuckets.functionCalls > 0) {
     contributionItems.push({

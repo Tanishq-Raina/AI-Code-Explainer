@@ -1,0 +1,1434 @@
+[
+  {
+    "id": "valid_00",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 1."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_00",
+    "group": "structural_violation",
+    "output": {
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 1."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_0"
+  },
+  {
+    "id": "leak_00",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 1.",
+      "hint_3": "public static void main(String[] args) {}"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_0"
+  },
+  {
+    "id": "factual_00",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java array indexes start at one.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 1."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_0"
+  },
+  {
+    "id": "valid_01",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 2."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_01",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": " ",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 2."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_1"
+  },
+  {
+    "id": "leak_01",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 2.",
+      "hint_3": "import java.util.List;"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_1"
+  },
+  {
+    "id": "factual_01",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero always returns zero.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 2."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_1"
+  },
+  {
+    "id": "valid_02",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 3."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_02",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": [
+        2
+      ],
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 3."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_2"
+  },
+  {
+    "id": "leak_02",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 3.",
+      "hint_3": "Here is the full solution."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_2"
+  },
+  {
+    "id": "factual_02",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "A null Java reference automatically creates an object.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 3."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_2"
+  },
+  {
+    "id": "valid_03",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 4."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_03",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "hint_2": "Inspect the denominator at statement 4."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_3"
+  },
+  {
+    "id": "leak_03",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 4.",
+      "hint_3": "```java\nint x=0;\n```"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_3"
+  },
+  {
+    "id": "factual_03",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java strings are mutable.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 4."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_3"
+  },
+  {
+    "id": "valid_04",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 5."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_04",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": " ",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 5."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_4"
+  },
+  {
+    "id": "leak_04",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 5.",
+      "hint_3": "complete solution"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_4"
+  },
+  {
+    "id": "factual_04",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Every Java loop has constant time complexity.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 5."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_4"
+  },
+  {
+    "id": "valid_05",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 6."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_05",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": [
+        5
+      ],
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 6."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_5"
+  },
+  {
+    "id": "leak_05",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 6.",
+      "hint_3": "public static void main(String[] args) {}"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_0"
+  },
+  {
+    "id": "factual_05",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java array indexes start at one.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 6."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_0"
+  },
+  {
+    "id": "valid_06",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 7."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_06",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 7."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_6"
+  },
+  {
+    "id": "leak_06",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 7.",
+      "hint_3": "import java.util.List;"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_1"
+  },
+  {
+    "id": "factual_06",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero always returns zero.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 7."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_1"
+  },
+  {
+    "id": "valid_07",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 8."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_07",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": " ",
+      "hint_2": "Inspect the denominator at statement 8."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_7"
+  },
+  {
+    "id": "leak_07",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 8.",
+      "hint_3": "Here is the full solution."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_2"
+  },
+  {
+    "id": "factual_07",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "A null Java reference automatically creates an object.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 8."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_2"
+  },
+  {
+    "id": "valid_08",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 9."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_08",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": [
+        8
+      ],
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 9."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_8"
+  },
+  {
+    "id": "leak_08",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 9.",
+      "hint_3": "```java\nint x=0;\n```"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_3"
+  },
+  {
+    "id": "factual_08",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java strings are mutable.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 9."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_3"
+  },
+  {
+    "id": "valid_09",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 10."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_09",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 10."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_9"
+  },
+  {
+    "id": "leak_09",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 10.",
+      "hint_3": "complete solution"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_4"
+  },
+  {
+    "id": "factual_09",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Every Java loop has constant time complexity.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 10."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_4"
+  },
+  {
+    "id": "valid_10",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 11."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_10",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": " ",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 11."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_10"
+  },
+  {
+    "id": "leak_10",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 11.",
+      "hint_3": "public static void main(String[] args) {}"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_0"
+  },
+  {
+    "id": "factual_10",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java array indexes start at one.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 11."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_0"
+  },
+  {
+    "id": "valid_11",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 12."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_11",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": [
+        11
+      ],
+      "hint_2": "Inspect the denominator at statement 12."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_11"
+  },
+  {
+    "id": "leak_11",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 12.",
+      "hint_3": "import java.util.List;"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_1"
+  },
+  {
+    "id": "factual_11",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero always returns zero.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 12."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_1"
+  },
+  {
+    "id": "valid_12",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 13."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_12",
+    "group": "structural_violation",
+    "output": {
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 13."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_0"
+  },
+  {
+    "id": "leak_12",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 13.",
+      "hint_3": "Here is the full solution."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_2"
+  },
+  {
+    "id": "factual_12",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "A null Java reference automatically creates an object.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 13."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_2"
+  },
+  {
+    "id": "valid_13",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 14."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_13",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": " ",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 14."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_1"
+  },
+  {
+    "id": "leak_13",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 14.",
+      "hint_3": "```java\nint x=0;\n```"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_3"
+  },
+  {
+    "id": "factual_13",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java strings are mutable.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 14."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_3"
+  },
+  {
+    "id": "valid_14",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 15."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_14",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": [
+        14
+      ],
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 15."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_2"
+  },
+  {
+    "id": "leak_14",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 15.",
+      "hint_3": "complete solution"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_4"
+  },
+  {
+    "id": "factual_14",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Every Java loop has constant time complexity.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 15."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_4"
+  },
+  {
+    "id": "valid_15",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 16."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_15",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "hint_2": "Inspect the denominator at statement 16."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_3"
+  },
+  {
+    "id": "leak_15",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 16.",
+      "hint_3": "public static void main(String[] args) {}"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_0"
+  },
+  {
+    "id": "factual_15",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java array indexes start at one.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 16."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_0"
+  },
+  {
+    "id": "valid_16",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 17."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_16",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": " ",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 17."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_4"
+  },
+  {
+    "id": "leak_16",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 17.",
+      "hint_3": "import java.util.List;"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_1"
+  },
+  {
+    "id": "factual_16",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero always returns zero.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 17."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_1"
+  },
+  {
+    "id": "valid_17",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 18."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_17",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": [
+        17
+      ],
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 18."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_5"
+  },
+  {
+    "id": "leak_17",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 18.",
+      "hint_3": "Here is the full solution."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_2"
+  },
+  {
+    "id": "factual_17",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "A null Java reference automatically creates an object.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 18."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_2"
+  },
+  {
+    "id": "valid_18",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 19."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_18",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 19."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_6"
+  },
+  {
+    "id": "leak_18",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 19.",
+      "hint_3": "```java\nint x=0;\n```"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_3"
+  },
+  {
+    "id": "factual_18",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java strings are mutable.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 19."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_3"
+  },
+  {
+    "id": "valid_19",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 20."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_19",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": " ",
+      "hint_2": "Inspect the denominator at statement 20."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_7"
+  },
+  {
+    "id": "leak_19",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 20.",
+      "hint_3": "complete solution"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_4"
+  },
+  {
+    "id": "factual_19",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Every Java loop has constant time complexity.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 20."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_4"
+  },
+  {
+    "id": "valid_20",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 21."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_20",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": [
+        20
+      ],
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 21."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_8"
+  },
+  {
+    "id": "leak_20",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 21.",
+      "hint_3": "public static void main(String[] args) {}"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_0"
+  },
+  {
+    "id": "factual_20",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java array indexes start at one.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 21."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_0"
+  },
+  {
+    "id": "valid_21",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 22."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_21",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 22."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_9"
+  },
+  {
+    "id": "leak_21",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 22.",
+      "hint_3": "import java.util.List;"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_1"
+  },
+  {
+    "id": "factual_21",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero always returns zero.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 22."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_1"
+  },
+  {
+    "id": "valid_22",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 23."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_22",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": " ",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 23."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_10"
+  },
+  {
+    "id": "leak_22",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 23.",
+      "hint_3": "Here is the full solution."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_2"
+  },
+  {
+    "id": "factual_22",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "A null Java reference automatically creates an object.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 23."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_2"
+  },
+  {
+    "id": "valid_23",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 24."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_23",
+    "group": "structural_violation",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": [
+        23
+      ],
+      "hint_2": "Inspect the denominator at statement 24."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_11"
+  },
+  {
+    "id": "leak_23",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 24.",
+      "hint_3": "```java\nint x=0;\n```"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_3"
+  },
+  {
+    "id": "factual_23",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Java strings are mutable.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 24."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_3"
+  },
+  {
+    "id": "valid_24",
+    "group": "compliant",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 25."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "correct",
+    "family": "arithmetic_context_variation"
+  },
+  {
+    "id": "structure_24",
+    "group": "structural_violation",
+    "output": {
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 25."
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "field_rule_0"
+  },
+  {
+    "id": "leak_24",
+    "group": "prohibited_pattern",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Integer division by zero raises ArithmeticException.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 25.",
+      "hint_3": "complete solution"
+    },
+    "expected_contract_accept": false,
+    "semantic_label": "not_assessed",
+    "family": "leak_pattern_4"
+  },
+  {
+    "id": "factual_24",
+    "group": "well_formed_factual_error",
+    "output": {
+      "problem_summary": "An integer division uses zero as its divisor.",
+      "why": "Every Java loop has constant time complexity.",
+      "hint_1": "Inspect the denominator before the division.",
+      "learning_tip": "Check integer arithmetic preconditions.",
+      "hint_2": "Inspect the denominator at statement 25."
+    },
+    "expected_contract_accept": true,
+    "semantic_label": "incorrect",
+    "family": "factual_claim_4"
+  }
+]

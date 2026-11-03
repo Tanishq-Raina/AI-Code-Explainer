@@ -24,3 +24,6 @@ backend/*.err.log
 backend/*.out.log
 *.docx
 
+# Collected research outputs (may include large generated videos)
+evaluation/runs/
+

@@ -53,6 +53,47 @@ function expressionFromSnippet(snippet, lineNumber) {
   const text = String(snippet || "").trim();
   if (!text) return null;
 
+  // Detect Java array allocations: "new int[n]", "new int[n][m]", "new int[n][n][n]"
+  // Returns an ArrayExpression with `dimensions` indicating n-dimensional allocation.
+  // If all dimension sizes are small constants, mark it as constant-size.
+  const newArrayMatch = text.match(
+    /^new\s+[A-Za-z_][A-Za-z0-9_$.]*((?:\s*\[[^\]]*\])+)\s*$/
+  );
+  if (newArrayMatch) {
+    const bracketSection = newArrayMatch[1];
+    const brackets = bracketSection.match(/\[([^\]]*)\]/g) || [];
+    const dimensions = brackets.length;
+
+    // Check if all dimensions are small numeric constants (e.g., new int[2], new int[3][3])
+    const allConstant = brackets.every((b) => {
+      const inner = b.slice(1, -1).trim();
+      return /^\d+$/.test(inner) && Number(inner) <= 100;
+    });
+
+    return {
+      type: "ArrayExpression",
+      allocation: allConstant ? "constant" : "new",
+      dimensions,
+      elements: [],
+    };
+  }
+
+  // Detect Java array literal: "{1, 2, 3}" or "{{1,2},{3,4}}"
+  if (text.startsWith("{") && text.endsWith("}")) {
+    const inner = text.slice(1, -1).trim();
+    if (inner.length > 0) {
+      // Count nesting depth to determine dimensions for literal initializers.
+      const isNested = /^\s*\{/.test(inner);
+      const elements = isNested ? [{ type: "ArrayExpression", elements: [] }] : [];
+      return {
+        type: "ArrayExpression",
+        allocation: "literal",
+        dimensions: isNested ? 2 : 1,
+        elements,
+      };
+    }
+  }
+
   const calls = extractCallExpressions(text, lineNumber);
   if (calls.length === 1) return calls[0];
   if (calls.length > 1) {
